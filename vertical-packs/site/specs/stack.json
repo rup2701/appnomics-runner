@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "about": "Template decisions every app starts from. Agents do not reopen these. To change one, write a change request.",
+  "decisions": [
+    { "id": "framework", "choice": "Next.js 16 (App Router), React 19, TypeScript strict", "why": "What the store pack uses and what the agent writes best." },
+    { "id": "orm", "choice": "Drizzle ORM with node-postgres", "why": "No native engine binary, so it installs in sandboxes and runs on serverless." },
+    { "id": "database", "choice": "Postgres. Neon in production, one database per app", "why": "Sign-ups must persist. Serverless hosting has no durable local files." },
+    { "id": "ui", "choice": "shadcn/ui components copied into src/components/ui, Radix primitives, Tailwind CSS 4 with CSS variable tokens", "why": "Accessibility is handled, the code is owned by the app, and the look settings can drive every component." },
+    { "id": "validation", "choice": "Zod at every boundary", "why": "Keeps visitor and owner input inside the schema." },
+    { "id": "tests", "choice": "Playwright end-to-end scripts in e2e/, plus one check per edge in specs/edges.json", "why": "Verification is automatic; a run passes only when these pass." },
+    { "id": "deploy", "choice": "One Vercel project per app, deployed directly from the app folder with the Vercel CLI. No GitHub repository is required in this version", "why": "Fewer moving parts for a one-page site. The owner can download the source as a zip." },
+    { "id": "settings", "choice": "Owner-editable words, images and visibility live in the database, not in code", "why": "Edits are instant and need no rebuild." },
+    { "id": "email", "choice": "None in this version. Sign-ups are stored and downloaded, nothing is sent", "why": "Keeps the site free of an email service and a verified domain." },
+    { "id": "payments", "choice": "None", "why": "A waitlist site takes no money." }
+  ]
+}

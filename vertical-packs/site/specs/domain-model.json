@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "app_type": "waitlist-site",
+  "about": "The data a waitlist site keeps. Everything the owner edits is data, so changes are instant.",
+  "entities": [
+    {
+      "name": "Site",
+      "note": "Exactly one row.",
+      "fields": [
+        { "name": "name", "type": "text", "required": true },
+        { "name": "tagline", "type": "text" },
+        { "name": "contact_email", "type": "text", "note": "Optional. When empty, no Contact link is shown." },
+        { "name": "accent", "type": "text", "note": "A colour token chosen from the brief's look." },
+        { "name": "success_target_signups", "type": "integer", "note": "Optional goal from the brief." },
+        { "name": "success_target_days", "type": "integer" },
+        { "name": "launched_at", "type": "timestamp", "note": "Start of the goal period." }
+      ]
+    },
+    {
+      "name": "Block",
+      "note": "One row per block on the page, in order.",
+      "fields": [
+        { "name": "id", "type": "text", "note": "hero, preview, benefits, waitlist, footer, or an extra block id" },
+        { "name": "type", "type": "enum", "values": ["hero", "preview", "benefits", "waitlist", "faq", "steps", "footer"] },
+        { "name": "position", "type": "integer" },
+        { "name": "visible", "type": "boolean", "default": true },
+        { "name": "content", "type": "json", "note": "Validated per block type with Zod: headline, text, items, image references, button label." }
+      ]
+    },
+    {
+      "name": "FormField",
+      "note": "The questions on the waitlist form. Email is always present and required.",
+      "fields": [
+        { "name": "key", "type": "text", "note": "Stable key used to store answers." },
+        { "name": "label", "type": "text" },
+        { "name": "type", "type": "enum", "values": ["text", "email", "select", "multiselect"] },
+        { "name": "required", "type": "boolean" },
+        { "name": "options", "type": "json", "note": "For select and multiselect." },
+        { "name": "position", "type": "integer" }
+      ]
+    },
+    {
+      "name": "Signup",
+      "fields": [
+        { "name": "id", "type": "uuid" },
+        { "name": "email", "type": "text", "note": "Lower-cased, trimmed. Unique." },
+        { "name": "answers", "type": "json", "note": "Keyed by FormField key. Select values are stored as the option text at the time of signing up." },
+        { "name": "source", "type": "text", "note": "From a ?src= or utm_source parameter, else 'direct'. Max 60 characters." },
+        { "name": "created_at", "type": "timestamp" }
+      ]
+    },
+    {
+      "name": "Image",
+      "fields": [
+        { "name": "id", "type": "uuid" },
+        { "name": "url", "type": "text" },
+        { "name": "alt", "type": "text", "note": "Owner-editable description. Never empty for a shown image." },
+        { "name": "width", "type": "integer" },
+        { "name": "height", "type": "integer" }
+      ]
+    },
+    {
+      "name": "Owner",
+      "note": "Not stored. One owner from environment configuration: an email and a password hash."
+    }
+  ],
+  "rules": [
+    "A Signup's email is unique. A second submission of the same email updates nothing and shows the same thank-you.",
+    "Option text in answers is stored as text, so renaming an option later does not change past answers.",
+    "Deleting a Signup removes it permanently. There is no soft delete in this version."
+  ]
+}

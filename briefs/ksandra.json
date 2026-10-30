@@ -1,0 +1,230 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Brief for the Ksandra waitlist site. The facts come from the existing Ksandra website, so the runner's result can be compared with it. Claims below are the owner's own and must be confirmed true before launch.",
+  "site": {
+    "name": "Ksandra",
+    "kind": "waitlist",
+    "one_liner": "Ask questions across all your documents and get answers with citations.",
+    "brand_words": [
+      "clear",
+      "confident",
+      "calm"
+    ],
+    "contact_email": null,
+    "demo_notice": true
+  },
+  "audience": {
+    "icp": "Knowledge workers and small teams whose documents are scattered across tools (Notion, Google Drive, Confluence, Slack, PDFs), who prepare for meetings and write content and waste time searching.",
+    "alternatives": "Searching each tool by hand, or asking colleagues where a document lives.",
+    "channels": [],
+    "success_target": {
+      "signups": 100,
+      "days": 30,
+      "note": "Assumption: matches the 'first 100 users' offer. Owner to confirm."
+    }
+  },
+  "hypothesis": "People who keep documents in several tools will join a waitlist for one place to ask questions and get cited answers.",
+  "nav": [
+    {
+      "label": "Features",
+      "target": "benefits"
+    },
+    {
+      "label": "Join Waitlist",
+      "target": "waitlist",
+      "style": "button"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero",
+      "headline": "Stop Searching, Start Asking.",
+      "subheadline": "Ksandra connects your scattered documents, from Notion to Google Drive, so you can prep for meetings and write content with cited information.",
+      "cta": {
+        "label": "Get Early Access",
+        "target": "waitlist"
+      },
+      "note": "First 100 users get a lifetime 50% discount",
+      "background": {
+        "source": "owner_upload",
+        "mood": "A vast, unexplored Mars-like landscape: empty horizon, warm dust, a sense of discovery.",
+        "dimming": "soft"
+      }
+    },
+    {
+      "type": "integrations",
+      "heading": "Connect your existing tools in minutes!",
+      "items": [
+        "Google Drive",
+        "Slack",
+        "Notion",
+        "Confluence"
+      ],
+      "display": "A strip directly below the hero: the heading in muted text, then one soft, translucent, rounded panel holding the tool names in a row (a wrapped grid on phones). Names are plain text in the page's heading font; no logos in this version.",
+      "owner_editable": "heading, the list of names (add, remove, reorder), and show or hide. Named 'Integrations' in the owner area."
+    },
+    {
+      "type": "preview",
+      "heading": "See Ksandra in Action",
+      "text": "Get instant answers from all your documents in one place.",
+      "image": {
+        "source": "owner_upload",
+        "label": "Concept preview",
+        "description": "A mock-up of the Ksandra interface: a question box and an answer with cited sources."
+      }
+    },
+    {
+      "type": "benefits",
+      "heading": "Transform How You Work",
+      "items": [
+        {
+          "title": "Ask Anything, Get Instant Answers",
+          "text": "Ask in plain language and get answers with their sources."
+        },
+        {
+          "title": "Search Across All Your Tools",
+          "text": "One search box for Google Drive, Notion, Confluence, Slack and PDFs."
+        },
+        {
+          "title": "Answers You Can Trust",
+          "text": "Every answer links back to the original document."
+        },
+        {
+          "title": "Secure & Private",
+          "text": "Your data is not used for model training. Self-hosted or SOC 2 cloud options."
+        }
+      ]
+    },
+    {
+      "type": "waitlist",
+      "heading": "Join the Waitlist",
+      "perks": [
+        "A lifetime 50% discount for the first 100 users",
+        "Early access to new features",
+        "Priority support"
+      ],
+      "form": {
+        "fields": [
+          {
+            "key": "full_name",
+            "label": "Full Name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "work_email",
+            "label": "Work Email",
+            "type": "email",
+            "required": true
+          },
+          {
+            "key": "use_case",
+            "label": "Main use case",
+            "type": "select",
+            "required": false,
+            "options": [
+              "Team documentation",
+              "Client documents",
+              "Research & analysis",
+              "Employee onboarding",
+              "Other"
+            ]
+          },
+          {
+            "key": "tools",
+            "label": "Tools you use most",
+            "type": "multiselect",
+            "required": false,
+            "options": [
+              "Google Drive",
+              "Notion",
+              "Confluence",
+              "Slack",
+              "PDF"
+            ]
+          }
+        ],
+        "submit_label": "Get Early Access",
+        "privacy_note": "We respect your privacy. No spam, ever.",
+        "success_message": "You're on the list. We'll be in touch when early access opens."
+      }
+    },
+    {
+      "type": "footer",
+      "tagline": "Making knowledge accessible and actionable",
+      "legal": "© 2025 Ksandra Inc. All rights reserved.",
+      "links": [
+        {
+          "label": "Features",
+          "target": "benefits"
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "text": "Your data is not used for model training.",
+      "source": "owner (existing Ksandra site)",
+      "confirmed": false
+    },
+    {
+      "text": "Self-hosted or SOC 2 cloud options.",
+      "source": "owner (existing Ksandra site)",
+      "confirmed": false
+    },
+    {
+      "text": "First 100 users get a lifetime 50% discount.",
+      "source": "owner (existing Ksandra site)",
+      "confirmed": false
+    },
+    {
+      "text": "Tools connect in minutes.",
+      "source": "owner (existing Ksandra site)",
+      "confirmed": false
+    }
+  ],
+  "imagery": {
+    "source": "owner_uploads",
+    "rules": [
+      "No stock or generated photos or screenshots are fetched or invented.",
+      "The hero background and the product preview start as neutral placeholders, the preview labelled 'Concept preview'.",
+      "The owner uploads both through the owner area and gives each a description."
+    ]
+  },
+  "look": {
+    "preset": "deep-tech",
+    "style": "modern",
+    "tone": "confident",
+    "accent": null,
+    "accent_note": "Choose one accent that suits a calm, space-inspired look with a dark hero and record it. Keep body text high-contrast.",
+    "layout": {
+      "width": "contained",
+      "max_width_px": 1200
+    }
+  },
+  "owner": {
+    "sign_in": "One owner, from environment configuration. The email and password hash are supplied when the site is deployed.",
+    "areas": [
+      "signups: totals, goal progress, breakdowns, list, CSV download",
+      "page content: Hero, Preview, Benefits, Waitlist, Footer",
+      "form questions",
+      "settings"
+    ]
+  },
+  "storage": {
+    "database": "Postgres (Neon when deployed)",
+    "photos": "A storage adapter: local disk for development, Vercel Blob when deployed"
+  },
+  "stack": "See the Builder's knowledge/stack.json. Those decisions are fixed.",
+  "not_in_this_version": [
+    "Sending email of any kind",
+    "Visit analytics",
+    "A custom domain",
+    "Testimonials, customer logos or user counts"
+  ],
+  "assumptions": [
+    "The wording of the benefit items is a paraphrase of the existing Ksandra site; the owner reviews it.",
+    "There is no contact email, so the page has no Contact link. This is deliberate and tests the 'no dead links' rule.",
+    "The thank-you message is a default; the existing site's wording was not available."
+  ]
+}

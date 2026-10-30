@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "app_type": "waitlist-site",
+  "global_experience": {
+    "layout": "Content sits in a centred column up to about 1200px wide with comfortable side margins. The header and the hero background may span the full width.",
+    "look": "Style, tone, accent and fonts come from the brief's look. Text is real text laid over images, never part of an image.",
+    "header": "The site name on the left, anchor links in the middle or right, and one call-to-action button. On phones the links collapse behind a menu button.",
+    "feedback": "Every action gives visible feedback: a button shows it is working, errors sit next to the field, and success replaces the form.",
+    "empty_states": "Anything without content shows a neutral, labelled placeholder, never a broken image or empty box.",
+    "owner_area_naming": "Names in the owner area match the names of the blocks on the page, so an owner can find what they see."
+  },
+  "pages": [
+    {
+      "id": "home",
+      "path": "/",
+      "purpose": "Make the promise clear and get the visitor to join the waitlist.",
+      "sections": "The blocks from the brief in order. Default order: hero, preview, benefits, waitlist, footer.",
+      "states": {
+        "loading": "The page is server-rendered, so there is no loading state.",
+        "submitting": "The form button shows progress and cannot be pressed twice.",
+        "success": "The form is replaced by the thank-you message from the brief. A reload shows the form again.",
+        "error": "A message under the field with the problem, or a general message if the server is unreachable, keeping what the visitor typed."
+      }
+    },
+    {
+      "id": "not-found",
+      "path": "any unknown path",
+      "purpose": "Tell the visitor the page does not exist and offer a way home.",
+      "sections": "A short message and a link to the home page."
+    },
+    {
+      "id": "admin-sign-in",
+      "path": "/admin/sign-in",
+      "purpose": "Let the owner in.",
+      "sections": "Email, password, sign-in button. After a failed attempt the email stays in the field."
+    },
+    {
+      "id": "admin-signups",
+      "path": "/admin",
+      "purpose": "Show how the experiment is going.",
+      "sections": "Summary (total, today, progress to goal), breakdown by each select question, breakdown by source, the list with search, delete and CSV download."
+    },
+    {
+      "id": "admin-page",
+      "path": "/admin/page",
+      "purpose": "Edit the words, images and visibility of each block.",
+      "sections": "One panel per block, named like the block on the page (Hero, Preview, Benefits, Waitlist, Footer). A Save button per panel with a confirmation."
+    },
+    {
+      "id": "admin-form",
+      "path": "/admin/form",
+      "purpose": "Edit the questions on the waitlist form.",
+      "sections": "A list of questions with label, type, options, required and order, plus the thank-you message and privacy note."
+    },
+    {
+      "id": "admin-settings",
+      "path": "/admin/settings",
+      "purpose": "Site name, tagline, contact email, goal and the start date of the goal period.",
+      "sections": "A simple form with a Save button."
+    }
+  ]
+}

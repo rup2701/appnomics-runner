@@ -1,0 +1,245 @@
+{
+  "schema_version": "1.0",
+  "product": "Waitlist Site",
+  "features": [
+    {
+      "id": "page-blocks",
+      "name": "The page is a set of blocks in order",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "The public home page is built from the blocks described in the brief, in the brief's order. Blocks may be hidden by the owner.",
+      "acceptance_criteria": [
+        "The page shows the blocks listed in the brief, in order, and nothing else of substance.",
+        "A hidden block does not appear on the page or in the navigation.",
+        "Every block with an anchor can be reached from the navigation, and the page scrolls to it.",
+        "The layout works from 360px to wide desktop screens, with content in a centred column no wider than about 1200px."
+      ],
+      "verification": [
+        "Load the page and check the block order against the brief.",
+        "Hide a block in the owner area and confirm it disappears.",
+        "Check the page at 360px and 1440px for horizontal scrolling."
+      ]
+    },
+    {
+      "id": "hero",
+      "name": "Hero",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "A headline, a supporting line and one primary call to action that goes to the waitlist form. An optional background image and a short note under the button.",
+      "acceptance_criteria": [
+        "The headline, supporting line, button label and note come from the brief and are editable by the owner.",
+        "The button scrolls to the waitlist form.",
+        "A background image is optional. When present, text stays readable: a dimming layer is applied and contrast against the text is at least 4.5:1.",
+        "Without a background image, the hero shows a calm solid or gradient background that fits the look, not a broken image."
+      ],
+      "verification": [
+        "Click the button and confirm the form comes into view.",
+        "Check the hero with and without a background image."
+      ]
+    },
+    {
+      "id": "preview",
+      "name": "Product preview",
+      "priority": "should-have",
+      "status": "approved",
+      "description": "An image that shows the product or concept below the hero, with a short heading and line of text.",
+      "acceptance_criteria": [
+        "The image is uploaded by the owner. Until then a neutral placeholder is shown, labelled 'Concept preview'.",
+        "The builder never generates or fetches product screenshots.",
+        "The image has the alt text the owner gave it."
+      ],
+      "verification": [
+        "Load the page with no image and confirm the labelled placeholder.",
+        "Upload an image in the owner area and confirm it appears with its alt text."
+      ]
+    },
+    {
+      "id": "benefits",
+      "name": "Benefits",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "Three to six benefit blocks, each with a short title and one or two sentences, in a grid that stacks on phones.",
+      "acceptance_criteria": [
+        "Items come from the brief and are editable by the owner.",
+        "Any statement about security, certification, performance or numbers is shown only if the brief lists it as a claim.",
+        "Empty items are not shown."
+      ],
+      "verification": [
+        "Compare the items on the page to the brief.",
+        "Confirm no claim appears that is not in the brief."
+      ]
+    },
+    {
+      "id": "waitlist-form",
+      "name": "Waitlist form",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "A form with the questions from the brief. Email is always present and required. Other fields may be text, select or multi-select, required or optional.",
+      "acceptance_criteria": [
+        "Fields, labels, options, required flags and button label come from the brief and can be edited by the owner.",
+        "Each field has a visible label and an error message that names the problem.",
+        "A valid submission stores the signup once and replaces the form with the thank-you message from the brief.",
+        "The page does not reload, and the visitor can tell the form was received.",
+        "Perks listed in the brief appear near the form, in the owner's words."
+      ],
+      "verification": [
+        "Submit a valid form and check the stored signup and the thank-you message.",
+        "Submit with a missing required field and with an invalid email and check the messages."
+      ]
+    },
+    {
+      "id": "spam-protection",
+      "name": "Spam and abuse protection",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "Protect the form without asking visitors to solve puzzles.",
+      "acceptance_criteria": [
+        "A hidden honeypot field is ignored by humans. A submission that fills it is accepted silently but not stored.",
+        "The honeypot input has an unguessable name such as hp_x7. Never name it website, url, email, phone, name, address or any other word a browser or password manager recognises, because they autofill it and real visitors are silently dropped. It is also aria-hidden, tabIndex -1, autoComplete off, and moved off-screen with CSS (not display none).",
+        "A single address can submit at most five times per ten minutes, then sees a friendly 'please try again later' message.",
+        "Every text value has a maximum length. Values are treated as text and never as HTML.",
+        "Email addresses are trimmed and lower-cased before storing."
+      ],
+      "verification": [
+        "Fill the honeypot and confirm nothing is stored.",
+        "Submit the form as a normal visitor would, through the real page in a browser, and confirm a row exists in the database. This must pass before the work is called done.",
+        "Submit six times quickly from one address and confirm the sixth is refused.",
+        "Submit a value with HTML in it and confirm it is shown as text in the owner area."
+      ]
+    },
+    {
+      "id": "navigation",
+      "name": "Navigation and footer",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "A header with the site name, anchor links and the call-to-action button, a mobile menu, and a footer.",
+      "acceptance_criteria": [
+        "Every navigation and footer link goes somewhere real: an anchor on the page, or a mailto link when a contact email is given.",
+        "When there is no contact email, there is no Contact link.",
+        "The mobile menu opens and closes with the keyboard and traps no focus.",
+        "The footer shows the tagline and legal line from the brief."
+      ],
+      "verification": [
+        "Click every navigation and footer link and confirm each one has a target.",
+        "Open and close the mobile menu using only the keyboard."
+      ]
+    },
+    {
+      "id": "source-tracking",
+      "name": "Where signups came from",
+      "priority": "should-have",
+      "status": "approved",
+      "description": "The page reads a ?src= or utm_source parameter and stores it with the signup, so the owner can see which channel worked.",
+      "acceptance_criteria": [
+        "A visit with ?src=linkedin stores 'linkedin' on a signup made in the same visit.",
+        "No parameter means 'direct'. Values are trimmed, lower-cased and limited to 60 characters.",
+        "The owner area shows signups per source."
+      ],
+      "verification": [
+        "Visit with ?src=test, sign up, and confirm the stored source."
+      ]
+    },
+    {
+      "id": "owner-sign-in",
+      "name": "Owner sign-in",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "One owner, from environment configuration (an email and a password hash). Everything under /admin needs a session.",
+      "acceptance_criteria": [
+        "Visiting /admin without a session goes to the sign-in page.",
+        "A wrong password shows a generic message and keeps the email in the field.",
+        "Five failed attempts from one address in ten minutes lock sign-in for ten minutes.",
+        "Signing out ends the session."
+      ],
+      "verification": [
+        "Sign in with the right and wrong password, and confirm the lockout."
+      ]
+    },
+    {
+      "id": "owner-signups",
+      "name": "Owner: signups",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "The page the owner opens every day: how many, how it compares with the goal, what people answered, and the list.",
+      "acceptance_criteria": [
+        "The top of the page shows the total, signups today, and progress toward the goal when the brief has one (for example '42 of 100 in 30 days, 12 days left').",
+        "For each select or multi-select question, a breakdown shows how many people chose each option.",
+        "A breakdown by source is shown.",
+        "The list shows newest first with email, answers, source and date. It has search by email and pages of 50.",
+        "The owner can delete a signup after a confirmation.",
+        "A button downloads all signups as a CSV file. Cells that start with =, +, - or @ are prefixed so spreadsheets do not run them as formulas."
+      ],
+      "verification": [
+        "Add signups with different answers and check the counts and breakdowns.",
+        "Download the CSV and open it as text.",
+        "Delete a signup and confirm the counts change."
+      ]
+    },
+    {
+      "id": "owner-content",
+      "name": "Owner: page content",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "The owner edits the words and images on the page without a rebuild.",
+      "acceptance_criteria": [
+        "The owner can edit the hero text and button label, the preview text and image, each benefit, the perks, the form's thank-you message and privacy note, and the footer lines.",
+        "The owner can show or hide each block, edit the form's questions and options, and set the goal.",
+        "Every uploaded image requires a description (alt text).",
+        "A saved change appears on the public page on the next load.",
+        "Saving shows a confirmation, and an invalid value shows a message next to the field."
+      ],
+      "verification": [
+        "Change the headline in the owner area and reload the public page.",
+        "Try to upload an image without a description."
+      ]
+    },
+    {
+      "id": "seo-basics",
+      "name": "Search and sharing basics",
+      "priority": "should-have",
+      "status": "approved",
+      "description": "The page can be found and shared sensibly.",
+      "acceptance_criteria": [
+        "The page has a title and description from the brief, a language attribute, and Open Graph tags.",
+        "robots.txt and a sitemap with the home page exist.",
+        "The admin pages are marked noindex."
+      ],
+      "verification": [
+        "Fetch the home page head and the admin pages and check the tags."
+      ]
+    },
+    {
+      "id": "accessibility-performance",
+      "name": "Accessibility and performance",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "The page is usable with a keyboard and loads quickly.",
+      "acceptance_criteria": [
+        "All form fields have labels, focus is always visible, and the page can be used with the keyboard alone.",
+        "Text contrast is at least 4.5:1 everywhere, including over images.",
+        "Images use the framework's image component with set dimensions so the page does not shift while loading.",
+        "Motion respects the visitor's reduced-motion setting."
+      ],
+      "verification": [
+        "Tab through the page and the form.",
+        "Compute contrast for the text colours and for text over the hero image."
+      ]
+    },
+    {
+      "id": "demo-and-sample-data",
+      "name": "Sample data and demo notice",
+      "priority": "should-have",
+      "status": "approved",
+      "description": "A new site looks complete without inventing facts.",
+      "acceptance_criteria": [
+        "Sample signups seeded for development are labelled as samples in the owner area and can be deleted in one action.",
+        "No testimonials, customer logos, user counts or ratings are ever generated.",
+        "If the brief sets demo_notice, the page shows a short notice that it is a demonstration."
+      ],
+      "verification": [
+        "Seed the database and confirm samples are labelled.",
+        "Search the page text for testimonials or counts that are not in the brief."
+      ]
+    }
+  ]
+}

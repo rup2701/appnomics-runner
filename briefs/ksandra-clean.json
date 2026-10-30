@@ -1,0 +1,224 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Brief for the Ksandra waitlist site. The facts come from the founder's interview. Claims below are the owner's own and must be confirmed true before launch.",
+  "site": {
+    "name": "Ksandra",
+    "kind": "waitlist",
+    "one_liner": "Connect your notes, Google Drive and PDFs, then ask questions across hundreds of documents to prep for things like an investor meeting.",
+    "brand_words": [
+      "curious",
+      "confident",
+      "futuristic"
+    ],
+    "contact_email": "rupesh@ksandra.ai",
+    "demo_notice": true
+  },
+  "audience": {
+    "icp": "Startup founders preparing for investor meetings, with hundreds of documents spread across notes apps, Google Drive, Slack and PDFs.",
+    "alternatives": "Not stated",
+    "channels": [
+      "Twitter",
+      "LinkedIn"
+    ],
+    "success_target": {
+      "signups": 50,
+      "days": 50,
+      "note": "Given by the owner."
+    }
+  },
+  "hypothesis": "Startup founders with many documents across several tools will join a waitlist for one place to ask questions and get answers, for example to prepare for an investor meeting.",
+  "nav": [
+    {
+      "label": "Features",
+      "target": "benefits"
+    },
+    {
+      "label": "Join Waitlist",
+      "target": "waitlist",
+      "style": "button"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero",
+      "headline": "Stop Searching, Start Asking.",
+      "subheadline": "Ksandra connects your notes, Google Drive, Slack and PDFs, so you can ask questions across all your documents and prep with answers you can check.",
+      "cta": {
+        "label": "Get Early Access",
+        "target": "waitlist"
+      },
+      "note": "First 100 users get a lifetime 50% discount",
+      "background": {
+        "source": "owner_upload",
+        "mood": "A vast, unexplored Mars-like landscape at dusk: empty horizon, warm dust, a sense of frontier and discovery. Full width and height, with a dark, calm feel.",
+        "dimming": "soft"
+      }
+    },
+    {
+      "type": "integrations",
+      "heading": "Works with the tools you already use",
+      "items": [
+        "Google Drive",
+        "Notion",
+        "Slack",
+        "PDFs"
+      ]
+    },
+    {
+      "type": "preview",
+      "heading": "See Ksandra in Action",
+      "text": "Ask a question on the left, see the sources behind the answer on the right.",
+      "image": {
+        "source": "owner_upload",
+        "label": "Concept preview",
+        "description": "A mock-up of the Ksandra interface: a chat window on the left and, on the right, a list of connected sources that may be referenced for answers."
+      }
+    },
+    {
+      "type": "benefits",
+      "heading": "Transform How You Prepare",
+      "items": [
+        {
+          "title": "Ask Anything, Get Instant Answers",
+          "text": "Ask in plain language and get an answer drawn from your own documents."
+        },
+        {
+          "title": "Search Across All Your Tools",
+          "text": "One question reaches Google Drive, Notion, Slack and your PDFs."
+        },
+        {
+          "title": "Answers You Can Trust",
+          "text": "Each answer points back to the documents it came from."
+        },
+        {
+          "title": "Secure & Private",
+          "text": "Your documents stay private and secure."
+        }
+      ]
+    },
+    {
+      "type": "waitlist",
+      "heading": "Join the Waitlist",
+      "perks": [
+        "A lifetime 50% discount for the first 100 users",
+        "An email when early access opens"
+      ],
+      "form": {
+        "fields": [
+          {
+            "key": "full_name",
+            "label": "Full Name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "work_email",
+            "label": "Email",
+            "type": "email",
+            "required": true
+          },
+          {
+            "key": "tools",
+            "label": "Which tools do you use most?",
+            "type": "multiselect",
+            "required": false,
+            "options": [
+              "Google Drive",
+              "Notion",
+              "Slack",
+              "PDFs"
+            ]
+          }
+        ],
+        "submit_label": "Get Early Access",
+        "privacy_note": "We'll only use your email to tell you about Ksandra early access.",
+        "success_message": "You're on the list. We'll email you when early access opens."
+      }
+    },
+    {
+      "type": "footer",
+      "tagline": "Ask your documents anything.",
+      "legal": "© Ksandra. All rights reserved.",
+      "links": [
+        {
+          "label": "Features",
+          "target": "benefits"
+        },
+        {
+          "label": "Contact",
+          "target": "mailto:rupesh@ksandra.ai"
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "text": "Secure & Private: your documents stay private and secure.",
+      "source": "owner (interview)",
+      "confirmed": false
+    },
+    {
+      "text": "Answers You Can Trust: each answer points back to the documents it came from.",
+      "source": "owner (interview)",
+      "confirmed": false
+    },
+    {
+      "text": "First 100 users get a lifetime 50% discount.",
+      "source": "owner (interview)",
+      "confirmed": false
+    }
+  ],
+  "imagery": {
+    "source": "owner_uploads",
+    "rules": [
+      "No stock or generated photos or screenshots are fetched or invented.",
+      "The hero background and the product preview start as neutral placeholders, the preview labelled 'Concept preview'.",
+      "The owner uploads both through the owner area and gives each a description."
+    ]
+  },
+  "look": {
+    "preset": "deep-tech",
+    "style": "modern",
+    "tone": "confident",
+    "accent": null,
+    "accent_note": "Choose one warm amber accent that suits a dark, calm, frontier-inspired look with a full-width Mars hero, and record it. Keep body text high-contrast. Clean modern font.",
+    "layout": {
+      "width": "contained",
+      "max_width_px": 1200
+    }
+  },
+  "owner": {
+    "sign_in": "One owner, from environment configuration. The email and password hash are supplied when the site is deployed.",
+    "areas": [
+      "signups: totals, goal progress, breakdowns, list, CSV download",
+      "page content: Hero, Preview, Benefits, Waitlist, Footer",
+      "form questions",
+      "settings"
+    ]
+  },
+  "storage": {
+    "database": "Postgres (Neon when deployed)",
+    "photos": "A storage adapter: local disk for development, Vercel Blob when deployed"
+  },
+  "stack": "See the Builder's knowledge/stack.json. Those decisions are fixed.",
+  "not_in_this_version": [
+    "Sending email of any kind",
+    "Visit analytics",
+    "A custom domain",
+    "Testimonials, customer logos or user counts"
+  ],
+  "assumptions": [
+    "Today's alternatives were not stated by the owner; recorded as 'Not stated' and competitors are kept off the page. Accepted by the owner.",
+    "Look chosen by default from the owner's reference (Perplexity-style hero of futuristic landscapes): deep-tech preset, dark and calm, one warm amber accent, clean modern font, brand words curious, confident, futuristic. Accepted by the owner.",
+    "The headline was drafted as 'Walk into every investor meeting prepared.' and changed by the owner to 'Stop Searching, Start Asking.'",
+    "The subheadline, benefit texts, section headings, button label, thank-you message, privacy note and footer tagline were drafted by the interviewer; the owner reviewed them.",
+    "The tools-use multiple choice on the form was suggested by the interviewer and accepted by the owner.",
+    "The product preview is a designed placeholder labelled 'Concept preview' (chat on the left, sources on the right), not a generated image; the owner uploads the real hero Mars image and any preview later.",
+    "The three unconfirmed claims were stated by the owner as included to build trust; the product is not built yet, so none is confirmed."
+  ],
+  "source": {
+    "generated_by": "interview",
+    "pack": "site",
+    "model": "claude-sonnet-5-5"
+  }
+}
