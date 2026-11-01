@@ -1,6 +1,7 @@
 // Usage:
 //   npm run deploy -- runs/<run-folder> --name ksandra --email owner@example.com [--password "..."]
-//   npm run deploy -- runs/<run-folder> --set-password "a new password"   (owner password on a deployed site)
+//   (a first deploy refuses to run if a Vercel project with that name already exists)
+//   npm run deploy -- runs/<run-folder> --set-password "a new password" [--email owner@example.com]   (owner password on a deployed site)
 //   npm run deploy -- runs/<run-folder> --redeploy [--skip-migrate]   (code or migration changes to a site already deployed)
 // Needs VERCEL_TOKEN and NEON_API_KEY in the runner's environment (never in the app folder).
 // Optional: VERCEL_SCOPE (team slug), NEON_ORG_ID, APP_DOMAIN (default appnomics.live), NEON_POOLED=0.
@@ -86,12 +87,32 @@ async function seed(appDir: string, directUrl: string) {
   await sh("npm", args, { cwd: appDir, env: baseEnv({ DATABASE_URL: directUrl }) }); // never db:reset
 }
 
+/** The owner sign-in variables are named differently by different builds (ADMIN_* or OWNER_*). Use what the app's .env.example asks for. */
+async function ownerVarNames(appDir: string): Promise<{ email: string; hash: string }> {
+  let keys: string[] = [];
+  try { keys = [...(await readFile(path.join(appDir, ".env.example"), "utf8")).matchAll(/^([A-Z][A-Z0-9_]*)=/gm)].map((m) => m[1]); } catch { /* no .env.example */ }
+  return {
+    email: keys.find((k) => /^(ADMIN|OWNER)_EMAIL$/.test(k)) ?? "ADMIN_EMAIL",
+    hash: keys.find((k) => /^(ADMIN|OWNER)_PASSWORD_HASH$/.test(k)) ?? "ADMIN_PASSWORD_HASH",
+  };
+}
+
 async function hashPassword(appDir: string, password: string): Promise<string> {
-  const out = await sh("npm", ["run", "--silent", "hash-password", "--", password], { cwd: appDir, env: baseEnv() });
-  const m = out.match(/scrypt:[0-9a-f]+:[0-9a-f]+/);
-  if (!m) throw new Error("hash-password printed no scrypt hash. Output was not a recognised hash; check scripts/hash-password.ts.");
+  // npm --silent hides its own "Missing script" message, so look for the script first and name the problem.
+  // The agent has called it "hash-password" (the pack asks for this name) and once "hash"; accept both.
+  const scripts = (JSON.parse(await readFile(path.join(appDir, "package.json"), "utf8")).scripts ?? {}) as Record<string, string>;
+  const script = ["hash-password", "hash"].find((n) => typeof scripts[n] === "string");
+  if (!script) throw new Error('This app has no "hash-password" script in package.json, so the owner password cannot be hashed. Nothing was deployed. Add "hash-password": "tsx scripts/hash-password.ts" (the script must print scrypt:<salt>:<hash>) and run again.');
+  const out = await sh("npm", ["run", "--silent", script, "--", password], { cwd: appDir, env: baseEnv() });
+  // The pack asks for scrypt:<salt>:<hash>. One build used bcrypt ($2b$10$...), and its sign-in checks bcrypt, so accept both.
+  const m = out.match(/scrypt:[0-9a-f]+:[0-9a-f]+|\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}/);
+  if (!m) throw new Error("The hash script printed no recognised hash (scrypt:<salt>:<hash> or bcrypt). Check scripts/hash-password.ts.");
   return m[0];
 }
+
+// Vercel (or Next at startup) expands $NAME inside environment values, which empties a bcrypt hash ($2b$10$...).
+// A backslash keeps each $ literal. A scrypt hash has no $, so it passes through unchanged.
+const forVercel = (hash: string) => hash.replace(/\$/g, "\\$");
 
 const vercelEnv = () => baseEnv({ VERCEL_TOKEN: process.env.VERCEL_TOKEN! });
 const scope = () => (process.env.VERCEL_SCOPE ? ["--scope", process.env.VERCEL_SCOPE] : []);
@@ -141,7 +162,10 @@ async function main() {
     const hash = await hashPassword(appDir, pw);
     secrets.push(hash);
     log(`Setting a new owner password on ${state.host}`);
-    await vercel(appDir, ["env", "add", "ADMIN_PASSWORD_HASH", "production", "--force"], hash);
+    const names = await ownerVarNames(appDir);
+    await vercel(appDir, ["env", "add", names.hash, "production", "--force"], forVercel(hash));
+    // --email also (re)sets the owner email, for a site deployed before the variable names were detected.
+    if (arg("email")) await vercel(appDir, ["env", "add", names.email, "production", "--force"], arg("email")!);
     const deployUrl = await deployProd(appDir);
     const result = await verify(`https://${state.host}`);
     await writeFile(statePath, JSON.stringify({ ...state, deployUrl, passwordSetAt: new Date().toISOString() }, null, 2));
@@ -174,6 +198,15 @@ async function main() {
   if (!/^\S+@\S+\.\S+$/.test(email)) throw new Error("--email must be the owner's email address");
   const already = await readFile(statePath).then(() => true, () => false);
   if (already) throw new Error(`${statePath} exists: this site was deployed already. Use --redeploy.`);
+
+  // `vercel link --project <name>` attaches to an existing project with that name, and the steps after it
+  // overwrite its production settings and deploy over it. A first deploy must only ever create a new project.
+  const scopeQuery = process.env.VERCEL_SCOPE ? `?slug=${encodeURIComponent(process.env.VERCEL_SCOPE)}` : "";
+  const exists = await fetch(`https://api.vercel.com/v9/projects/${encodeURIComponent(name)}${scopeQuery}`, {
+    headers: { Authorization: `Bearer ${process.env.VERCEL_TOKEN}` },
+  });
+  if (exists.status === 200) throw new Error(`A Vercel project named "${name}" already exists in this account. Nothing was changed. Pick another --name; this script only creates new projects and never reuses one.`);
+  if (exists.status !== 404) throw new Error(`Could not check whether the Vercel project "${name}" exists (HTTP ${exists.status}). Nothing was changed. Check VERCEL_TOKEN and VERCEL_SCOPE and try again.`);
 
   const generated = !arg("password") && !process.env.ADMIN_PASSWORD;
   const password = arg("password") ?? process.env.ADMIN_PASSWORD ?? randomBytes(12).toString("base64url");
@@ -209,10 +242,11 @@ async function main() {
     await vercel(appDir, ["link", "--yes", "--project", name]);
 
     log("5/7 Setting production settings");
+    const names = await ownerVarNames(appDir);
     const vars: Record<string, string> = {
       DATABASE_URL: pooled(uri),
-      ADMIN_EMAIL: email,
-      ADMIN_PASSWORD_HASH: hash,
+      [names.email]: email,
+      [names.hash]: forVercel(hash),
       SESSION_SECRET: randomBytes(32).toString("hex"),
       NEXT_PUBLIC_SITE_URL: siteUrl,
     };

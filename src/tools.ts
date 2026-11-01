@@ -93,6 +93,9 @@ export function makeHandlers(appDir: string, env: Record<string, string>) {
       return `Wrote ${input.content.length} characters to ${input.path}`;
     },
     run_command(input: { command: string; args: string[] }): Promise<string> {
+      if (typeof input.command !== "string" || !Array.isArray(input.args) || input.args.some((a) => typeof a !== "string")) {
+        return Promise.reject(new Error("run_command needs command as a string and args as an array of strings, for example {\"command\":\"npm\",\"args\":[\"run\",\"build\"]}."));
+      }
       const refusal = checkCommand(input.command, input.args);
       if (refusal) return Promise.reject(new Error(refusal));
       return new Promise((resolve) => {
