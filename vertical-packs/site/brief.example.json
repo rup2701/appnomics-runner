@@ -1,89 +1,160 @@
 {
   "schema_version": "1.0",
-  "purpose": "Brief for the Ksandra waitlist site. The facts come from the existing Ksandra website, so the runner's result can be compared with it. Claims below are the owner's own and must be confirmed true before launch.",
+  "purpose": "Example brief for a waitlist site. It shows the shape and the defaults only. Every idea-specific value below belongs to a made-up product and must be replaced by what the person says in the interview.",
   "site": {
-    "name": "Ksandra",
+    "name": "Mealwise",
     "kind": "waitlist",
-    "one_liner": "Ask questions across all your documents and get answers with citations.",
-    "brand_words": ["clear", "confident", "calm"],
+    "one_liner": "A weekly dinner plan for busy families, with the shopping list done for you.",
+    "brand_words": [
+      "warm",
+      "practical",
+      "friendly"
+    ],
     "contact_email": null,
     "demo_notice": true
   },
   "audience": {
-    "icp": "Knowledge workers and small teams whose documents are scattered across tools (Notion, Google Drive, Confluence, Slack, PDFs), who prepare for meetings and write content and waste time searching.",
-    "alternatives": "Searching each tool by hand, or asking colleagues where a document lives.",
-    "channels": [],
-    "success_target": { "signups": 100, "days": 30, "note": "Assumption: matches the 'first 100 users' offer. Owner to confirm." }
+    "icp": "Parents with two or more children who cook most weeknight dinners and are tired of deciding what to make.",
+    "alternatives": "Recipe websites, meal-kit boxes, or deciding on the way home from work.",
+    "channels": [
+      "Parenting groups",
+      "Newsletter"
+    ],
+    "success_target": {
+      "signups": 150,
+      "days": 30,
+      "note": "Example number. The person sets their own."
+    }
   },
-  "hypothesis": "People who keep documents in several tools will join a waitlist for one place to ask questions and get cited answers.",
+  "hypothesis": "Busy parents will join a waitlist for a weekly dinner plan with a ready shopping list.",
   "nav": [
-    { "label": "Features", "target": "benefits" },
-    { "label": "Join Waitlist", "target": "waitlist", "style": "button" }
+    {
+      "label": "Why Mealwise",
+      "target": "benefits"
+    },
+    {
+      "label": "Join the waitlist",
+      "target": "waitlist",
+      "style": "button"
+    }
   ],
   "blocks": [
     {
       "type": "hero",
-      "headline": "Stop Searching, Start Asking.",
-      "subheadline": "Ksandra connects your scattered documents, from Notion to Google Drive, so you can prep for meetings and write content with cited information.",
-      "cta": { "label": "Get Early Access", "target": "waitlist" },
-      "note": "First 100 users get a lifetime 50% discount",
+      "headline": "Dinner, decided.",
+      "subheadline": "Mealwise plans your week of family dinners and writes the shopping list, so you never again stand in the kitchen at 5 o'clock asking what to make.",
+      "cta": {
+        "label": "Join the waitlist",
+        "target": "waitlist"
+      },
+      "note": "Founding families keep their price for life",
       "background": {
         "source": "owner_upload",
-        "mood": "A vast, unexplored Mars-like landscape: empty horizon, warm dust, a sense of discovery.",
+        "mood": "A bright family kitchen table in morning light, a bowl of fruit, warm wood.",
         "dimming": "soft"
       }
     },
     {
       "type": "preview",
-      "heading": "See Ksandra in Action",
-      "text": "Get instant answers from all your documents in one place.",
-      "image": { "source": "owner_upload", "label": "Concept preview", "description": "A mock-up of the Ksandra interface: a question box and an answer with cited sources." }
+      "heading": "A week of dinners, in one view",
+      "text": "See the plan, swap a meal, and get the list.",
+      "image": {
+        "source": "owner_upload",
+        "label": "Concept preview",
+        "description": "A mock-up of a weekly plan with five dinners and a shopping list beside it."
+      }
     },
     {
       "type": "benefits",
-      "heading": "Transform How You Work",
+      "heading": "Less deciding, more eating",
       "items": [
-        { "title": "Ask Anything, Get Instant Answers", "text": "Ask in plain language and get answers with their sources." },
-        { "title": "Search Across All Your Tools", "text": "One search box for Google Drive, Notion, Confluence, Slack and PDFs." },
-        { "title": "Answers You Can Trust", "text": "Every answer links back to the original document." },
-        { "title": "Secure & Private", "text": "Your data is not used for model training. Self-hosted or SOC 2 cloud options." }
+        {
+          "title": "A plan in one minute",
+          "text": "Tell us who is eating and what they like. Get a full week."
+        },
+        {
+          "title": "The list writes itself",
+          "text": "Every ingredient, grouped by aisle, with quantities for your family."
+        },
+        {
+          "title": "Swap anything",
+          "text": "Not a fan of Tuesday? Change a meal and the list updates."
+        },
+        {
+          "title": "Made for picky eaters",
+          "text": "Set dislikes and allergies once and they stay out of every plan."
+        }
       ]
     },
     {
       "type": "waitlist",
-      "heading": "Join the Waitlist",
+      "heading": "Join the waitlist",
       "perks": [
-        "A lifetime 50% discount for the first 100 users",
-        "Early access to new features",
-        "Priority support"
+        "Founding-family pricing, kept for life",
+        "First access when we open"
       ],
       "form": {
         "fields": [
-          { "key": "full_name", "label": "Full Name", "type": "text", "required": true },
-          { "key": "work_email", "label": "Work Email", "type": "email", "required": true },
-          { "key": "use_case", "label": "Main use case", "type": "select", "required": false,
-            "options": ["Team documentation", "Client documents", "Research & analysis", "Employee onboarding", "Other"] },
-          { "key": "tools", "label": "Tools you use most", "type": "multiselect", "required": false,
-            "options": ["Google Drive", "Notion", "Confluence", "Slack", "PDF"] }
+          {
+            "key": "full_name",
+            "label": "Name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "email",
+            "label": "Email",
+            "type": "email",
+            "required": true
+          },
+          {
+            "key": "household",
+            "label": "People at the table",
+            "type": "select",
+            "required": false,
+            "options": [
+              "1 to 2",
+              "3 to 4",
+              "5 or more"
+            ]
+          },
+          {
+            "key": "challenge",
+            "label": "Hardest part of dinner",
+            "type": "multiselect",
+            "required": false,
+            "options": [
+              "Deciding what to make",
+              "Shopping",
+              "Picky eaters",
+              "Time to cook",
+              "Cost"
+            ]
+          }
         ],
-        "submit_label": "Get Early Access",
-        "privacy_note": "We respect your privacy. No spam, ever.",
-        "success_message": "You're on the list. We'll be in touch when early access opens."
+        "submit_label": "Join the waitlist",
+        "privacy_note": "We will only email you about Mealwise. You can leave any time.",
+        "success_message": "Thanks, you're in. We'll email you when the first places open."
       }
     },
     {
       "type": "footer",
-      "tagline": "Making knowledge accessible and actionable",
-      "legal": "© 2025 Ksandra Inc. All rights reserved.",
+      "tagline": "Dinner, planned.",
+      "legal": "© 2026 Mealwise. All rights reserved.",
       "links": [
-        { "label": "Features", "target": "benefits" }
+        {
+          "label": "Why Mealwise",
+          "target": "benefits"
+        }
       ]
     }
   ],
   "claims": [
-    { "text": "Your data is not used for model training.", "source": "owner (existing Ksandra site)", "confirmed": false },
-    { "text": "Self-hosted or SOC 2 cloud options.", "source": "owner (existing Ksandra site)", "confirmed": false },
-    { "text": "First 100 users get a lifetime 50% discount.", "source": "owner (existing Ksandra site)", "confirmed": false }
+    {
+      "text": "Founding families keep their price for life.",
+      "source": "owner (example)",
+      "confirmed": false
+    }
   ],
   "imagery": {
     "source": "owner_uploads",
@@ -94,11 +165,16 @@
     ]
   },
   "look": {
+    "preset": "dtc-brand",
     "style": "modern",
     "tone": "confident",
     "accent": null,
-    "accent_note": "Choose one accent that suits a calm, space-inspired look with a dark hero and record it. Keep body text high-contrast.",
-    "layout": { "width": "contained", "max_width_px": 1200 }
+    "accent_note": "Choose one accent that suits a warm family brand and record it.",
+    "layout": {
+      "width": "contained",
+      "max_width_px": 1200
+    },
+    "benefits_layout": "agent_decides"
   },
   "owner": {
     "sign_in": "One owner, from environment configuration. The email and password hash are supplied when the site is deployed.",
@@ -121,8 +197,7 @@
     "Testimonials, customer logos or user counts"
   ],
   "assumptions": [
-    "The wording of the benefit items is a paraphrase of the existing Ksandra site; the owner reviews it.",
-    "There is no contact email, so the page has no Contact link. This is deliberate and tests the 'no dead links' rule.",
-    "The thank-you message is a default; the existing site's wording was not available."
+    "Everything about Mealwise is made up for this example.",
+    "The thank-you message is a default; the person can change it."
   ]
 }

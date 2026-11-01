@@ -95,8 +95,8 @@
       "description": "Protect the form without asking visitors to solve puzzles.",
       "acceptance_criteria": [
         "A hidden honeypot field is ignored by humans. A submission that fills it is accepted silently but not stored.",
-        "The honeypot input has an unguessable name such as hp_x7. Never name it website, url, email, phone, name, address or any other word a browser or password manager recognises, because they autofill it and real visitors are silently dropped. It is also aria-hidden, tabIndex -1, autoComplete off, and moved off-screen with CSS (not display none).",
-        "A single address can submit at most five times per ten minutes, then sees a friendly 'please try again later' message.",
+        "The honeypot input has an unguessable name chosen fresh for each site (hp_ followed by six random letters and digits, written into the code once). Do not copy an example name. Never name it website, url, email, phone, name, address or any other word a browser or password manager recognises, because they autofill it and real visitors are silently dropped. It is also aria-hidden, tabIndex -1, autoComplete off, and moved off-screen with CSS (not display none).",
+        "A single address can submit at most five times per ten minutes: the first five are accepted and the sixth is refused with a friendly 'please try again later' message.",
         "Every text value has a maximum length. Values are treated as text and never as HTML.",
         "Email addresses are trimmed and lower-cased before storing."
       ],
@@ -167,7 +167,7 @@
         "A breakdown by source is shown.",
         "The list shows newest first with email, answers, source and date. It has search by email and pages of 50.",
         "The owner can delete a signup after a confirmation.",
-        "A button downloads all signups as a CSV file. Cells that start with =, +, - or @ are prefixed so spreadsheets do not run them as formulas."
+        "A button downloads all signups as a CSV file. Cells that start with =, +, - or @ (or a tab or carriage return) are prefixed with an apostrophe so spreadsheets do not run them as formulas."
       ],
       "verification": [
         "Add signups with different answers and check the counts and breakdowns.",

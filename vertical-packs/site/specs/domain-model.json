@@ -21,7 +21,7 @@
       "note": "One row per block on the page, in order.",
       "fields": [
         { "name": "id", "type": "text", "note": "hero, preview, benefits, waitlist, footer, or an extra block id" },
-        { "name": "type", "type": "enum", "values": ["hero", "preview", "benefits", "waitlist", "faq", "steps", "footer"] },
+        { "name": "type", "type": "enum", "values": ["hero", "integrations", "preview", "benefits", "waitlist", "faq", "steps", "footer"] },
         { "name": "position", "type": "integer" },
         { "name": "visible", "type": "boolean", "default": true },
         { "name": "content", "type": "json", "note": "Validated per block type with Zod: headline, text, items, image references, button label." }
@@ -43,7 +43,7 @@
       "name": "Signup",
       "fields": [
         { "name": "id", "type": "uuid" },
-        { "name": "email", "type": "text", "note": "Lower-cased, trimmed. Unique." },
+        { "name": "email", "type": "text", "note": "Lower-cased, trimmed. Unique. The form field that holds the email (its key may be email or work_email) is stored in this column only, not repeated in the answers." },
         { "name": "answers", "type": "json", "note": "Keyed by FormField key. Select values are stored as the option text at the time of signing up." },
         { "name": "source", "type": "text", "note": "From a ?src= or utm_source parameter, else 'direct'. Max 60 characters." },
         { "name": "created_at", "type": "timestamp" }

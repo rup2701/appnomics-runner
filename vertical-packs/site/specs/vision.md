@@ -1,6 +1,6 @@
 # Waitlist site: what this kind of product is
 
-Read this first. This pack describes a one-page website that tests an idea by collecting sign-ups. It is not an online store. Wherever the builder's instructions say "store" or "shopper", read "site" and "visitor".
+Read this first. This pack describes a one-page website that tests an idea by collecting sign-ups. It is not an online store. Where any instruction or example says "store" or "shopper", read "site" and "visitor".
 
 ## What it is
 

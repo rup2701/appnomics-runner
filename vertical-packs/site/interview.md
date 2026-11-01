@@ -11,8 +11,8 @@ The person supplies facts and choices. You propose the wording (headline, benefi
 ## Rules for the interview
 
 - One question at a time, plain words, no jargon. Offer 2 or 3 examples when a question is hard.
-- Eight to twelve questions in all. Anything skipped gets the default below, you tell the person which default you are using (see the next rule), and every default is listed again on the review screen.
-- **When an answer is skipped or vague ("not really", "you decide"), say what you will use and ask if it works.** Do not move on silently. One short message: the default in plain words, why it suits their idea, and "Does that work, or would you change anything?" Example: "No preference? I'd go with a dark, calm look, one warm accent colour, and a clean modern font, since this is a software product for professionals. Does that work?" Make the default specific to their idea (their tone words, their audience), never a generic "clean and minimal". When they accept, record it under `assumptions` as chosen by default.
+- About fourteen short questions in all, one per message; a person who wants speed can say so and you use the defaults for the rest. Anything skipped gets the default below, you tell the person which default you are using (see the next rule), and every default is listed again on the review screen.
+- **When an answer is skipped or vague ("not really", "you decide"), say what you will use and ask if it works.** Do not move on silently. One short message: the default in plain words, why it suits their idea, and "Does that work, or would you change anything?" Example, for a made-up family-food product: "No preference? I'd go with a light, warm look, one soft green accent, and a friendly rounded font, since this is for busy parents. Does that work?" Make the default specific to their idea (their tone words, their audience), never a generic "clean and minimal". When they accept, record it under `assumptions` as chosen by default.
 - If the person pastes an existing site or deck, read it, fill in what you can and ask only about the gaps.
 - End with a review screen: the headline, subheadline, benefits, form fields, the look and the claims flagged unconfirmed. They approve it or change a line, and only then does the build start.
 
@@ -24,13 +24,16 @@ The person supplies facts and choices. You propose the wording (headline, benefi
 | 2 | Who is it for? Describe the person who would want it most. | `audience.icp` | None; ask again |
 | 3 | What do they do about the problem today? | `audience.alternatives` | "Not stated" |
 | 4 | What are the main benefits of your idea? Give up to four. | `blocks[benefits].items` (you write titles and one-line text; they approve) | Three generic benefits drawn from Q1, flagged as drafted |
-| 5 | Which features or tools would you like to list or show? (Optional: tools it connects to.) | `blocks[preview]`, and `blocks[integrations]` when tools are named | No integrations strip |
-| 6 | What should visitors do first? What do you want to say about early access (a perk, a discount, a date)? | `blocks[hero].cta`, `blocks[hero].note`, `blocks[waitlist].perks` | CTA "Join the waitlist", no note, no perks |
-| 7 | What design, tone and voice? (Calm, bold, playful, serious? A brand you like?) | `site.brand_words`, `look.preset`, `look.accent_note` and the hero mood | Preset by type: deep-tech for software, dtc-brand for products |
-| 8 | What should the waitlist capture? Our default is full name and email. Anything else that helps you decide what to build? (A multiple choice question is easy to analyse.) | `blocks[waitlist].form.fields` | full_name and work_email |
-| 9 | How will you know it worked? How many sign-ups, in how many days? Where will you find the people? | `audience.success_target`, `audience.channels` | 100 sign-ups in 30 days, flagged as assumed |
-| 10 | Is there anything you say about the product that must be true before you publish it (privacy, security, results)? | `claims[]` with `confirmed` | None; any claim you notice in their answers is added as unconfirmed |
-| 11 | Do you have a contact email to show? Any images you can upload later (hero, product screenshot)? | `site.contact_email`, `imagery` | No contact email, no Contact link; images start as designed placeholders |
+| 5 | Which features or tools would you like to list or show? (Optional: tools it connects to.) If tools are named, also draft a short heading for the strip (for example "Works with the tools you already use") and show it on the review as drafted. | `blocks[preview]`, and `blocks[integrations]` when tools are named | No integrations strip |
+| 6 | What do you want visitors to do first on the page? | `blocks[hero].cta`, `nav` | CTA "Join the waitlist" |
+| 7 | Is there anything you want to offer or say about early access (a perk, a discount, a date)? | `blocks[hero].note`, `blocks[waitlist].perks` | No note, no perks |
+| 8 | What design, tone and voice? (Calm, bold, playful, serious? A brand you like?) And how should the benefits look: cards in a grid, one per line with images alternating sides, or should I choose? | `site.brand_words`, `look.preset`, `look.accent_note`, `look.benefits_layout` (`cards`, `rows` or `agent_decides`) and the hero mood | Preset by type: deep-tech for software, dtc-brand for products; benefits layout `agent_decides` |
+| 9 | What should the waitlist capture? Our default is full name and email. Anything else that helps you decide what to build? (A multiple choice question is easy to analyse.) | `blocks[waitlist].form.fields` | full_name and work_email |
+| 10 | How many sign-ups would tell you the idea has legs, and in how many days? | `audience.success_target` | 100 sign-ups in 30 days, flagged as assumed |
+| 11 | Where will you find the people (communities, social, newsletters)? | `audience.channels` | None listed |
+| 12 | Is there anything you say about the product that must be true before you publish it (privacy, security, results)? | `claims[]` with `confirmed` | None; any claim you notice in their answers is added as unconfirmed |
+| 13 | Do you have a contact email to show on the page? | `site.contact_email` | No contact email, no Contact link |
+| 14 | Do you have images to upload later (a hero image, a product screenshot)? You cannot generate or fetch images: say so and offer designed placeholders. | `imagery` | Images start as designed placeholders |
 
 ## What the interview writes (not asked)
 

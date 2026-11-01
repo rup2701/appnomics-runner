@@ -15,7 +15,18 @@ Nobody can show you a screenshot while you build, so every rule here is either a
 - **Icons** all come from `lucide-react`, one stroke width, one size per use. No emoji as icons.
 - **Buttons** are at least 44px tall, have a visible keyboard focus ring, a hover state and a disabled/working state.
 - **Motion** is quiet: a short fade or rise on load at most, and nothing when the visitor prefers reduced motion. No auto-playing media.
+- **The brief wins over the preset.** If the brief asks for a light or a dark page, or an accent, use it even where the preset says otherwise, and record that in AGENT_LOG.md.
 - **Cards** have a 1px border or a very soft shadow, never both heavy. Same radius everywhere.
+
+## Benefits layout
+
+The brief's `look.benefits_layout` is one of:
+
+- `cards` (the default if it is missing): a grid of cards, using the table below.
+- `rows`: one benefit per full-width row. Text on one side, an image or designed placeholder on the other, switching sides on every row. On a phone each row stacks with the image above the text. Keep the lucide-react icon next to each title. The grid table and the orphan check do not apply to this layout.
+- `agent_decides`: choose `cards` or `rows`, whichever suits the number and length of the benefits and the preset, and follow that layout's rules fully. Record the choice in AGENT_LOG.md.
+
+The owner can show, hide and reorder benefits in either layout, so the layout must still look right after an edit.
 
 ## Grids follow the number of cards
 
@@ -48,7 +59,7 @@ Feeling: calm, precise, confident. A dark hero and dark page, lots of space, alm
 - **Colours (dark):** background #0B0D12, surface #11151C, border rgba(255,255,255,0.08), text #E8EAF0, muted #9AA3B2. The accent is warm or electric and chosen from the brief's mood. Text on the accent is near-black or white, whichever passes 4.5:1.
 - **Type scale (desktop / phone):** hero headline 64 / 40 px, tracking -0.02em, line height 1.05; section heading 40 / 30; text 18 / 17, line height 1.6; small 14.
 - **Spacing:** sections 112px top and bottom on desktop, 64px on a phone; contained column up to 1200px; hero text no wider than 720px.
-- **Hero:** full screen: `min-height: 100svh`, the header floating on top of it, the content centred vertically and horizontally. A small eyebrow label (optional, from the brief), the headline, one subheadline, the main button with the note beside or beneath it. Background image dimmed with a gradient that fades into the page background at the bottom. A small scroll cue at the bottom edge is fine.
+- **Hero:** full screen: `min-height: 100svh` (when a demo notice bar is shown, subtract its height so the headline and the button still fit on a 375 by 667 phone without scrolling), the header floating on top of it, the content centred vertically and horizontally. A small eyebrow label (optional, from the brief), the headline, one subheadline, the main button with the note beside or beneath it. Background image dimmed with a gradient that fades into the page background at the bottom. A small scroll cue at the bottom edge is fine.
 - **Preview:** large, centred, in a window frame with a soft glow in the accent colour at low opacity, and a short caption underneath.
 - **Benefits:** cards with an icon, a short title and two lines of text; cards sit on the surface colour; the grid follows the card-count table.
 - **Waitlist:** two columns on desktop (heading and perks on the left, the form in a card on the right), one column on a phone. Perks are a plain list with check icons.
@@ -73,10 +84,11 @@ Add these to the end-to-end tests, as far as Playwright can measure them:
 1. At 375 by 667 and at 1440 by 900: the headline and the main button are both visible without scrolling.
 2. At 375 wide the page has no horizontal scroll (`scrollWidth <= innerWidth`).
 3. Every block is inside the contained column: no block is wider than 1200px except the hero background and the footer background.
-4. No grid has an orphan: for each grid of cards, the number of cards in the last row is not 1 unless there is only one card.
+4. For the `cards` layout and every other grid of cards, no orphan: for each grid, the number of cards in the last row is not 1 unless there is only one card.
 5. Every image has alt text, or `alt=""` if it is decoration.
 6. Body text colour against its background has a contrast ratio of at least 4.5:1 (compute it from the computed styles of the hero text, the benefit text and the form labels).
 7. The page with no uploaded images shows no empty box and no broken image icon.
+8. For the `rows` layout: each benefit is in its own row, the image side alternates, and at 375 wide every row stacks with no horizontal scroll.
 
 ## Moves from elite product sites
 
