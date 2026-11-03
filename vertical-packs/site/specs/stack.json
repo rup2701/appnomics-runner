@@ -63,9 +63,9 @@
       "why": "The deploy script sets these names. Different names mean the deployed owner cannot sign in."
     },
     {
-      "id": "hash-password-script",
-      "choice": "package.json has a script named exactly hash-password (\"hash-password\": \"tsx scripts/hash-password.ts\"). It takes the password as its one argument and prints scrypt:<salt>:<hash> and nothing else. The same hashing code is used by the sign-in check.",
-      "why": "The deploy script calls npm run hash-password to create the owner's password hash. A build that named it differently could not be published."
+      "id": "deploy-scripts",
+      "choice": "package.json has these scripts, with exactly these names: \"db:migrate\" (applies the migrations), \"db:seed\" (inserts the sample data; safe on an empty database) and \"hash-password\" (takes the password as its one argument and prints scrypt:<salt>:<hash> and nothing else; the sign-in check uses the same hashing code).",
+      "why": "The deploy script runs these by name. Builds that named them differently could not be published without a hand fix."
     }
   ]
 }

@@ -62,6 +62,15 @@ async function neonDirectUrl(state: { neonProjectId: string; neonDatabase?: stri
   return direct(body.uri);
 }
 
+/** The agent names its package.json scripts; the pack asks for fixed names, but builds have varied. Find the one that exists. */
+async function pickScript(appDir: string, purpose: string, names: string[]): Promise<string> {
+  let scripts: Record<string, string> = {};
+  try { scripts = JSON.parse(await readFile(path.join(appDir, "package.json"), "utf8")).scripts ?? {}; } catch { /* handled below */ }
+  const found = names.find((n) => typeof scripts[n] === "string");
+  if (!found) throw new Error(`This app has no ${purpose} script in package.json (looked for: ${names.join(", ")}). Nothing was deployed. Its scripts are: ${Object.keys(scripts).join(", ") || "none"}.`);
+  return found;
+}
+
 async function hasMigrations(appDir: string) {
   try { return (await readdir(path.join(appDir, "drizzle"))).some((f) => f.endsWith(".sql")); } catch { return false; }
 }
@@ -69,8 +78,9 @@ async function hasMigrations(appDir: string) {
 async function migrate(appDir: string, directUrl: string, firstTime: boolean) {
   const env = baseEnv({ DATABASE_URL: directUrl });
   if (await hasMigrations(appDir)) {
-    log("  applying migrations (db:migrate)");
-    await sh("npm", ["run", "db:migrate"], { cwd: appDir, env });
+    const script = await pickScript(appDir, "migration", ["db:migrate", "migrate"]);
+    log(`  applying migrations (${script})`);
+    await sh("npm", ["run", script], { cwd: appDir, env });
   } else if (firstTime) {
     log("  no migration files; this is a new empty database, so using drizzle-kit push");
     await sh("npx", ["drizzle-kit", "push", "--force"], { cwd: appDir, env });
@@ -81,8 +91,11 @@ async function migrate(appDir: string, directUrl: string, firstTime: boolean) {
 
 async function seed(appDir: string, directUrl: string) {
   let needsConfirm = false;
-  try { needsConfirm = (await readFile(path.join(appDir, "src/db/seed.ts"), "utf8")).includes("--confirm"); } catch { /* no seed file */ }
-  const args = ["run", "db:seed", ...(needsConfirm ? ["--", "--confirm"] : [])];
+  for (const f of ["src/db/seed.ts", "scripts/seed.ts"]) {
+    try { if ((await readFile(path.join(appDir, f), "utf8")).includes("--confirm")) needsConfirm = true; } catch { /* no such seed file */ }
+  }
+  const script = await pickScript(appDir, "seed", ["db:seed", "seed"]);
+  const args = ["run", script, ...(needsConfirm ? ["--", "--confirm"] : [])];
   log(`  seeding (npm ${args.join(" ")})`);
   await sh("npm", args, { cwd: appDir, env: baseEnv({ DATABASE_URL: directUrl }) }); // never db:reset
 }
@@ -99,10 +112,7 @@ async function ownerVarNames(appDir: string): Promise<{ email: string; hash: str
 
 async function hashPassword(appDir: string, password: string): Promise<string> {
   // npm --silent hides its own "Missing script" message, so look for the script first and name the problem.
-  // The agent has called it "hash-password" (the pack asks for this name) and once "hash"; accept both.
-  const scripts = (JSON.parse(await readFile(path.join(appDir, "package.json"), "utf8")).scripts ?? {}) as Record<string, string>;
-  const script = ["hash-password", "hash"].find((n) => typeof scripts[n] === "string");
-  if (!script) throw new Error('This app has no "hash-password" script in package.json, so the owner password cannot be hashed. Nothing was deployed. Add "hash-password": "tsx scripts/hash-password.ts" (the script must print scrypt:<salt>:<hash>) and run again.');
+  const script = await pickScript(appDir, "hash-password", ["hash-password", "hash"]);
   const out = await sh("npm", ["run", "--silent", script, "--", password], { cwd: appDir, env: baseEnv() });
   // The pack asks for scrypt:<salt>:<hash>. One build used bcrypt ($2b$10$...), and its sign-in checks bcrypt, so accept both.
   const m = out.match(/scrypt:[0-9a-f]+:[0-9a-f]+|\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}/);

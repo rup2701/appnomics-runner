@@ -77,6 +77,16 @@ Feeling: warm, human, tactile. A light page, big photography, a little more pers
 - **Benefits:** icon or small photo, short title, one line; grid follows the table.
 - **Waitlist and footer:** like deep-tech but on the light surface.
 
+## Polish rules (draft, from the owner's design review of 2026-11-03)
+
+These come from a human's corrections of a generated page. Each one names the fault it fixes. They apply to every preset.
+
+1. **One loudest headline per view.** In any one screen there is a single largest headline. A second headline in a side panel or beside a form is at most two steps smaller, or it becomes a caption. Two headlines of similar size fight for the first read.
+2. **A picture of a page must be readable at the size it is shown.** When a screenshot or mock-up of a page sits in a panel, crop it to the part that matters (headline, product shot, main button), not the whole page at small scale. Text inside the picture is at least 12px on screen at 1440 wide, or it is cropped out.
+3. **Pin the header to the edges.** The logo sits at the container's left edge and any badge or menu at its right edge, with the same side margin as the rest of the page (24px on a phone, 40px on desktop). Do not float header items inward so that they match some other block.
+4. **Rounded corners on pictures follow the cards.** Pictures use the same radius as the cards. A picture that runs off one edge of the screen has square corners on that edge and the page's radius on the inner corners.
+5. **Leave space between a picture and the thing beside it.** A picture next to a split line, a column or a form has a gap of at least 48px on desktop, so it never touches the divider.
+
 ## Checks to run before you finish
 
 Add these to the end-to-end tests, as far as Playwright can measure them:
@@ -89,6 +99,9 @@ Add these to the end-to-end tests, as far as Playwright can measure them:
 6. Body text colour against its background has a contrast ratio of at least 4.5:1 (compute it from the computed styles of the hero text, the benefit text and the form labels).
 7. The page with no uploaded images shows no empty box and no broken image icon.
 8. For the `rows` layout: each benefit is in its own row, the image side alternates, and at 375 wide every row stacks with no horizontal scroll.
+9. Polish rule 1: at 1440 by 900, take every heading (h1 to h3) that is visible at the top of the page; the second largest computed font size is not more than 75% of the largest, unless the two are the same element type in a repeated list.
+10. Polish rule 3: at 1440 wide, the header logo's left edge is within 48px of its container's left edge, and the right-hand header item's right edge is within 48px of the container's right edge.
+11. Polish rule 5: for every `img` or background-image block that sits beside a form or text column on desktop, the horizontal gap to its neighbour is at least 48px.
 
 ## Moves from elite product sites
 
