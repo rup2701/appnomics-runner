@@ -1,0 +1,303 @@
+{
+  "schema_version": "1.0",
+  "product": "SaaS Product Site",
+  "features": [
+    {
+      "id": "page-blocks",
+      "name": "The page is a set of blocks in order",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "The public home page is built from the blocks in the brief, in the brief's order. A block with no content in the brief is not on the page.",
+      "acceptance_criteria": [
+        "The page shows the blocks listed in the brief, in order, and nothing else of substance.",
+        "A block with no content (no plans, no quotes, no confirmed claims) is absent from the page and from the navigation. No placeholder text such as 'Lorem' or 'Example' appears anywhere.",
+        "Every block with an anchor can be reached from the navigation and the page scrolls to it.",
+        "The layout works from 360px to wide desktop screens, with content in a centred column no wider than about 1200px.",
+        "The page content is read from one typed content file written from the brief; nothing about the page is stored in the database."
+      ],
+      "verification": [
+        "Load the page and check the block order against the brief.",
+        "Build with a brief that has no pricing and no quotes and confirm neither block exists in the page or the navigation.",
+        "Check the page at 360px and 1440px for horizontal scrolling."
+      ]
+    },
+    {
+      "id": "hero",
+      "name": "Hero with email box",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "A centred headline, one supporting line, and the email box with its button on one row (stacked on a phone) with a one-line privacy note. The product visual starts below.",
+      "acceptance_criteria": [
+        "The headline, supporting line, button label and privacy note come from the brief.",
+        "The email box and button are the sign-up form (see email-signup) and are visible without scrolling at 1440 by 900 and at 375 by 667.",
+        "The hero is not full screen: the product visual begins just below the button.",
+        "Text stays readable: contrast against the background is at least 4.5:1."
+      ],
+      "verification": [
+        "Check the hero at both sizes and confirm the headline, box and button are in view.",
+        "Submit an email from the hero and confirm it is stored."
+      ]
+    },
+    {
+      "id": "product-visual",
+      "name": "Product visual",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "One large framed panel (window frame: top bar, three dots, a title) built in HTML and CSS from the brief's description, or the owner's screenshot in the same frame when one is supplied.",
+      "acceptance_criteria": [
+        "The panel is labelled 'Concept preview' when it is not the real product.",
+        "Any figure shown in the panel is labelled as sample data or left out; the builder invents no numbers.",
+        "The panel is at most 1100px wide, keeps its aspect ratio, and its text is legible at the size shown."
+      ],
+      "verification": [
+        "Search the panel text for numbers not in the brief.",
+        "Check the panel at 375px and 1440px."
+      ]
+    },
+    {
+      "id": "pills",
+      "name": "Feature pills",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "A single row of up to three pills, each with a small lucide-react icon and a short phrase from the brief.",
+      "acceptance_criteria": [
+        "There are at most three pills; extra items are ignored and noted in AGENT_LOG.md.",
+        "The pills are in one row at 1440px and stack at 375px.",
+        "Each pill's text comes from the brief."
+      ],
+      "verification": [
+        "Count the pills and check the layout at both widths."
+      ]
+    },
+    {
+      "id": "steps",
+      "name": "How it works",
+      "priority": "should-have",
+      "status": "draft",
+      "description": "A heading and up to three numbered columns, each with a title, one line and a small panel built in HTML.",
+      "acceptance_criteria": [
+        "Up to three steps, numbered, from the brief.",
+        "On a phone the columns stack.",
+        "A step's small panel contains only words from the brief."
+      ],
+      "verification": [
+        "Check the layout at both widths."
+      ]
+    },
+    {
+      "id": "trust",
+      "name": "Trust block (regulated or sensitive products)",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "Two columns, 'What we read' and 'What we never touch', drawn only from claims the brief marks confirmed. Any certification or compliance wording is shown as text only when confirmed.",
+      "acceptance_criteria": [
+        "The block exists only when the brief has confirmed claims for it.",
+        "No claim, certification, number or legal wording appears that is not in the brief; an unconfirmed claim is not shown.",
+        "If the brief has a disclosure, it is shown in the footer exactly as written."
+      ],
+      "verification": [
+        "Build with and without confirmed claims and compare.",
+        "Search the page for words like SOC, HIPAA, encrypted, bank-grade and confirm each is in the brief and confirmed."
+      ]
+    },
+    {
+      "id": "pricing",
+      "name": "Pricing",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "One card per plan (up to three) with the name, price, period, features and a button that scrolls to the email box. Or one wide 'Talk to us' card when the brief says contact only.",
+      "acceptance_criteria": [
+        "The block exists only when the brief has plans or contact_only.",
+        "Columns equal the number of plans, with no orphan card.",
+        "The highlighted plan has an accent border and a 'Most popular' label only when the owner marked it.",
+        "Prices and features are exactly as in the brief."
+      ],
+      "verification": [
+        "Build with one, two and three plans and check the grid.",
+        "Compare every price and feature with the brief."
+      ]
+    },
+    {
+      "id": "testimonials",
+      "name": "Testimonials",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "Up to three quote cards from the brief, each with the quote, the person's name, role and company. Initials in a circle replace any photo the owner did not supply.",
+      "acceptance_criteria": [
+        "The block exists only when the brief has quotes.",
+        "No quote, name, logo, photo or user count is ever generated.",
+        "One quote is a single wide centred card."
+      ],
+      "verification": [
+        "Build with and without quotes and compare.",
+        "Compare every quote with the brief."
+      ]
+    },
+    {
+      "id": "closing-cta",
+      "name": "Closing call to action",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "One wide rounded block with a headline, a line and the same email box and button as the hero.",
+      "acceptance_criteria": [
+        "The headline and line come from the brief.",
+        "The box is the same sign-up form as the hero and stores the signup once, with placement 'closing'."
+      ],
+      "verification": [
+        "Submit from the closing box and confirm the stored row."
+      ]
+    },
+    {
+      "id": "email-signup",
+      "name": "Email sign-up",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "One required field, email, in the hero and again in the closing block. The button label, privacy note and success message come from the brief.",
+      "acceptance_criteria": [
+        "A valid submission stores the signup once and replaces that box with the success message. The page does not reload.",
+        "An invalid or empty email shows a message under the field that names the problem, and what was typed stays.",
+        "The same email twice shows the same success message and stores one row.",
+        "Each submission records the source and which box was used."
+      ],
+      "verification": [
+        "Submit a valid, an invalid and a repeated email from each box and check the stored rows."
+      ]
+    },
+    {
+      "id": "spam-protection",
+      "name": "Spam and abuse protection",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "Protect the form without asking visitors to solve puzzles.",
+      "acceptance_criteria": [
+        "A hidden honeypot field is ignored by humans. A submission that fills it is accepted silently but not stored.",
+        "The honeypot input has an unguessable name chosen fresh for each site (hp_ followed by six random letters and digits, written into the code once). Do not copy an example name. Never name it website, url, email, phone, name, address or any other word a browser or password manager recognises, because they autofill it and real visitors are silently dropped. It is also aria-hidden, tabIndex -1, autoComplete off, and moved off-screen with CSS (not display none).",
+        "A single address can submit at most five times per ten minutes: the first five are accepted and the sixth is refused with a friendly 'please try again later' message.",
+        "Every text value has a maximum length. Values are treated as text and never as HTML.",
+        "Email addresses are trimmed and lower-cased before storing."
+      ],
+      "verification": [
+        "Fill the honeypot and confirm nothing is stored.",
+        "Submit the form as a normal visitor would, through the real page in a browser, and confirm a row exists in the database. This must pass before the work is called done.",
+        "Submit six times quickly from one address and confirm the sixth is refused.",
+        "Submit a value with HTML in it and confirm it is shown as text in the owner area."
+      ]
+    },
+    {
+      "id": "source-tracking",
+      "name": "Where signups came from",
+      "priority": "should-have",
+      "status": "approved",
+      "description": "The page reads a ?src= or utm_source parameter and stores it with the signup, so the owner can see which channel worked.",
+      "acceptance_criteria": [
+        "A visit with ?src=linkedin stores 'linkedin' on a signup made in the same visit.",
+        "No parameter means 'direct'. Values are trimmed, lower-cased and limited to 60 characters.",
+        "The owner area shows signups per source."
+      ],
+      "verification": [
+        "Visit with ?src=test, sign up, and confirm the stored source."
+      ]
+    },
+    {
+      "id": "footer",
+      "name": "Footer",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "A footer on the surface colour with a 1px top border: name and tagline, link columns, and a bottom row with the copyright line and the disclosure if there is one.",
+      "acceptance_criteria": [
+        "Every link goes to a real target: an anchor that exists on the page, a mailto, or a URL given in the brief. No href='#' and no empty href.",
+        "A Legal or social column appears only when the owner supplied those links; otherwise it is not shown.",
+        "When there is no contact email, there is no Contact link.",
+        "The mobile menu opens and closes with the keyboard and traps no focus."
+      ],
+      "verification": [
+        "Click every header and footer link and confirm each has a target.",
+        "Build with no legal links and confirm there is no Legal column.",
+        "Open and close the mobile menu using only the keyboard."
+      ]
+    },
+    {
+      "id": "owner-sign-in",
+      "name": "Owner sign-in",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "One owner, from environment configuration (an email and a password hash). Everything under /admin needs a session.",
+      "acceptance_criteria": [
+        "Visiting /admin without a session goes to the sign-in page.",
+        "A wrong password shows a generic message and keeps the email in the field.",
+        "Five failed attempts from one address in ten minutes lock sign-in for ten minutes.",
+        "Signing out ends the session."
+      ],
+      "verification": [
+        "Sign in with the right and wrong password, and confirm the lockout."
+      ]
+    },
+    {
+      "id": "owner-signups",
+      "name": "Owner: signups",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "The only owner page: who left an email. There is no page editor in this version.",
+      "acceptance_criteria": [
+        "The top shows the total and signups today.",
+        "A breakdown by source and by which box was used is shown.",
+        "The list shows newest first with email, source and date, with search by email and pages of 50.",
+        "The owner can delete a signup after a confirmation.",
+        "A button downloads all signups as a CSV. Cells that start with =, +, - or @ (or a tab or carriage return) are prefixed with an apostrophe so spreadsheets do not run them as formulas."
+      ],
+      "verification": [
+        "Add signups and check the counts and breakdowns.",
+        "Download the CSV and open it as text.",
+        "Delete a signup and confirm the counts change."
+      ]
+    },
+    {
+      "id": "seo-basics",
+      "name": "Search and sharing basics",
+      "priority": "should-have",
+      "status": "approved",
+      "description": "The page can be found and shared sensibly.",
+      "acceptance_criteria": [
+        "The page has a title and description from the brief, a language attribute, and Open Graph tags.",
+        "robots.txt and a sitemap with the home page exist.",
+        "The admin pages are marked noindex."
+      ],
+      "verification": [
+        "Fetch the home page head and the admin pages and check the tags."
+      ]
+    },
+    {
+      "id": "accessibility-performance",
+      "name": "Accessibility and performance",
+      "priority": "must-have",
+      "status": "approved",
+      "description": "The page is usable with a keyboard and loads quickly.",
+      "acceptance_criteria": [
+        "All form fields have labels, focus is always visible, and the page can be used with the keyboard alone.",
+        "Text contrast is at least 4.5:1 everywhere, including over images.",
+        "Images use the framework's image component with set dimensions so the page does not shift while loading.",
+        "Motion respects the visitor's reduced-motion setting."
+      ],
+      "verification": [
+        "Tab through the page and the form.",
+        "Compute contrast for the text colours and for text over the hero image."
+      ]
+    },
+    {
+      "id": "demo-and-sample-data",
+      "name": "Sample data and demo notice",
+      "priority": "should-have",
+      "status": "draft",
+      "description": "A new site looks complete without inventing facts.",
+      "acceptance_criteria": [
+        "Sample signups seeded for development are labelled as samples in the owner area and can be deleted in one action.",
+        "Testimonials, customer logos, user counts, ratings, prices and certifications appear only when the brief supplies them (and, for claims, confirms them).",
+        "If the brief sets demo_notice, the page shows a short notice that it is a demonstration."
+      ],
+      "verification": [
+        "Seed the database and confirm samples are labelled.",
+        "Search the page text for testimonials, counts, prices or claims that are not in the brief."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Example brief for a SaaS product site. It shows the shape and the defaults only. Every idea-specific value below belongs to a made-up product and must be replaced by what the person says in the interview.",
+  "site": {
+    "name": "Tallyfold",
+    "kind": "saas",
+    "industry": "fintech",
+    "one_liner": "Expense reports that fill themselves in for small finance teams.",
+    "brand_words": [
+      "precise",
+      "calm",
+      "trustworthy"
+    ],
+    "contact_email": null,
+    "disclosure": null,
+    "demo_notice": true
+  },
+  "audience": {
+    "icp": "Finance leads at companies of 20 to 200 people who chase receipts every month-end.",
+    "alternatives": "Spreadsheets, shared inboxes, and expense tools that need every receipt keyed in.",
+    "channels": [
+      "Finance newsletters",
+      "LinkedIn"
+    ],
+    "frustrations": [
+      "Chasing receipts every month-end",
+      "Charges nobody can explain",
+      "Close takes days instead of hours"
+    ]
+  },
+  "nav": [
+    {
+      "label": "How it works",
+      "target": "steps"
+    },
+    {
+      "label": "Pricing",
+      "target": "pricing"
+    },
+    {
+      "label": "Get started",
+      "target": "cta",
+      "style": "button"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero",
+      "headline": "Month-end, without the chase.",
+      "subheadline": "Tallyfold matches every card charge to a receipt and a category, so your team stops hunting for paperwork.",
+      "cta": {
+        "label": "Get started",
+        "target": "cta"
+      },
+      "note": null
+    },
+    {
+      "type": "visual",
+      "label": "Concept preview",
+      "description": "A mock-up of a month's charges, each matched to a receipt, with two unmatched items highlighted."
+    },
+    {
+      "type": "pills",
+      "items": [
+        {
+          "icon": "receipt",
+          "text": "Receipts matched automatically"
+        },
+        {
+          "icon": "tags",
+          "text": "Categories learned from your books"
+        },
+        {
+          "icon": "calendar-check",
+          "text": "Month-end close in hours"
+        }
+      ]
+    },
+    {
+      "type": "steps",
+      "heading": "How it works",
+      "items": [
+        {
+          "title": "Connect your cards",
+          "text": "Add the cards your team already uses."
+        },
+        {
+          "title": "Forward receipts",
+          "text": "Email or photograph them. We match each to a charge."
+        },
+        {
+          "title": "Review and export",
+          "text": "Approve the matches and send the file to your accountant."
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "heading": "What Tallyfold reads, and what it never touches",
+      "reads": [
+        "Card transaction lists, read only"
+      ],
+      "never": [
+        "Money movement. Tallyfold cannot send or move funds."
+      ],
+      "note": "Only claims marked confirmed in the brief appear here; the block is left out otherwise."
+    },
+    {
+      "type": "pricing",
+      "heading": "Simple plans",
+      "plans": [
+        {
+          "name": "Team",
+          "price": "$99",
+          "period": "per month",
+          "features": [
+            "Up to 25 cards",
+            "Receipt matching",
+            "Accountant export"
+          ],
+          "button": "Get started",
+          "highlight": false
+        },
+        {
+          "name": "Business",
+          "price": "$299",
+          "period": "per month",
+          "features": [
+            "Up to 100 cards",
+            "Everything in Team",
+            "Custom categories",
+            "Priority support"
+          ],
+          "button": "Get started",
+          "highlight": true
+        }
+      ]
+    },
+    {
+      "type": "testimonials",
+      "heading": "What finance teams say",
+      "items": [
+        {
+          "quote": "Example quote. Replace with a real one from the owner.",
+          "name": "Example Name",
+          "role": "Controller",
+          "company": "Example Co"
+        }
+      ]
+    },
+    {
+      "type": "cta",
+      "headline": "Close the books faster.",
+      "subheadline": "Leave your email and we will be in touch.",
+      "cta_label": "Get started"
+    },
+    {
+      "type": "footer",
+      "company": "Tallyfold, Inc.",
+      "tagline": "Expense reports that fill themselves in.",
+      "columns": [
+        {
+          "title": "Product",
+          "links": [
+            {
+              "label": "How it works",
+              "target": "steps"
+            },
+            {
+              "label": "Pricing",
+              "target": "pricing"
+            }
+          ]
+        },
+        {
+          "title": "Company",
+          "links": []
+        },
+        {
+          "title": "Legal",
+          "links": []
+        }
+      ],
+      "legal": "© 2026 Tallyfold, Inc. All rights reserved.",
+      "disclosure": null
+    }
+  ],
+  "signup": {
+    "fields": [
+      {
+        "key": "email",
+        "label": "Work email",
+        "type": "email",
+        "required": true
+      }
+    ],
+    "submit_label": "Get started",
+    "privacy_note": "We will only email you about Tallyfold.",
+    "success_message": "Thanks, we'll be in touch."
+  },
+  "claims": [
+    {
+      "text": "Tallyfold reads card transactions read-only and cannot move money.",
+      "source": "owner (example)",
+      "confirmed": false
+    },
+    {
+      "text": "Example quote from Example Name.",
+      "source": "owner (example)",
+      "confirmed": false
+    }
+  ],
+  "imagery": {
+    "source": "owner_uploads",
+    "rules": [
+      "No stock or generated photos or screenshots are fetched or invented.",
+      "The product visual starts as a designed mock-up labelled 'Concept preview'.",
+      "Logos and screenshots are added later by the owner."
+    ]
+  },
+  "look": {
+    "preset": "saas-clean",
+    "tone": "confident",
+    "accent": null,
+    "accent_note": "Choose one accent that suits a precise, calm finance brand and record it.",
+    "layout": {
+      "width": "contained",
+      "max_width_px": 1200
+    }
+  },
+  "owner": {
+    "sign_in": "One owner, from environment configuration. The email and password hash are supplied when the site is deployed.",
+    "areas": [
+      "signups: total, list, CSV download"
+    ],
+    "page_editing": "None in this version. Changes to the page are made by asking the builder."
+  },
+  "storage": {
+    "database": "Postgres (Neon when deployed)"
+  },
+  "stack": "See the Builder's knowledge/stack.json. Those decisions are fixed.",
+  "not_in_this_version": [
+    "Sending email of any kind",
+    "Visit analytics",
+    "A custom domain",
+    "An owner screen for editing the page",
+    "Customer logos or user counts unless the owner supplies them"
+  ],
+  "assumptions": [
+    "Everything about Tallyfold is made up for this example.",
+    "The success message is a default; the person can change it."
+  ],
+  "owner_vision": "A finance lead should feel calm and in control, and leave their email to see it work. It should never feel like a bank or promise anything about moving money."
+}

@@ -13,7 +13,7 @@ const h = makeHandlers(app, { PATH: process.env.PATH ?? "" });
 
 assert.throws(() => inside(app, "../outside.txt"), /escapes/);
 assert.throws(() => inside(app, "/etc/passwd"), /escapes/);
-await assert.rejects(h.write_file({ path: "specs/vision.md", content: "x" }), /read-only/);
+await assert.rejects(h.write_file({ path: "specs/contract.md", content: "x" }), /read-only/);
 await assert.rejects(h.write_file({ path: ".git/config", content: "x" }), /read-only/);
 await h.write_file({ path: "src/a.ts", content: "hello\nworld" });
 assert.match(await h.read_file({ path: "src/a.ts" }), /1\thello\n2\tworld/);

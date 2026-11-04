@@ -3,12 +3,13 @@
 // for the runner. Type /quit to stop. Needs ANTHROPIC_API_KEY.
 import Anthropic from "@anthropic-ai/sdk";
 import readline from "node:readline/promises";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, access } from "node:fs/promises";
 import path from "node:path";
 import { config, costUsd, emptyUsage, addUsage } from "./config.js";
 
 const REQUIRED: Record<string, string[]> = {
   site: ["site", "audience", "blocks", "look"],
+  saas: ["site", "audience", "blocks", "signup", "look"],
   store: ["store", "categories", "look", "orders"],
 };
 
@@ -30,7 +31,7 @@ async function main() {
   });
   const example = await readFile(path.join(packDir, "brief.example.json"), "utf8");
 
-  const system = `You are the interview agent of an AI app builder. You talk with a founder in plain, friendly words and, at the end, save a brief.json that the builder uses to build their ${pack === "site" ? "waitlist website" : "store"}. The builder never sees this conversation, only the brief.
+  const system = `You are the interview agent of an AI app builder. You talk with a founder in plain, friendly words and, at the end, save a brief.json that the builder uses to build their ${pack === "site" ? "waitlist website" : pack === "saas" ? "product website" : "store"}. The builder never sees this conversation, only the brief.
 
 Follow this interview guide exactly (its questions, defaults, rules and review step):
 
@@ -94,6 +95,10 @@ How to talk:
         brief.source = { generated_by: "interview", pack, model: config.model };
         const name = (brief.site as { name?: string } | undefined)?.name ?? (brief.store as { name?: string } | undefined)?.name ?? "brief";
         savedPath = path.resolve(arg("out") ?? path.join(here, "briefs", `${slug(name)}.json`));
+        // Never overwrite an existing brief: add -2, -3, ... to the file name.
+        const taken = async (f: string) => access(f).then(() => true, () => false);
+        const base = savedPath.replace(/\.json$/, "");
+        for (let n = 2; await taken(savedPath); n++) savedPath = `${base}-${n}.json`;
         await writeFile(savedPath, JSON.stringify(brief, null, 2) + "\n");
         await writeFile(savedPath.replace(/\.json$/, ".interview.md"), `# Interview for ${name}\n\n${transcript.join("\n\n")}\n`);
         results.push({ type: "tool_result", tool_use_id: tu.id, content: `Saved to ${savedPath}. Tell the person what happens next.` });

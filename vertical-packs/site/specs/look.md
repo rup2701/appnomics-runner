@@ -1,6 +1,6 @@
 # Look: how the site should feel and how to check it
 
-Read this after vision.md. The brief says what the site says; this file says how it should look. Behaviour is in the other specs. Where the brief names a `look.preset`, use that preset below. If it names none, choose the closest one and record the choice in AGENT_LOG.md.
+Read this after contract.md. The brief says what the site says; this file says how it should look. Behaviour is in the other specs. Where the brief names a `look.preset`, use that preset below. If it names none, choose the closest one and record the choice in AGENT_LOG.md.
 
 Nobody can show you a screenshot while you build, so every rule here is either a number you can set or a check you can run. Do the checks at the end of the shopper stage.
 

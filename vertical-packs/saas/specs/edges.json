@@ -1,0 +1,329 @@
+{
+  "schema_version": "1.0",
+  "app_type": "saas-site",
+  "purpose": "The things that go wrong, or get awkward, on a SaaS product site that neither the visitor nor the owner will think to specify. One check per edge is expected in e2e/.",
+  "how_to_read": {
+    "status": {
+      "handled": "Defined behaviour, clear to the visitor and the owner.",
+      "partial": "Copes, but someone may be left unaware.",
+      "open": "Needs an owner decision or a feature this version excludes."
+    },
+    "tested": {
+      "yes": "An automated check in e2e/ proves it.",
+      "partial": "Part is checked.",
+      "no": "Built in, no check yet."
+    }
+  },
+  "edges": [
+    {
+      "id": "S-001",
+      "area": "form",
+      "edge": "Visitor submits with the email empty or malformed.",
+      "visitor_sees": "A message under the email field ('Please enter a valid email address'); what they typed stays.",
+      "owner_sees": "Nothing stored.",
+      "default_behavior": "Validate on the server with Zod. Also validate in the browser for speed.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-002",
+      "area": "form",
+      "edge": "The same email joins twice.",
+      "visitor_sees": "The same thank-you as the first time.",
+      "owner_sees": "One signup, not two.",
+      "default_behavior": "Email is unique (lower-cased, trimmed). A repeat changes nothing and reveals nothing.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-003",
+      "area": "form",
+      "edge": "The visitor double-clicks Submit.",
+      "visitor_sees": "One thank-you.",
+      "owner_sees": "One signup.",
+      "default_behavior": "Disable the button while sending; the unique email also protects the data.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-004",
+      "area": "form",
+      "edge": "A bot fills the hidden honeypot field. A real visitor never does, so a browser autofilling it (a field named website, url or email) must not be possible.",
+      "visitor_sees": "The normal thank-you.",
+      "owner_sees": "Nothing stored.",
+      "default_behavior": "Accept silently so the bot learns nothing.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-005",
+      "area": "form",
+      "edge": "Many submissions come from one address in a short time.",
+      "visitor_sees": "The first five in ten minutes are accepted; the sixth sees a friendly 'please try again in a few minutes' message.",
+      "owner_sees": "Only the allowed ones stored.",
+      "default_behavior": "In-database or in-memory rate limit keyed on the first forwarded address.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-006",
+      "area": "form",
+      "edge": "The server or database is unreachable when the visitor submits.",
+      "visitor_sees": "A general message ('Something went wrong, please try again') with what they typed kept.",
+      "owner_sees": "A line in a 'Recent problems' list on the Signups page.",
+      "default_behavior": "Never show a stack trace. Record the failure.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-007",
+      "area": "csv",
+      "edge": "The owner downloads a CSV with thousands of rows.",
+      "visitor_sees": "Not applicable.",
+      "owner_sees": "The whole file downloads without a timeout.",
+      "default_behavior": "Stream the rows rather than loading all of them into memory.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "S-008",
+      "area": "source",
+      "edge": "The ?src= value is empty, very long or contains odd characters.",
+      "visitor_sees": "Nothing different.",
+      "owner_sees": "A clean, short source label, or 'direct'.",
+      "default_behavior": "Trim, lower-case, keep letters, numbers, dash and underscore, cut at 60 characters.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-009",
+      "area": "navigation",
+      "edge": "A navigation link has no target (for example Contact with no contact email).",
+      "visitor_sees": "No such link.",
+      "owner_sees": "A hint in settings: 'Add a contact email to show a Contact link'.",
+      "default_behavior": "Only render links that have a real target.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-010",
+      "area": "owner",
+      "edge": "Someone guesses the admin password.",
+      "visitor_sees": "Not applicable.",
+      "owner_sees": "A lockout message after five failed attempts in ten minutes.",
+      "default_behavior": "Rate limit sign-in by address; generic error message.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-011",
+      "area": "owner",
+      "edge": "An admin page or API is requested without a session.",
+      "visitor_sees": "Redirected to sign-in; API answers 401.",
+      "owner_sees": "Not applicable.",
+      "default_behavior": "Every /admin route and owner API checks the session on the server.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-012",
+      "area": "owner",
+      "edge": "The owner deletes a signup by mistake.",
+      "visitor_sees": "Not applicable.",
+      "owner_sees": "A confirmation first; after confirming the signup is gone.",
+      "default_behavior": "Permanent delete after a confirmation. There is no undo in this version.",
+      "status": "partial",
+      "tested": "no"
+    },
+    {
+      "id": "S-013",
+      "area": "owner",
+      "edge": "No one has signed up yet.",
+      "visitor_sees": "Not applicable.",
+      "owner_sees": "An empty-state message with the site's address and a hint about ?src=.",
+      "default_behavior": "Never show an empty table or division by zero.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-014",
+      "area": "seo",
+      "edge": "A crawler asks for robots.txt, the sitemap or an admin page.",
+      "visitor_sees": "Not applicable.",
+      "owner_sees": "Not applicable.",
+      "default_behavior": "robots.txt and the sitemap exist; admin pages are noindex and disallowed.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-015",
+      "area": "claims",
+      "edge": "The brief gives no claim for a feature that sounds like one (security, certifications, user counts).",
+      "visitor_sees": "Plain, factual copy.",
+      "owner_sees": "A line in AGENT_LOG.md listing every sentence that makes a claim and where it came from.",
+      "default_behavior": "Never invent claims, testimonials, logos or numbers. Leave them out.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "S-016",
+      "area": "privacy",
+      "edge": "A visitor asks to be removed from the list.",
+      "visitor_sees": "The privacy note says how to ask (the contact email, if there is one).",
+      "owner_sees": "Can delete the signup from the list.",
+      "default_behavior": "If there is no contact email, the privacy note says only what is stored and why.",
+      "status": "partial",
+      "tested": "no"
+    },
+    {
+      "id": "S-017",
+      "area": "deploy",
+      "edge": "The site starts without a database address or owner credentials.",
+      "visitor_sees": "Not applicable.",
+      "owner_sees": "A clear startup message naming the missing setting.",
+      "default_behavior": "Validate environment variables when the server starts (an instrumentation hook; the build itself cannot check them) and refuse to start with a readable error.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "S-018",
+      "area": "deploy",
+      "edge": "Image storage is not configured in a deployed site.",
+      "visitor_sees": "Not applicable.",
+      "owner_sees": "A message on the upload field that images cannot be uploaded yet and why.",
+      "default_behavior": "A storage adapter: local disk in development, Vercel Blob when deployed; a deployed site without a store token shows the message.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "S-019",
+      "area": "form",
+      "edge": "A very long value, or HTML and script text, is entered in the email field.",
+      "visitor_sees": "A message that the address is not valid.",
+      "owner_sees": "Nothing stored.",
+      "default_behavior": "Maximum length 254 on the email; output is escaped everywhere, including the CSV and the owner list.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-020",
+      "area": "form",
+      "edge": "The email has capitals, a plus sign (name+tag@x.com) or accents in the domain.",
+      "visitor_sees": "Accepted and the normal success message.",
+      "owner_sees": "The address lower-cased in the list and the CSV.",
+      "default_behavior": "Validate with Zod; lower-case and trim before storing; UTF-8 everywhere, CSV starts with a byte-order mark.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-021",
+      "area": "csv",
+      "edge": "A stored email starts with =, +, - or @ (a spreadsheet formula).",
+      "visitor_sees": "Nothing different.",
+      "owner_sees": "The text shown literally in the spreadsheet.",
+      "default_behavior": "Prefix such cells (also those starting with a tab or carriage return) with an apostrophe in the CSV.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-022",
+      "area": "images",
+      "edge": "The product visual image is missing, huge or fails to load.",
+      "visitor_sees": "The HTML mock-up in its frame, or a calm placeholder; the page does not jump.",
+      "owner_sees": "Nothing; images arrive later through the builder.",
+      "default_behavior": "Always render the HTML mock-up from the brief; use an image only when the content file points at one that loads.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-023",
+      "area": "owner",
+      "edge": "Sample signups are left in the database.",
+      "visitor_sees": "Not applicable.",
+      "owner_sees": "Sample rows labelled 'Sample' and a 'Delete all samples' button; samples are left out of every count.",
+      "default_behavior": "Samples never count in totals.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-024",
+      "area": "content",
+      "edge": "The brief has no pricing and no quotes.",
+      "visitor_sees": "A page with no pricing or testimonials block and no links to them.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Leave the blocks out entirely; no placeholder text, no empty section, no nav link.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-025",
+      "area": "content",
+      "edge": "The brief has one plan, or the plans differ a lot in length.",
+      "visitor_sees": "One centred narrow card, or equal-height cards with the button at the bottom.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Columns equal the number of plans; cards stretch to the same height; the button sits at the foot.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-026",
+      "area": "content",
+      "edge": "The brief has one quote, or a very long quote.",
+      "visitor_sees": "One wide centred card; a long quote is clamped at six lines with the full text still readable.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Clamp with line-clamp and an accessible full text; never cut mid-word.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-027",
+      "area": "content",
+      "edge": "The brief lists more than three pills or steps.",
+      "visitor_sees": "The first three.",
+      "owner_sees": "A note in AGENT_LOG.md.",
+      "default_behavior": "Render at most three; record the rest as ignored.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-028",
+      "area": "content",
+      "edge": "The headline is very long.",
+      "visitor_sees": "At most three lines on a 375px phone, never overflowing.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Responsive type scale; the hero text column is no wider than 18 characters per line on desktop.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-029",
+      "area": "claims",
+      "edge": "A fintech or regulated brief has claims marked unconfirmed (security, compliance, 'cannot move money').",
+      "visitor_sees": "The claims are not on the page.",
+      "owner_sees": "They are listed under 'Check these before you share it' with the unconfirmed flag.",
+      "default_behavior": "Show only claims marked confirmed; never rewrite or strengthen a claim.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-030",
+      "area": "claims",
+      "edge": "The brief has a disclosure (for example a bank partner statement).",
+      "visitor_sees": "The disclosure in the footer exactly as written.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Never write or edit legal wording; copy the owner's text unchanged.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-031",
+      "area": "navigation",
+      "edge": "A footer column has no links (no legal pages, no social profiles).",
+      "visitor_sees": "The column is not shown.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Omit empty columns; never link to href='#'.",
+      "status": "handled",
+      "tested": "no"
+    }
+  ]
+}
