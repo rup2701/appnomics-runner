@@ -131,6 +131,15 @@ async function vercel(appDir: string, args: string[], input?: string) {
   return sh("npx", ["--yes", "vercel@latest", ...args, ...scope()], { cwd: appDir, env: vercelEnv(), input });
 }
 
+/** Point the folder at the site's own Vercel project. A rollback can delete .vercel, and deploying without it creates a new project named after the folder. */
+async function relink(appDir: string, name: string | undefined) {
+  if (!name) throw new Error("deploy.json has no project name, so the site cannot be redeployed safely.");
+  await writeFile(path.join(appDir, "vercel.json"), JSON.stringify({ framework: "nextjs" }, null, 2));
+  await vercel(appDir, ["link", "--yes", "--project", name]);
+  const linked = JSON.parse(await readFile(path.join(appDir, ".vercel", "project.json"), "utf8")).projectName;
+  if (linked !== name) throw new Error(`The folder is linked to "${linked}", not "${name}". Not deploying.`);
+}
+
 async function deployProd(appDir: string): Promise<string> {
   const out = await vercel(appDir, ["deploy", "--prod", "--yes"]);
   const url = out.trim().split("\n").filter((l) => l.startsWith("https://")).pop();
@@ -193,6 +202,7 @@ async function main() {
       secrets.push(url);
       await migrate(appDir, url, false);
     }
+    await relink(appDir, state.name);
     const deployUrl = await deployProd(appDir);
     const result = await verify(`https://${state.host}`);
     await writeFile(statePath, JSON.stringify({ ...state, deployUrl, redeployedAt: new Date().toISOString() }, null, 2));
@@ -260,6 +270,10 @@ async function main() {
       SESSION_SECRET: randomBytes(32).toString("hex"),
       NEXT_PUBLIC_SITE_URL: siteUrl,
     };
+    // Some builds also read the public address as SITE_URL (links, sitemap). Set it when the app asks for it.
+    try {
+      if (/^SITE_URL=/m.test(await readFile(path.join(appDir, ".env.example"), "utf8"))) vars.SITE_URL = siteUrl;
+    } catch { /* no .env.example */ }
     for (const [k, v] of Object.entries(vars)) await vercel(appDir, ["env", "add", k, "production", "--force"], v);
     try {
       const example = await readFile(path.join(appDir, ".env.example"), "utf8");
