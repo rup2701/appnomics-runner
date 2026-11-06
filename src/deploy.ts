@@ -10,6 +10,7 @@ import { spawn } from "node:child_process";
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import { randomBytes } from "node:crypto";
 import path from "node:path";
+import { isStaticRun } from "./kind.js";
 
 const secrets: string[] = [];
 const redact = (s: string) => secrets.reduce((t, v) => (v ? t.split(v).join("***") : t), s);
@@ -147,11 +148,15 @@ async function deployProd(appDir: string): Promise<string> {
   return url;
 }
 
-async function verify(siteUrl: string): Promise<{ home: number; signIn: number; adminRedirects: boolean }> {
+async function verify(siteUrl: string, staticSite = false): Promise<{ home: number; signIn: number; adminRedirects: boolean }> {
   const get = async (p: string, manual = false) => fetch(siteUrl + p, { redirect: manual ? "manual" : "follow" });
   for (let i = 0; i < 12; i++) {
     try {
       const home = await get("/");
+      if (staticSite) { // no owner area on a static site: only the home page is checked
+        if (home.status === 200) return { home: 200, signIn: 0, adminRedirects: false };
+        throw new Error("not ready");
+      }
       const signIn = await get("/admin/sign-in");
       const admin = await get("/admin", true);
       const adminRedirects = admin.status >= 300 && admin.status < 400 && (admin.headers.get("location") ?? "").includes("sign-in");
@@ -173,7 +178,9 @@ async function main() {
   const domainBase = process.env.APP_DOMAIN ?? "appnomics.live";
 
   // ---- set a new owner password on a deployed site ----
+  const staticSite = await isStaticRun(root);
   if (arg("set-password") !== undefined) {
+    if (staticSite) throw new Error("This site has no owner area, so there is no password to set.");
     const state = JSON.parse(await readFile(statePath, "utf8"));
     const pw = arg("set-password")!;
     if (pw.length < 10) throw new Error("--set-password needs at least 10 characters");
@@ -196,7 +203,8 @@ async function main() {
   if (flag("redeploy")) {
     const state = JSON.parse(await readFile(statePath, "utf8"));
     log(`Redeploying ${state.host}`);
-    if (flag("skip-migrate")) log("  skipping migrations (--skip-migrate)");
+    if (staticSite) log("  static site: no migrations");
+    else if (flag("skip-migrate")) log("  skipping migrations (--skip-migrate)");
     else {
       const url = await neonDirectUrl(state);
       secrets.push(url);
@@ -204,18 +212,18 @@ async function main() {
     }
     await relink(appDir, state.name);
     const deployUrl = await deployProd(appDir);
-    const result = await verify(`https://${state.host}`);
+    const result = await verify(`https://${state.host}`, staticSite);
     await writeFile(statePath, JSON.stringify({ ...state, deployUrl, redeployedAt: new Date().toISOString() }, null, 2));
     log(`\nDone: https://${state.host}\n${JSON.stringify(result)}`);
     return;
   }
 
   // ---- first deploy ----
-  if (!process.env.NEON_API_KEY) throw new Error("Set NEON_API_KEY (source ~/.appnomics/keys.env)");
+  if (!staticSite && !process.env.NEON_API_KEY) throw new Error("Set NEON_API_KEY (source ~/.appnomics/keys.env)");
   const name = arg("name") ?? "";
   const email = arg("email") ?? "";
   if (!/^[a-z0-9-]{3,40}$/.test(name)) throw new Error("--name must be 3 to 40 lowercase letters, numbers or dashes (it becomes name." + domainBase + ")");
-  if (!/^\S+@\S+\.\S+$/.test(email)) throw new Error("--email must be the owner's email address");
+  if (!staticSite && !/^\S+@\S+\.\S+$/.test(email)) throw new Error("--email must be the owner's email address");
   const already = await readFile(statePath).then(() => true, () => false);
   if (already) throw new Error(`${statePath} exists: this site was deployed already. Use --redeploy.`);
 
@@ -227,6 +235,29 @@ async function main() {
   });
   if (exists.status === 200) throw new Error(`A Vercel project named "${name}" already exists in this account. Nothing was changed. Pick another --name; this script only creates new projects and never reuses one.`);
   if (exists.status !== 404) throw new Error(`Could not check whether the Vercel project "${name}" exists (HTTP ${exists.status}). Nothing was changed. Check VERCEL_TOKEN and VERCEL_SCOPE and try again.`);
+
+
+  if (staticSite) {
+    // A static site: no database, no owner password, no environment variables except the public address.
+    const host = `${name}.${domainBase}`;
+    const siteUrl = `https://${host}`;
+    log(`Deploying ${root} to ${siteUrl} (static site)`);
+    log("[1/4] Linking the Vercel project");
+    await writeFile(path.join(appDir, "vercel.json"), JSON.stringify({ framework: "nextjs" }, null, 2));
+    await vercel(appDir, ["link", "--yes", "--project", name]);
+    log("[2/4] Setting the public address");
+    await vercel(appDir, ["env", "add", "NEXT_PUBLIC_SITE_URL", "production", "--force"], siteUrl);
+    log("[3/4] Deploying to production (the build runs on Vercel)");
+    const deployUrl = await deployProd(appDir);
+    log("[4/4] Adding the address and checking the site");
+    try { await vercel(appDir, ["domains", "add", host, name]); }
+    catch { await vercel(appDir, ["alias", "set", deployUrl, host]); }
+    const result = await verify(siteUrl, true);
+    await writeFile(statePath, JSON.stringify({ name, host, static: true, deployUrl, deployedAt: new Date().toISOString() }, null, 2));
+    log(`\nLive: ${siteUrl}\nChecks: home ${result.home}`);
+    log("Sample content (testimonials, pricing, images, links with no page) is labelled Sample; the owner reviews it before sharing.");
+    return;
+  }
 
   const generated = !arg("password") && !process.env.ADMIN_PASSWORD;
   const password = arg("password") ?? process.env.ADMIN_PASSWORD ?? randomBytes(12).toString("base64url");

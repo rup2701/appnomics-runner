@@ -1,7 +1,11 @@
-# SaaS product site pack (DRAFT, not wired into the builder yet)
+# SaaS product showcase pack (DRAFT, not wired into the builder yet)
 
-A one-page marketing site for a software product: centered hero with an email box, a product visual, three feature pills, how it works, pricing, testimonials, a closing call to action and a proper footer. Copied from the `site` (waitlist) pack; shares its stack and its honesty rules (nothing is invented; proof, prices and claims come from the owner).
+A one-page showcase for a software product, built fast from a short interview. No sign-ups, no database, no owner area, no email. Hero with a main button (a link the owner sets) and a product image placeholder, benefits bento, how it works, pricing (up to three plans, optional yearly billing), testimonials, FAQ, closing call to action and a full footer. Optional: examples gallery, comparison table, use-case cards.
 
-An optional **fintech module** adds a trust block and required-disclosure wording, and only uses claims the owner confirmed. The base stays industry-neutral so other flavours (healthcare, for example) can be added the same way.
+The brand is the part to get right: audience, tone (calm, bold, playful, serious) and color (light, dark, blue accent) are asked in the interview and drive the look preset (light is `saas-clean`, dark is `deep-tech`).
 
-Status of the files: the interview, example brief, contract, look rules and the four specs (requirements, experience, domain model, edges) are all written for this pack. Not yet done: the builder and worker wiring, and a first test build.
+Honesty rules: drafted copy comes from the interview; sample content (testimonials, pricing the owner has not given, the hero image, links with no page) is clearly marked "Sample" and listed in the brief's `placeholders`. Nothing about customers, certifications or security is invented.
+
+The earlier version of this pack, with email sign-ups, a database and an owner area, is kept in `parked/saas-signup-owner-v1` for the app packs that need those parts (waitlist, creator, coaching).
+
+Status: interview, brief, contract and specs are written for this pack. Not yet done: the runner's no-database deploy mode, the builder and worker wiring, and a first test build.

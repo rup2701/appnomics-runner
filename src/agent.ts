@@ -6,7 +6,7 @@ import path from "node:path";
 import { config, costUsd, addUsage, type Usage } from "./config.js";
 import { toolDefs, makeHandlers, agentEnv } from "./tools.js";
 
-export const SYSTEM_PROMPT = `You are the builder agent for an AI app builder. You are given a folder with specs/ (the files for this kind of app) and specs/brief.json (the facts about this one app). Build the app they describe, whether it is a store or a website.
+const BASE_PROMPT = `You are the builder agent for an AI app builder. You are given a folder with specs/ (the files for this kind of app) and specs/brief.json (the facts about this one app). Build the app they describe, whether it is a store or a website.
 
 How to work:
 - Read specs/contract.md (the contract for this kind of app; older runs call it specs/vision.md), specs/stack.json, specs/requirements.json, specs/experience.json, specs/domain-model.json, specs/edges.json, specs/SPEC_GAPS.md and specs/brief.json first, and specs/look.md if it exists (it holds the look rules and checks; follow them). The stack decisions are fixed; do not reopen them.
@@ -18,6 +18,14 @@ How to work:
 - Keep commands short. Install packages with npm. A command has a time limit of ten minutes.
 - When the work is done, write AGENT_LOG.md at the root with these headings: What I built and where; Beyond the specs; Decisions on ambiguous points; Not verified; Unclear, missing or misleading in the specs; Mistakes made and fixed; Final results (the exact commands you ran and what they printed).
 - Never claim a check passed unless you ran it and saw it pass. Finish by replying with one short paragraph.`;
+
+const DB_LINE = "- DATABASE_URL is already in .env. The database is empty and yours alone.";
+const STAGES_LINE = "(1) scaffold, database schema and seed data from the brief, (2) the public side (what shoppers or visitors see), (3) the owner area, (4) end-to-end tests";
+// A static site (the SaaS showcase pack) has no database, no owner area and no environment variables.
+export const staticPrompt = (p: string) =>
+  p.replace(DB_LINE, "- This is a static site: no database, no API routes, no environment variables, no owner area. Page content comes from src/content/site.ts, written from the brief. Ignore any mention of a database in the instructions above.")
+   .replace(STAGES_LINE, "(1) scaffold and the content file from the brief, (2) the public page (every section in the brief's page_plan), (3) end-to-end tests");
+export const SYSTEM_PROMPT = BASE_PROMPT;
 
 type Result = { turns: number; stopReason: "finished" | "max_turns" | "max_cost" | "cut_off" | "no_log"; usage: Usage };
 
@@ -37,6 +45,7 @@ function moveCacheMark(messages: Anthropic.MessageParam[]): void {
 export async function runAgent(opts: {
   client: Anthropic; appDir: string; databaseUrl: string; usage: Usage; transcriptPath: string; budgetUsedUsd: () => number;
   firstMessage?: string; // used by resume
+  staticSite?: boolean; // no database or owner area
 }): Promise<Result> {
   const handlers = makeHandlers(opts.appDir, agentEnv(opts.databaseUrl)) as Record<string, (i: never) => Promise<string>>;
   const messages: Anthropic.MessageParam[] = [
@@ -57,7 +66,7 @@ export async function runAgent(opts: {
         res = await opts.client.messages.create({
           model: config.model,
           max_tokens: 20000,
-          system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+          system: [{ type: "text", text: opts.staticSite ? staticPrompt(SYSTEM_PROMPT) : SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
           tools: toolDefs,
           messages,
         });

@@ -10,6 +10,7 @@ import path from "node:path";
 import { config, costUsd, emptyUsage } from "./config.js";
 import { standInBrief } from "./brief.js";
 import { createWorkspace } from "./workspace.js";
+import { isStaticBrief, isStaticRun } from "./kind.js";
 import { runAgent, transcriptFile } from "./agent.js";
 import { agentEnv } from "./tools.js";
 
@@ -64,13 +65,14 @@ async function resume(runDir: string, message: string = RESUME_MESSAGE, label: s
   const root = path.resolve(runDir);
   const appDir = path.join(root, "app");
   const env = await readFile(path.join(appDir, ".env"), "utf8");
-  const databaseUrl = env.match(/^DATABASE_URL=(.+)$/m)?.[1]?.trim().replace(/^["']|["']$/g, "");
-  if (!databaseUrl) throw new Error(`No DATABASE_URL in ${appDir}/.env`);
+  const staticSite = await isStaticRun(root);
+  const databaseUrl = env.match(/^DATABASE_URL=(.+)$/m)?.[1]?.trim().replace(/^["']|["']$/g, "") ?? "";
+  if (!databaseUrl && !staticSite) throw new Error(`No DATABASE_URL in ${appDir}/.env`);
   const usage = emptyUsage();
   const started = Date.now();
   console.log(`Resuming ${root}`);
   const result = await runAgent({
-    client: new Anthropic(), appDir, databaseUrl, usage, firstMessage: message,
+    client: new Anthropic(), appDir, databaseUrl, usage, firstMessage: message, staticSite,
     transcriptPath: transcriptFile(root), budgetUsedUsd: () => costUsd(usage),
   });
   const check = async (args: string[]) => {
@@ -139,13 +141,14 @@ async function main() {
   const briefCost = costUsd(usage);
 
   console.log("2/4 Setting up a fresh folder and database…");
-  const ws = await createWorkspace({ prompt, specsDir, brief, runsDir: path.join(here, "runs") });
+  const staticSite = isStaticBrief(brief);
+  const ws = await createWorkspace({ prompt, specsDir, brief, runsDir: path.join(here, "runs"), skipDb: staticSite });
   await writeFile(path.join(ws.root, "brief.json"), JSON.stringify(brief, null, 2));
-  console.log(`    ${ws.appDir}\n    database ${ws.dbName}`);
+  console.log(`    ${ws.appDir}${staticSite ? "\n    static site: no database" : `\n    database ${ws.dbName}`}`);
 
   console.log("3/4 Agent is building (this takes a while)…");
   let result = await runAgent({
-    client, appDir: ws.appDir, databaseUrl: ws.databaseUrl, usage,
+    client, appDir: ws.appDir, databaseUrl: ws.databaseUrl, usage, staticSite,
     transcriptPath: transcriptFile(ws.root), budgetUsedUsd: () => costUsd(usage),
   });
   // Packs with a look file get a second, focused pass: a full build follows look rules far less closely than a short, single-purpose request does.
@@ -153,7 +156,7 @@ async function main() {
   if (hasLook && result.stopReason === "finished" && !process.argv.includes("--no-look-pass")) {
     console.log("3b/4 Look pass (the agent checks the public page against look.md)…");
     const lp = await runAgent({
-      client, appDir: ws.appDir, databaseUrl: ws.databaseUrl, usage, firstMessage: LOOK_PASS_MESSAGE,
+      client, appDir: ws.appDir, databaseUrl: ws.databaseUrl, usage, staticSite, firstMessage: LOOK_PASS_MESSAGE,
       transcriptPath: transcriptFile(ws.root), budgetUsedUsd: () => costUsd(usage),
     });
     result = { ...lp, turns: result.turns + lp.turns };

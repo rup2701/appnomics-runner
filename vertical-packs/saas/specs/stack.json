@@ -8,16 +8,6 @@
       "why": "What the store pack uses and what the agent writes best."
     },
     {
-      "id": "orm",
-      "choice": "Drizzle ORM with node-postgres",
-      "why": "No native engine binary, so it installs in sandboxes and runs on serverless."
-    },
-    {
-      "id": "database",
-      "choice": "Postgres. Neon in production, one database per app",
-      "why": "Sign-ups must persist. Serverless hosting has no durable local files."
-    },
-    {
       "id": "ui",
       "choice": "shadcn/ui components copied into src/components/ui, Radix primitives, Tailwind CSS 4 with CSS variable tokens",
       "why": "Accessibility is handled, the code is owned by the app, and the look settings can drive every component."
@@ -33,24 +23,9 @@
       "why": "Verification is automatic; a run passes only when these pass."
     },
     {
-      "id": "deploy",
-      "choice": "One Vercel project per app, deployed directly from the app folder with the Vercel CLI. No GitHub repository is required in this version",
-      "why": "Fewer moving parts for a one-page site. The owner can download the source as a zip."
-    },
-    {
-      "id": "settings",
-      "choice": "Owner-editable words, images and visibility live in the database, not in code",
-      "why": "Edits are instant and need no rebuild."
-    },
-    {
-      "id": "email",
-      "choice": "None in this version. Sign-ups are stored and downloaded, nothing is sent",
-      "why": "Keeps the site free of an email service and a verified domain."
-    },
-    {
       "id": "payments",
       "choice": "None",
-      "why": "A waitlist site takes no money."
+      "why": "A marketing site takes no money."
     },
     {
       "id": "typescript",
@@ -58,14 +33,24 @@
       "why": "TypeScript 7 does not work with the Next.js tooling yet; an unpinned install picked it and cost a rebuild."
     },
     {
-      "id": "owner-variables",
-      "choice": "The owner sign-in is read from ADMIN_EMAIL and ADMIN_PASSWORD_HASH, plus SESSION_SECRET and DATABASE_URL. List them all in .env.example",
-      "why": "The deploy script sets these names. Different names mean the deployed owner cannot sign in."
+      "id": "data",
+      "choice": "No database, no ORM, no server API routes, no environment variables. The page is static, rendered from src/content/site.ts",
+      "why": "A showcase stores nothing. Fewer parts means a faster build and a faster deploy."
     },
     {
-      "id": "deploy-scripts",
-      "choice": "package.json has these scripts, with exactly these names: \"db:migrate\" (applies the migrations), \"db:seed\" (inserts the sample data; safe on an empty database) and \"hash-password\" (takes the password as its one argument and prints scrypt:<salt>:<hash> and nothing else; the sign-in check uses the same hashing code).",
-      "why": "The deploy script runs these by name. Builds that named them differently could not be published without a hand fix."
+      "id": "deploy",
+      "choice": "One Vercel project per site, deployed directly from the site folder with the Vercel CLI. No GitHub repository is required in this version",
+      "why": "Fewer moving parts. The owner can download the source as a zip."
+    },
+    {
+      "id": "email",
+      "choice": "None. Nothing is collected or sent",
+      "why": "Email and sign-ups are integrations, handled in a later version."
+    },
+    {
+      "id": "scripts",
+      "choice": "package.json has the scripts \"dev\", \"build\", \"start\" and \"test:e2e\". It has no \"db:migrate\", \"db:seed\" or \"hash-password\"",
+      "why": "The deploy script for this pack runs the build only: no migration, seed or owner password."
     }
   ]
 }

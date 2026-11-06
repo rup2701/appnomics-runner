@@ -9,7 +9,7 @@ import { config, costUsd, emptyUsage, addUsage } from "./config.js";
 
 const REQUIRED: Record<string, string[]> = {
   site: ["site", "audience", "blocks", "look"],
-  saas: ["site", "audience", "blocks", "signup", "look"],
+  saas: ["site", "audience", "brand", "main_button", "blocks", "look"],
   store: ["store", "categories", "look", "orders"],
 };
 

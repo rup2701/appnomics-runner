@@ -24,7 +24,8 @@ export async function createWorkspace(opts: {
   const dbName = `run_${stamp}_${Math.random().toString(36).slice(2, 6)}`;
   const databaseUrl = `${config.dbBaseUrl}/${dbName}`;
   if (!opts.skipDb) await run("createdb", [dbName]);
-  await writeFile(path.join(appDir, ".env"), `DATABASE_URL=${databaseUrl}\n`);
+  // A static site has no database and needs no variables.
+  await writeFile(path.join(appDir, ".env"), opts.skipDb ? "" : `DATABASE_URL=${databaseUrl}\n`);
 
   const git = (...args: string[]) =>
     run("git", ["-C", appDir, "-c", "user.name=runner", "-c", "user.email=runner@appnomics.invalid", ...args]);
@@ -32,5 +33,5 @@ export async function createWorkspace(opts: {
   await writeFile(path.join(appDir, ".gitignore"), "node_modules\n.next\n.env\n.uploads\n");
   await git("add", "-A");
   await git("commit", "-q", "-m", "Specs and brief");
-  return { runId, root, appDir, dbName, databaseUrl };
+  return { runId, root, appDir, dbName: opts.skipDb ? "" : dbName, databaseUrl: opts.skipDb ? "" : databaseUrl };
 }

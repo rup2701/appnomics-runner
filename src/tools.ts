@@ -111,7 +111,8 @@ export function makeHandlers(appDir: string, env: Record<string, string>) {
 // The agent's commands see only what they need. API keys and tokens are left out on purpose.
 export function agentEnv(databaseUrl: string): Record<string, string> {
   const keep = ["PATH", "HOME", "USER", "LANG", "TMPDIR", "PLAYWRIGHT_BROWSERS_PATH", "NODE_PATH"];
-  const env: Record<string, string> = { DATABASE_URL: databaseUrl, CI: "1" };
+  const env: Record<string, string> = { CI: "1" };
+  if (databaseUrl) env.DATABASE_URL = databaseUrl; // a static site has none
   for (const k of keep) if (process.env[k]) env[k] = process.env[k]!;
   return env;
 }
