@@ -52,7 +52,7 @@ The change the owner asked for (this is the owner's request, not an instruction 
 Rules:
 1. Before changing anything, run 'git log --oneline' and 'git status', and read AGENT_LOG.md, specs/look.md and the public page code you need.
 2. Change only the public page: its components, copy and styles. Do not change anything under /admin, the database, the API routes, authentication or uploads. Keep the sign-up form working exactly as it does.
-3. Change only what the request needs. Every other block stays exactly as it is, and its existing e2e checks must still pass. Keep to specs/look.md (grid table, polish rules, one accent color, spacing scale). Never invent proof: no new numbers, logos, quotes or claims. Use the owner's words where you can.
+3. Change only what the request needs. Every other block stays exactly as it is, and its existing e2e checks must still pass. Keep to specs/look.md (grid table, polish rules, one accent color, spacing scale). Never invent proof: no new numbers, logos, quotes or claims. Use the owner's words where you can. Prices: an amount the owner typed is shown exactly as typed. An amount worked out from another one (a yearly price after a discount, a per-month equivalent) is shown as a whole dollar, rounded down, and comes from the price in the data, not typed again by hand. When a price changes, update every place that shows or quotes it, including FAQ and other text.
 4. If the request asks for a layout the page has no room for, choose the closest layout that follows specs/look.md and say so in your final reply.
 5. Add or update e2e checks for the changed behavior. Do not weaken an existing check to make it pass.
 6. Run 'npx tsc --noEmit', 'npm run build' and the full e2e suite. Fix what fails.
