@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "about": "Template decisions every app starts from. Agents do not reopen these. To change one, write a change request.",
+  "decisions": [
+    {
+      "id": "framework",
+      "choice": "Next.js 16 (App Router), React 19, TypeScript strict",
+      "why": "What the store pack uses and what the agent writes best."
+    },
+    {
+      "id": "ui",
+      "choice": "shadcn/ui components copied into src/components/ui, Radix primitives, Tailwind CSS 4 with CSS variable tokens",
+      "why": "Accessibility is handled, the code is owned by the app, and the look settings can drive every component."
+    },
+    {
+      "id": "validation",
+      "choice": "Zod at every boundary",
+      "why": "Keeps visitor and owner input inside the schema."
+    },
+    {
+      "id": "tests",
+      "choice": "Playwright end-to-end scripts in e2e/, plus one check per edge in specs/edges.json",
+      "why": "Verification is automatic; a run passes only when these pass."
+    },
+    {
+      "id": "payments",
+      "choice": "None",
+      "why": "A marketing site takes no money."
+    },
+    {
+      "id": "typescript",
+      "choice": "TypeScript 5.9 (pin typescript@~5.9 in devDependencies)",
+      "why": "TypeScript 7 does not work with the Next.js tooling yet; an unpinned install picked it and cost a rebuild."
+    },
+    {
+      "id": "data",
+      "choice": "No database, no ORM, no server API routes, no environment variables. The page is static, rendered from src/content/site.ts",
+      "why": "A showcase stores nothing. Fewer parts means a faster build and a faster deploy."
+    },
+    {
+      "id": "deploy",
+      "choice": "One Vercel project per site, deployed directly from the site folder with the Vercel CLI. No GitHub repository is required in this version",
+      "why": "Fewer moving parts. The owner can download the source as a zip."
+    },
+    {
+      "id": "email",
+      "choice": "None. Nothing is collected or sent",
+      "why": "Email and sign-ups are integrations, handled in a later version."
+    },
+    {
+      "id": "scripts",
+      "choice": "package.json has the scripts \"dev\", \"build\", \"start\" and \"test:e2e\". It has no \"db:migrate\", \"db:seed\" or \"hash-password\"",
+      "why": "The deploy script for this pack runs the build only: no migration, seed or owner password."
+    }
+  ]
+}

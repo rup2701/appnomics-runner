@@ -1,0 +1,27 @@
+{
+  "purpose": "Example of the creative block that would sit in a brief beside look. A made-up product; every value comes from the interview, never from this file.",
+  "creative": {
+    "direction": "Board, grotesk and mono",
+    "concept": "A calm planning board: thin rules, small status dots and mono labels, because the product is about seeing a whole week at a glance.",
+    "typography": {
+      "pairing": "Grotesk and mono",
+      "heading": "Space Grotesk",
+      "body": "Inter",
+      "accent": "JetBrains Mono"
+    },
+    "motif": "board",
+    "hero": {
+      "kind": "fragment",
+      "note": "Three sample post cards on a week strip, built from the site's own words and marked Sample.",
+      "asset": null
+    },
+    "signature": [
+      { "element": "section index labels", "where": "every section eyebrow", "font": "accent" },
+      { "element": "status chips", "where": "hero fragment, pricing badge, FAQ topics" }
+    ],
+    "references": [],
+    "learned": [],
+    "chosen_by": "owner",
+    "options_shown": ["Board, grotesk and mono", "Quiet editorial", "Soft and friendly"]
+  }
+}

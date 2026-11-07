@@ -1,0 +1,406 @@
+{
+  "schema_version": "2.0",
+  "purpose": "Example brief for a product showcase: one page, no sign-ups, no database, no owner area. It shows the shape and the defaults only. Every idea-specific value belongs to a made-up product and must be replaced by what the person says in the interview.",
+  "site": {
+    "name": "Tallyfold",
+    "kind": "product-showcase",
+    "industry": "fintech",
+    "one_liner": "Expense reports that fill themselves in for small finance teams.",
+    "core_idea": {
+      "product": "Matches every card charge to a receipt and a category.",
+      "pain": "Finance leads chase receipts every month-end and the close takes days.",
+      "solution": "Charges and receipts are matched automatically, so the close takes hours."
+    },
+    "demo_notice": true
+  },
+  "audience": {
+    "icp": "Finance leads at companies of 20 to 200 people who chase receipts every month-end.",
+    "alternatives": "Spreadsheets, shared inboxes, and expense tools that need every receipt keyed in.",
+    "frustrations": [
+      "Chasing receipts every month-end",
+      "Charges nobody can explain",
+      "Close takes days instead of hours"
+    ]
+  },
+  "brand": {
+    "tone": "calm",
+    "tone_options": [
+      "calm",
+      "bold",
+      "playful",
+      "serious"
+    ],
+    "color": "light",
+    "color_options": [
+      "light",
+      "dark",
+      "blue-accent"
+    ],
+    "preset_map": {
+      "light": "showcase-light",
+      "dark": "showcase-dark",
+      "blue-accent": "showcase-light with a blue accent"
+    },
+    "own_words": null
+  },
+  "main_button": {
+    "label": "Get started",
+    "link": null,
+    "link_status": "placeholder",
+    "note": "A link the owner sets later: a sign-up page, a booking page or a mailto. With no link the button scrolls to the pricing section (the closing section when pricing is off) and is flagged 'Set your link'."
+  },
+  "nav": [
+    {
+      "label": "How it works",
+      "target": "how_it_works"
+    },
+    {
+      "label": "Pricing",
+      "target": "pricing"
+    },
+    {
+      "label": "FAQ",
+      "target": "faq"
+    },
+    {
+      "label": "Get started",
+      "target": "main_button",
+      "style": "button"
+    }
+  ],
+  "page_plan": {
+    "always_on": [
+      "hero",
+      "how_it_works",
+      "faq",
+      "closing_cta",
+      "footer"
+    ],
+    "optional": {
+      "pricing": true,
+      "testimonials": true,
+      "examples_gallery": false,
+      "comparison_table": false,
+      "use_case_cards": false,
+      "benefits_bento": true
+    },
+    "order": [
+      "hero",
+      "benefits_bento",
+      "how_it_works",
+      "pricing",
+      "testimonials",
+      "faq",
+      "closing_cta",
+      "footer"
+    ],
+    "added_by_owner": []
+  },
+  "blocks": [
+    {
+      "type": "hero",
+      "status": "drafted",
+      "headline": "Month-end, without the chase.",
+      "subheadline": "Tallyfold matches every card charge to a receipt and a category, so your team stops hunting for paperwork.",
+      "cta": {
+        "label": "Get started",
+        "target": "main_button"
+      },
+      "visual": {
+        "kind": "image_placeholder",
+        "label": "Your product image goes here",
+        "aspect": "16:10",
+        "image": null,
+        "note": "A plain labelled box under the hero text. No mock-up is drawn. The owner supplies a screenshot or image later, and the box is replaced."
+      },
+      "secondary_cta": {
+        "label": "Watch demo",
+        "target": "secondary_button"
+      }
+    },
+    {
+      "type": "benefits_bento",
+      "status": "drafted",
+      "heading": "Why finance teams use it",
+      "items": [
+        {
+          "icon": "receipt",
+          "title": "Receipts matched automatically",
+          "text": "Each charge finds its receipt without anyone keying it in.",
+          "size": "large"
+        },
+        {
+          "icon": "tags",
+          "title": "Categories learned from your books",
+          "text": "Suggestions improve as you approve them.",
+          "size": "small"
+        },
+        {
+          "icon": "calendar-check",
+          "title": "Month-end close in hours",
+          "text": "Unmatched items are listed, so nothing hides.",
+          "size": "small"
+        }
+      ],
+      "note": "The first item is the large card: the most important claim. Cards follow the bento layout table in look.md for the number of items."
+    },
+    {
+      "type": "how_it_works",
+      "status": "drafted",
+      "heading": "How it works",
+      "items": [
+        {
+          "title": "Connect your cards",
+          "text": "Add the cards your team already uses."
+        },
+        {
+          "title": "Forward receipts",
+          "text": "Email or photograph them. We match each to a charge."
+        },
+        {
+          "title": "Review and export",
+          "text": "Approve the matches and send the file to your accountant."
+        }
+      ]
+    },
+    {
+      "type": "pricing",
+      "status": "placeholder",
+      "heading": "Simple plans",
+      "billing": "monthly_and_yearly",
+      "yearly_discount_percent": 20,
+      "rules": [
+        "At most 3 plans.",
+        "Prices the owner typed stay exactly as typed.",
+        "Calculated amounts are whole dollars, rounded down: yearly = floor(monthly x 12 x (1 - discount)); per-month equivalent = floor(yearly / 12).",
+        "Each price is defined once in the plan data and derived everywhere else (cards, FAQ, comparison table)."
+      ],
+      "plans": [
+        {
+          "name": "Team",
+          "monthly_price": 99,
+          "yearly_price": 950,
+          "yearly_per_month": 79,
+          "features": [
+            "Up to 25 cards",
+            "Receipt matching",
+            "Accountant export"
+          ],
+          "button": "Get started",
+          "highlight": false,
+          "price_source": "owner"
+        },
+        {
+          "name": "Business",
+          "monthly_price": 299,
+          "yearly_price": 2870,
+          "yearly_per_month": 239,
+          "features": [
+            "Up to 100 cards",
+            "Everything in Team",
+            "Custom categories",
+            "Priority support"
+          ],
+          "button": "Get started",
+          "highlight": true,
+          "price_source": "owner"
+        }
+      ]
+    },
+    {
+      "type": "testimonials",
+      "status": "placeholder",
+      "heading": "What finance teams say",
+      "items": [
+        {
+          "quote": "Placeholder quote. Replace with a real one before you share the page.",
+          "name": "Example Name",
+          "role": "Controller",
+          "company": "Example Co"
+        },
+        {
+          "quote": "Placeholder quote. A second example, so several quotes sit side by side.",
+          "name": "Example Name",
+          "role": "Head of Finance",
+          "company": "Example Co"
+        },
+        {
+          "quote": "Placeholder quote. A third example. Add real ones and these go away.",
+          "name": "Example Name",
+          "role": "CEO",
+          "company": "Example Co"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "status": "drafted",
+      "heading": "Questions",
+      "items": [
+        {
+          "q": "Who is Tallyfold for?",
+          "a": "Finance leads at companies of 20 to 200 people."
+        },
+        {
+          "q": "How does matching work?",
+          "a": "Forward a receipt and we match it to the charge by amount, date and merchant."
+        },
+        {
+          "q": "What does it cost?",
+          "a": "Plans start at $99 a month. See the pricing section."
+        }
+      ]
+    },
+    {
+      "type": "closing_cta",
+      "status": "drafted",
+      "headline": "Close the books faster.",
+      "subheadline": "See how Tallyfold fits your month-end.",
+      "cta": {
+        "label": "Get started",
+        "target": "main_button"
+      }
+    },
+    {
+      "type": "footer",
+      "status": "drafted",
+      "company": "Tallyfold, Inc.",
+      "tagline": "Expense reports that fill themselves in.",
+      "columns": [
+        {
+          "title": "Product",
+          "links": [
+            {
+              "label": "How it works",
+              "target": "how_it_works"
+            },
+            {
+              "label": "Pricing",
+              "target": "pricing"
+            },
+            {
+              "label": "FAQ",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "title": "Company",
+          "links": [
+            {
+              "label": "About",
+              "link": null
+            },
+            {
+              "label": "Contact",
+              "link": null
+            }
+          ]
+        },
+        {
+          "title": "Resources",
+          "links": [
+            {
+              "label": "Docs",
+              "link": null
+            },
+            {
+              "label": "Changelog",
+              "link": null
+            }
+          ]
+        }
+      ],
+      "legal_links": [
+        {
+          "label": "Privacy",
+          "link": null
+        },
+        {
+          "label": "Terms",
+          "link": null
+        },
+        {
+          "label": "Security",
+          "link": null
+        }
+      ],
+      "link_rule": "A link with no page behind it is shown as 'Set your link' in the review list, and points to the top of the page until set. No legal text is written.",
+      "legal": "© 2026 Tallyfold, Inc. All rights reserved."
+    }
+  ],
+  "imagery": {
+    "source": "owner_uploads",
+    "rules": [
+      "No stock or generated photos or screenshots are fetched or invented.",
+      "The hero image starts as a plain labelled placeholder box.",
+      "Logos and screenshots are added later by the owner."
+    ]
+  },
+  "look": {
+    "preset": "showcase-light",
+    "mode": "light",
+    "tone": "calm",
+    "accent": "#2563EB",
+    "accent_note": "One hex colour from the interview's colour choice or the owner's own words. Record any change made for contrast.",
+    "layout": {
+      "width": "contained",
+      "max_width_px": 1200
+    }
+  },
+  "placeholders": [
+    {
+      "where": "main_button.link",
+      "what": "Where the main button goes",
+      "fix": "Tell Scout the link"
+    },
+    {
+      "where": "secondary_button.link",
+      "what": "Where the Watch demo button goes",
+      "fix": "Tell Scout the link"
+    },
+    {
+      "where": "hero.visual",
+      "what": "The product image is an empty placeholder",
+      "fix": "Send Scout a screenshot or image"
+    },
+    {
+      "where": "pricing",
+      "what": "Plan names, prices and features are examples",
+      "fix": "Tell Scout your real plans"
+    },
+    {
+      "where": "testimonials",
+      "what": "The quote is a placeholder",
+      "fix": "Replace with a real quote or remove the section"
+    },
+    {
+      "where": "footer",
+      "what": "Company, Resources and legal links have no pages yet",
+      "fix": "Tell Scout each link"
+    }
+  ],
+  "stack": "See the Builder's knowledge/stack.json. Those decisions are fixed. This pack deploys as a static-style site: no database, no sign-ups, no owner area.",
+  "not_in_this_version": [
+    "Collecting emails or sign-ups",
+    "Sending email of any kind",
+    "Payments or checkout",
+    "Visit analytics",
+    "A custom domain",
+    "Customer logos or user counts unless the owner supplies them",
+    "Legal text (privacy, terms, security pages)"
+  ],
+  "assumptions": [
+    "Everything about Tallyfold is made up for this example.",
+    "Yearly billing at 20% off is an example the owner would confirm.",
+    "Testimonials and pricing are placeholders; the owner reviews and fixes them."
+  ],
+  "owner_vision": "A finance lead should feel calm and in control. The page should never feel like a bank or promise anything about moving money.",
+  "secondary_button": {
+    "label": "Watch demo",
+    "link": null,
+    "target": "how_it_works",
+    "link_status": "placeholder",
+    "note": "Optional. A secondary button next to the main one in the hero only. With no link it scrolls to How it works and is flagged 'Set your link'."
+  }
+}
