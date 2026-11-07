@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "app_type": "saas-site",
+  "about": "The data a SaaS product site keeps. The page itself is not stored in the database: it is rendered from the brief, written into code at build time. Only the email list is data.",
+  "entities": [
+    {
+      "name": "Signup",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "note": "Lower-cased, trimmed. Unique."
+        },
+        {
+          "name": "source",
+          "type": "text",
+          "note": "From a ?src= or utm_source parameter, else 'direct'. Max 60 characters."
+        },
+        {
+          "name": "placement",
+          "type": "text",
+          "note": "Which email box was used: hero or closing. Optional."
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp"
+        }
+      ]
+    },
+    {
+      "name": "Owner",
+      "note": "Not stored. One owner from environment configuration: an email and a password hash."
+    }
+  ],
+  "rules": [
+    "A Signup's email is unique. A second submission of the same email updates nothing and shows the same success message.",
+    "Deleting a Signup removes it permanently. There is no soft delete in this version.",
+    "Page content (headline, pills, steps, plans, quotes, footer) lives in one typed content file written from the brief at build time. It is not editable in an owner screen; changes are made by asking the builder."
+  ]
+}

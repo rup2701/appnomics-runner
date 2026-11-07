@@ -1,6 +1,6 @@
 # SaaS product showcase pack (DRAFT, not wired into the builder yet)
 
-A one-page showcase for a software product, built fast from a short interview. No sign-ups, no database, no owner area, no email. Hero with a main button (a link the owner sets) and a product image placeholder, benefits bento, how it works, pricing (up to three plans, optional yearly billing), testimonials, FAQ, closing call to action and a full footer. Optional: examples gallery, comparison table, use-case cards.
+A showcase website for a software product (a home page first; more pages come later through Scout), built fast from a short interview. No sign-ups, no database, no owner area, no email. Hero with a main button (a link the owner sets) and a product image placeholder, benefits bento, how it works, pricing (up to three plans, optional yearly billing), testimonials, FAQ, closing call to action and a full footer. Optional: examples gallery, comparison table, use-case cards.
 
 The brand is the part to get right: audience, tone (calm, bold, playful, serious) and color (light, dark, blue accent) are asked in the interview and drive the look preset (light is `saas-clean`, dark is `deep-tech`).
 

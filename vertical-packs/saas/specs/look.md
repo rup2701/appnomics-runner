@@ -100,7 +100,7 @@ Feeling: calm, precise, spacious. A light page, large type, one strong accent, s
 - **Type scale (desktop / phone):** hero headline 72 / 40 px on desktop / phone (on a phone use `clamp(32px, 9.6vw, 40px)`, so a long headline still wraps to three lines at most at 375px), tracking -0.03em, line height 1.02, centered, no wider than 18 characters per line; section heading 44 / 30; text 18 / 17, line height 1.6; small 14.
 - **Spacing:** sections 120px top and bottom on desktop, 72px on a phone; contained column up to 1200px; radius 16px for cards, inputs and pictures; shadow `0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.06)`, no heavier.
 - **Header:** the site name left, anchor links, one accent button on the right. Sticky, with a 1px bottom border once the page scrolls.
-- **Hero:** centered, not full screen. Headline, one subheadline (no wider than 56 characters per line), then the main button, with the plain image placeholder (16:10, labelled) starting just below it. The headline and the main button are both visible without scrolling at 1440 by 900 and at 375 by 667.
+- **Hero:** centered, not full screen. Headline, one subheadline (no wider than 56 characters per line), then the main button and, if the brief has one, a quieter secondary button beside it, with the plain image placeholder (16:10, labelled) starting just below it. The headline and the main button are both visible without scrolling at 1440 by 900 and at 375 by 667.
 
 ## Section shapes (SaaS pack)
 

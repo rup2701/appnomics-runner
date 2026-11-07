@@ -19,9 +19,9 @@
       "id": "S-001",
       "area": "button",
       "edge": "The brief has no main button link.",
-      "visitor_sees": "A button that scrolls to the closing section.",
+      "visitor_sees": "A button that scrolls to the pricing section.",
       "owner_sees": "'Set your link' in the review list.",
-      "default_behavior": "Scroll to the closing section; never href='#' or an empty href.",
+      "default_behavior": "Scroll to the pricing section, or the closing section when pricing is off; never href='#' or an empty href.",
       "status": "handled",
       "tested": "no"
     },
@@ -262,6 +262,16 @@
       "visitor_sees": "Wording and look follow them.",
       "owner_sees": "Nothing.",
       "default_behavior": "Prefer the owner's words over the preset's defaults and note it in AGENT_LOG.md.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "S-026",
+      "area": "button",
+      "edge": "A secondary button has no link yet (for example Watch demo).",
+      "visitor_sees": "A quieter button that scrolls to How it works.",
+      "owner_sees": "'Set your link' in the review list.",
+      "default_behavior": "Allow it, scroll to How it works and flag it; never leave a button that does nothing.",
       "status": "handled",
       "tested": "no"
     }

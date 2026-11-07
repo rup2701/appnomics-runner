@@ -43,18 +43,19 @@
     },
     {
       "id": "main-button",
-      "name": "Main button",
+      "name": "Main and secondary buttons",
       "priority": "must-have",
       "status": "draft",
-      "description": "One button style used in the header, hero, pricing cards and closing section. It points to one link from the brief.",
+      "description": "One main button style used in the header, hero, pricing cards and closing section, pointing to one link from the brief. An optional secondary button sits next to it in the hero only.",
       "acceptance_criteria": [
         "With a link, every main button opens that link (a URL or a mailto).",
-        "With no link, every main button scrolls to the closing section and the review list shows 'Set your link'.",
+        "With no link, every main button scrolls to the pricing section (the closing section when pricing is off) and the review list shows 'Set your link'.",
         "The link is stored once in the content file and used everywhere.",
-        "An external link opens in the same tab unless the brief says otherwise."
+        "An optional secondary button appears in the hero only, in a quieter style. With no link it scrolls to How it works and is flagged 'Set your link'.",
+        "There are never more than two buttons in the hero."
       ],
       "verification": [
-        "Build with and without a link and click each button on the page."
+        "Build with and without links and click each button on the page."
       ]
     },
     {

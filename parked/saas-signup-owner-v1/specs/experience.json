@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "app_type": "saas-site",
+  "global_experience": {
+    "layout": "Content sits in a centred column up to about 1200px wide with comfortable side margins. The header and the hero background may span the full width.",
+    "look": "Style, tone, accent and fonts come from the brief's look. Text is real text laid over images, never part of an image.",
+    "header": "The site name on the left, anchor links in the middle or right, and one accent button on the right. Sticky, with a 1px bottom border once the page scrolls. On phones the links collapse behind a menu button.",
+    "feedback": "Every action gives visible feedback: the email button shows it is working, errors sit under the field, and the success message replaces the form in the box that was used.",
+    "empty_states": "A block with no content in the brief is not on the page at all, and not in the navigation. A missing image shows a designed placeholder, never a broken image or empty box."
+  },
+  "pages": [
+    {
+      "id": "home",
+      "path": "/",
+      "purpose": "Make the product clear in five seconds and get the visitor to leave an email.",
+      "sections": "The blocks from the brief in order. Default order: hero (with the email box), product visual, three pills, how it works, trust (only with confirmed claims), pricing (only if given), testimonials (only if given), closing call to action (the same email box), footer.",
+      "states": {
+        "loading": "The page is server-rendered, so there is no loading state.",
+        "submitting": "The email button shows progress and cannot be pressed twice.",
+        "success": "The email box is replaced by the success message from the brief. A reload shows the box again.",
+        "error": "A message under the field with the problem, or a general message if the server is unreachable, keeping what the visitor typed."
+      }
+    },
+    {
+      "id": "not-found",
+      "path": "any unknown path",
+      "purpose": "Tell the visitor the page does not exist and offer a way home.",
+      "sections": "A short message and a link to the home page."
+    },
+    {
+      "id": "admin-sign-in",
+      "path": "/admin/sign-in",
+      "purpose": "Let the owner in.",
+      "sections": "Email, password, sign-in button. After a failed attempt the email stays in the field."
+    },
+    {
+      "id": "admin-signups",
+      "path": "/admin",
+      "purpose": "Show who left an email.",
+      "sections": "Total and today, breakdown by source, the list (newest first, search, delete, CSV download). Nothing else: there is no page editor in this version."
+    }
+  ]
+}

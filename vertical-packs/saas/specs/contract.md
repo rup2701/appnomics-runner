@@ -1,10 +1,10 @@
 # SaaS product showcase: what this kind of product is
 
-Read this first. This pack describes a one-page showcase for a software product. It is not an online store, not a waitlist and not an app. Where any instruction or example says "store" or "shopper", read "site" and "visitor".
+Read this first. This pack describes a showcase website for a software product, starting with a home page. It is not an online store, not a waitlist and not an app. Where any instruction or example says "store" or "shopper", read "site" and "visitor".
 
 ## What it is
 
-A single public page made of sections in a default order: hero with the main button and a product image, benefits (a bento grid), how it works, pricing, testimonials, FAQ, a closing call to action, and a full footer. There is no sign-up form, no database, no owner area and no email. The main button is a link the owner sets (a sign-up page, a booking page, a mailto), and until they do it scrolls to the closing section and is flagged "Set your link". The page's words are not edited in a screen: changes are made by asking the builder (Scout).
+A home page made of sections in a default order: hero with the main button and a product image, benefits (a bento grid), how it works, pricing, testimonials, FAQ, a closing call to action, and a full footer. There is no sign-up form, no database, no owner area and no email. The main button is a link the owner sets (a sign-up page, a booking page, a mailto), and until they do it scrolls to the pricing section (or the closing section when pricing is off) and is flagged "Set your link". An optional secondary button (for example Watch demo) sits beside it in the hero. The page's words are not edited in a screen: changes are made by asking the builder (Scout).
 
 Optional sections the owner can switch on: examples gallery, comparison table, use-case cards.
 

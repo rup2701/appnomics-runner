@@ -47,7 +47,7 @@
     "label": "Get started",
     "link": null,
     "link_status": "placeholder",
-    "note": "A link the owner sets later: a sign-up page, a booking page or a mailto. With no link the button scrolls to the closing section and is flagged 'Set your link'."
+    "note": "A link the owner sets later: a sign-up page, a booking page or a mailto. With no link the button scrolls to the pricing section (the closing section when pricing is off) and is flagged 'Set your link'."
   },
   "nav": [
     {
@@ -112,6 +112,10 @@
         "aspect": "16:10",
         "image": null,
         "note": "A plain labelled box under the hero text. No mock-up is drawn. The owner supplies a screenshot or image later, and the box is replaced."
+      },
+      "secondary_cta": {
+        "label": "Watch demo",
+        "target": "secondary_button"
       }
     },
     {
@@ -337,6 +341,11 @@
       "fix": "Tell Scout the link"
     },
     {
+      "where": "secondary_button.link",
+      "what": "Where the Watch demo button goes",
+      "fix": "Tell Scout the link"
+    },
+    {
       "where": "hero.visual",
       "what": "The product image is an empty placeholder",
       "fix": "Send Scout a screenshot or image"
@@ -372,5 +381,12 @@
     "Yearly billing at 20% off is an example the owner would confirm.",
     "Testimonials and pricing are placeholders; the owner reviews and fixes them."
   ],
-  "owner_vision": "A finance lead should feel calm and in control. The page should never feel like a bank or promise anything about moving money."
+  "owner_vision": "A finance lead should feel calm and in control. The page should never feel like a bank or promise anything about moving money.",
+  "secondary_button": {
+    "label": "Watch demo",
+    "link": null,
+    "target": "how_it_works",
+    "link_status": "placeholder",
+    "note": "Optional. A secondary button next to the main one in the hero only. With no link it scrolls to How it works and is flagged 'Set your link'."
+  }
 }
