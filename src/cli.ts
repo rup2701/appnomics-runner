@@ -58,7 +58,7 @@ Rules:
 5. Add or update e2e checks for the changed behavior. Do not weaken an existing check to make it pass.
 6. Run 'npx tsc --noEmit', 'npm run build' and the full e2e suite. Fix what fails.
 7. Commit the work. Then append a section to AGENT_LOG.md headed 'Change: ' plus a short title, with what changed, what you chose where the request was unclear, and what you did not verify. Do not rewrite the earlier log.
-Finish by replying with one or two short plain sentences saying what changed on the page, then a last line in exactly this form: VIEW: followed by the id of the page section that changed (an id that exists on the public page, for example #how-it-works), or VIEW: top when the change is at the top of the page.`;
+Finish by replying to the site owner, who is not a developer. Write one or two short plain sentences, at most 40 words in all, saying what they will now see on the page. Never mention file names, specs, look.md, CSS or class names, colour codes, pixel sizes, commands, tests, checks or git. If you had to choose something the request left open, or could not do part of it, add one more plain sentence saying so. Then a last line in exactly this form: VIEW: followed by the id of the page section that changed (an id that exists on the public page, for example #how-it-works), or VIEW: top when the change is at the top of the page.`;
 
 async function resume(runDir: string, message: string = RESUME_MESSAGE, label: string = "resume") {
   if (!process.env.ANTHROPIC_API_KEY) throw new Error("Set ANTHROPIC_API_KEY");
