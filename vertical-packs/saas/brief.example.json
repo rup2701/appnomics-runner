@@ -37,9 +37,9 @@
       "blue-accent"
     ],
     "preset_map": {
-      "light": "saas-clean",
-      "dark": "deep-tech",
-      "blue-accent": "saas-clean with a blue accent"
+      "light": "showcase-light",
+      "dark": "showcase-dark",
+      "blue-accent": "showcase-light with a blue accent"
     },
     "own_words": null
   },
@@ -141,7 +141,8 @@
           "text": "Unmatched items are listed, so nothing hides.",
           "size": "small"
         }
-      ]
+      ],
+      "note": "The first item is the large card: the most important claim. Cards follow the bento layout table in look.md for the number of items."
     },
     {
       "type": "how_it_works",
@@ -215,6 +216,18 @@
           "quote": "Placeholder quote. Replace with a real one before you share the page.",
           "name": "Example Name",
           "role": "Controller",
+          "company": "Example Co"
+        },
+        {
+          "quote": "Placeholder quote. A second example, so several quotes sit side by side.",
+          "name": "Example Name",
+          "role": "Head of Finance",
+          "company": "Example Co"
+        },
+        {
+          "quote": "Placeholder quote. A third example. Add real ones and these go away.",
+          "name": "Example Name",
+          "role": "CEO",
           "company": "Example Co"
         }
       ]
@@ -325,10 +338,11 @@
     ]
   },
   "look": {
-    "preset": "saas-clean",
+    "preset": "showcase-light",
+    "mode": "light",
     "tone": "calm",
-    "accent": null,
-    "accent_note": "Choose one accent that suits the tone and record it.",
+    "accent": "#2563EB",
+    "accent_note": "One hex colour from the interview's colour choice or the owner's own words. Record any change made for contrast.",
     "layout": {
       "width": "contained",
       "max_width_px": 1200

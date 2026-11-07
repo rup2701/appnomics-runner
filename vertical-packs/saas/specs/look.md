@@ -1,161 +1,154 @@
-# Look: how the site should feel and how to check it (SaaS pack)
+# Look: how the site should feel and how to check it (SaaS product showcase)
 
-Read this after contract.md. The brief says what the site says; this file says how it should look. Behaviour is in the other specs. Where the brief names a `look.preset`, use that preset below. If it names none, choose the closest one and record the choice in AGENT_LOG.md.
+Read this after contract.md. The brief says what the site says; this file says how it looks. Behaviour is in the other specs. These rules are for any product: nothing here is tied to one product, one colour or one industry. The brief supplies the colour mode, the accent and the tone; this file turns them into numbers.
 
-You cannot see the page while you build, so every rule here is either a number you can set or a check you can run. Do the checks at the end of the public-page stage (the visitor side).
+You cannot see the page while you build, so every rule is a number you can set or a check you can run. Do the checks at the end of the page stage.
 
-If the brief has `look.references`, each one is a layout the owner likes from another site, already described for you in numbers (what the section is, how many items, how they are arranged, rough sizes). Follow that layout using our own words, icons and colors. Never copy another site's text, logos, images or brand.
+If the brief has `look.references`, each is a layout the owner likes from another site, already described in numbers. Follow that layout in our own words, icons and colours. Never copy another site's text, logos, images or brand.
 
-## Rules for every preset
+## Inputs from the brief
 
-- **The preset decides the hero.** deep-tech and dtc-brand heroes are full screen; the saas-clean hero is centered and not full screen. If the task text or the brief says otherwise, follow the chosen preset and say so in AGENT_LOG.md.
+- `look.mode`: `light` or `dark`. The brief's `brand.color` decides: light and blue-accent use `light`; dark uses `dark`. (`look.preset` is `showcase-light` or `showcase-dark`.)
+- `look.accent`: one hex colour. If it is missing, choose one that suits the tone (calm: a blue or teal; bold: a vivid green, orange or violet; playful: a warm pink or yellow-orange; serious: a deep blue or slate), and record it. A blue-accent choice means a blue accent.
+- `look.tone`: `calm`, `bold`, `playful` or `serious` (from `brand.tone`). The tone table below sets the character.
+- The brief wins over this file. If the brief asks for something else, do that and record it in AGENT_LOG.md under "Decisions on ambiguous points".
 
-- **One accent color.** Everything else is a neutral. The accent is for the main button, links and one or two highlights. Take it from the brief's mood and record the hex value.
-- **Two fonts at most**, loaded with `next/font` (no external stylesheet). One for headings, one for text. Weights 400, 500, 600 only.
-- **Color roles as CSS variables** in one place (background, surface, border, text, muted text, accent, accent text). Components use roles, never raw hex values. Tailwind 4 classes read the variables.
-- **A spacing scale of 4 and 8.** Section padding is large and the same for every section. Do not invent one-off gaps.
-- **Text is never part of an image.** Text over a photo sits on a dark or light overlay strong enough for body text contrast of 4.5:1 or more, and large text of 3:1 or more.
-- **Line length** of 60 to 75 characters for paragraphs (`max-w-prose` or similar). Headlines wrap to at most three lines on a phone.
-- **Icons** all come from `lucide-react`, one stroke width, one size per use. No emoji as icons.
-- **Buttons** are at least 44px tall, have a visible keyboard focus ring, a hover state and a disabled/working state.
-- **Motion** is quiet: a short fade or rise on load at most, and nothing when the visitor prefers reduced motion. No auto-playing media.
-- **The brief wins over the preset.** If the brief asks for a light or a dark page, or an accent, use it even where the preset says otherwise, and record that in AGENT_LOG.md.
-- **Cards** have a 1px border or a very soft shadow, never both heavy. Same radius everywhere.
+## Colour roles
 
-## Benefits layout
+Set these as CSS variables in one place. Components use roles, never raw hex values.
 
-The brief's `look.benefits_layout` is one of:
+| Role | Light mode | Dark mode |
+|---|---|---|
+| background | #FFFFFF | #0B0F0D |
+| surface | #F4F6F5 | #151B18 |
+| border | #E4E7E5 | #232B27 |
+| text | #0B0F0D | #FFFFFF |
+| muted text | #5B6560 | #A9B4AE |
+| inverse block | #0B0F0D (text on it #FFFFFF) | #FFFFFF (text on it #0B0F0D) |
+| accent | the brief's accent | the brief's accent |
+| text on accent | near-black #04130D or white, whichever gives 4.5:1 or more; prefer near-black | the same |
 
-- `cards` (the default if it is missing): a grid of cards, using the table below.
-- `rows`: one benefit per full-width row. Text on one side, an image or designed placeholder on the other, switching sides on every row. On a phone each row stacks with the image above the text. Keep the lucide-react icon next to each title. The grid table and the orphan check do not apply to this layout.
-- `agent_decides`: choose `cards` or `rows`, whichever suits the number and length of the benefits and the preset, and follow that layout's rules fully. Record the choice in AGENT_LOG.md.
+If neither near-black nor white reaches 4.5:1 on the accent, move the accent lighter or darker until one does, and record the final hex. Accent used as text (eyebrow labels, links) must reach 4.5:1 against its background; where it does not, use the text colour and keep the accent for fills and borders.
 
-The owner can show, hide and reorder benefits in either layout, so the layout must still look right after an edit.
+## Type, space and shape
 
-## Grids follow the number of cards
+- **Font:** Inter only, loaded with `next/font` (no external stylesheet).
+- **Tone table** (desktop / phone):
 
-Never leave an orphan card alone on the last row.
+| | calm | bold | playful | serious |
+|---|---|---|---|---|
+| Heading weight | 600 | 800 | 700 | 600 |
+| Hero headline | 64 / 38 px, tracking -0.03em | 80 / 42 px, -0.04em, line height 1.0 | 68 / 40 px, -0.035em | 56 / 34 px, -0.02em |
+| Section heading | 44 / 30 | 68 / 36 | 52 / 32 | 40 / 28 |
+| Card radius | 16 px | 28 px | 32 px | 8 px |
+| Section padding | 120 / 72 px | 112 / 64 px | 104 / 64 px | 112 / 64 px |
+| Accent use | links, button, outlines and strokes | large bento card and closing block as fills, buttons, strokes and text | large bento card and closing block as fills, buttons, strokes and text | button, strokes and text only |
+| Motion | hover only | hover lift and rise on scroll | hover lift and rise on scroll | none |
 
-| Cards | Desktop columns | Tablet | Phone |
-|---|---|---|---|
-| 1 | 1 (centred, narrow) | 1 | 1 |
-| 2 | 2 | 2 | 1 |
-| 3 | 3 | 1 or 3 stacked evenly | 1 |
-| 4 | 2 (a 2 by 2 grid) | 2 | 1 |
-| 5 or 6 | 3 | 2 | 1 |
-| 7 or more | 4, or 3 if the cards are wide | 2 | 1 |
+- **Body text:** 18 / 17 px, line height 1.6, regular weight (400), headings per the table. Small text 14. Paragraph lines 60 to 75 characters.
+- **Hero headline** on a phone uses `clamp` so it wraps to three lines at most at 375 px.
+- **Layout:** a contained column up to 1200 px; side margin 24 px on a phone, 40 px on desktop. Spacing from a scale of 4 and 8. Section padding as in the table, the same for every section.
+- **Section headings** are left-aligned, with a small eyebrow above (13 px, bold, uppercase, tracking 0.12em, accent where it passes contrast). The hero and the closing block are centred.
+- **Cards** all have the same radius, the same padding (32 px on desktop, 24 px on a phone) and either a 1px border or a very soft shadow, never both heavy. Every card in a section uses the same padding, so edges and text line up.
+- **Where the accent colour goes.** As a background, the accent fills buttons and, in the bold and playful tones, at most two large blocks: the large benefits card and the closing block (mark each with `data-accent-block`). It is never a background for anything small: no icon squares or circles, badges, labels, tags, step numbers, highlight chips, or tinted tiles, and no tint of the accent as a background (a tint is still an accent background). Everywhere else the accent appears as a line or as text: the stroke of an icon, a border, an underline, a numeral, an eyebrow label, a link, a focus ring.
+- **Icons** come from `lucide-react`, one stroke width, outline only, with no background shape behind them. The stroke may be the accent (it must reach 3:1 against what it sits on) or the text colour. No tinted icon squares, no emoji as icons. Cards use numerals (see the benefits grid).
+- **Buttons** at least 44 px tall, a visible focus ring, hover and disabled states. The main button is the accent with text-on-accent colour; on an accent block it is the inverse block colour.
+- **Text is never part of an image.** Text over an image sits on an overlay that keeps body text at 4.5:1 and large text at 3:1.
 
-Compute the column count from the number of items, so that when the owner adds or hides a card the grid still looks right.
+## Motion
+
+Reduced motion switches all of it off. Calm: a small colour change on hover only. Bold and playful: cards lift 4 px on hover (250 ms), and each section rises 24 px and fades in once as it enters the view (400 ms, `IntersectionObserver`, never repeating). Serious: none. No auto-playing media.
+
+## Hero
+
+Centred, not full screen. Eyebrow (optional), the headline, one subheadline (no wider than 56 characters per line), then the main button and, if the brief has one, a quieter secondary button beside it. Below, the image placeholder: one plain box up to 1100 px wide, aspect 16:10, surface colour, 1px border, card radius, labelled "Your product image goes here". No mock-up is drawn. When the owner supplies an image it fills the same frame. The headline and the main button are both visible without scrolling at 1440 by 900 and at 375 by 667.
+
+## Benefits grid (bento)
+
+A true bento: cards of different sizes, on a 4-column grid on desktop with rows at least 190 px tall and a 16 px gap. The grid is built from the number of cards, so nothing is left over and no gap appears when the owner adds or hides a card:
+
+| Cards | Layout (columns by rows) |
+|---|---|
+| 1 | one card, 4 by 1 |
+| 2 | two cards, 2 by 1 each |
+| 3 | large 2 by 2, then two wide 2 by 1 stacked on the right |
+| 4 | large 2 by 2, wide 2 by 1, two small 1 by 1 |
+| 5 | large 2 by 2, four small 1 by 1 |
+| 6 | large 2 by 2, wide 2 by 1, two small 1 by 1, then two wide 2 by 1 |
+
+On a phone every card is full width in one column, and the large card keeps its larger title.
+
+- **The first benefit is the large card**, the most important claim. It is the one the owner would pick if they could pick only one.
+- **Card contents:** a small numeral (01, 02, ...) at the top, then the title and one supporting line, bottom-aligned. The numeral sits in the flow of the card and never overlaps the title. No icon squares.
+- **Title size follows card size:** large card `clamp(32px, 4vw, 54px)` and tight line height; wide card 26 px; small card 22 px. Supporting text 16 px (large card 18 px). A card whose title is larger because of its size is a real size difference, not a single enlarged heading in an equal grid.
+- **Fills (bold and playful):** the large card is an accent block (text-on-accent colour), one wide card is an inverse block, the rest are surface cards. At most one accent block and one inverse block per grid, and the accent block is the large card only. **Calm:** all surface cards; the large card has an accent numeral and a 1.5 px accent border. **Serious:** the large card is an inverse block, the rest surface cards.
+- Text on every fill meets 4.5:1.
+- A card the owner adds later takes the next place in the table for the new count.
+
+## Section shapes
+
+Page order: hero, benefits, how it works, (optional: examples gallery, comparison table, use-case cards), pricing, testimonials, FAQ, closing call to action, footer. A section the owner switched off is not on the page. Sample sections carry a small muted "Sample" label.
+
+1. **How it works:** heading, then up to three columns, each with a numeral (large text in the accent or text colour, no filled circle), a title and one line; on a phone they stack.
+2. **Pricing:** one card per plan, columns equal to the number of plans (1 centred and narrow, 2, or 3), equal heights, buttons aligned at the bottom. With monthly and yearly billing, a two-option switch (Monthly / Yearly) above the cards, Monthly by default, with a "Save N%" note beside Yearly. The highlighted plan (only if the owner marked it) has an inverse block fill (bold, playful) or a 2 px accent border (calm, serious), and a "Most popular" label. Each card: plan name, large price, period small, on Yearly the per-month equivalent in small text, a feature list with check icons (outline stroke in the accent or text colour, no filled circles), one button (the main button). The "Most popular" label is an outlined pill (1px accent border, accent or text colour for the words), never a filled one.
+3. **Testimonials:** a row of cards. On desktop three cards are visible at once, each a third of the width minus the gaps; the row scrolls sideways with scroll-snap and a hidden scrollbar. On a phone one card is about 85% wide so the next card shows. Round previous/next buttons (44 px) sit on the right of the section heading, work with the keyboard, and are disabled at the ends; they appear only when there are more cards than fit. Each card has the same height (at least 300 px): the "Sample" label first, in the flow of the card and never over the quote; then the quote (22 px, weight 600, line height 1.3); then the name, role and company at the bottom. With real quotes: one real quote is a single card at normal card width, centred; two are two cards. With none, the brief gives three sample quotes, each labelled "Sample". Never a photo or logo the owner did not supply; use initials in a circle.
+4. **FAQ:** a heading, then 3 to 6 questions as an accordion in one narrow column (up to 760 px), a 1px divider between items, a plus or chevron that turns when open, a visible focus ring.
+5. **Optional sections:** examples gallery (a grid of up to six labelled cards), comparison table (up to five rows and three columns, our product highlighted), use-case cards (up to four, each with a numeral, a title and one line).
+6. **Closing call to action:** one full-width block with a radius 1.3 times the card radius and a large section-heading-sized headline (centred, no wider than 16 characters per line), one supporting line and the main button. Fill: accent block (bold, playful), surface (calm), inverse block (serious). The button is the inverse colour on an accent block and the accent on an inverse block.
+7. **Footer:** surface colour with a 1px top border. A top row: name and tagline on the left; three link columns on the right (Product: the page's own sections, including the FAQ; Company; Resources). A bottom row: the copyright line, and the Privacy, Terms and Security links. Every link goes to a real target: an anchor on the page, a mailto, or a URL from the brief; a link with no page points to the top of the page and is listed as "Set your link". No `href="#"`.
 
 ## When an image is missing
 
 Imagery comes from the owner, so on first load most images are empty. An empty site must still look designed.
 
-- **Hero without a photo:** a background made only with CSS from the accent and the neutrals (a soft gradient, optionally a faint grid or noise pattern). Never a flat grey box. Text contrast rules still apply.
-- **Preview without an image:** if the brief describes a mock-up, build it in HTML and CSS inside a window frame (top bar with three dots, a title, the mock content). Use only the words the brief gives; any sample text you must invent is short, clearly generic and covered by the "Concept preview" label from the brief. If the brief describes none, show a framed placeholder with the label and the owner's description of what goes there.
-- **Any other image:** a framed placeholder with a one-line label, same aspect ratio as the finished image, so nothing jumps when the real image arrives.
+- **Hero image:** the labelled placeholder box above. Never a flat grey box without a label.
+- **Any other image:** a framed placeholder with a one-line label and the same aspect ratio as the finished image, so nothing jumps when the real image arrives.
+- **A custom pattern rather than a stock photo:** simple SVG shapes in the accent and the neutrals where a background is needed.
 
-## Preset: deep-tech (AI, developer tools, B2B software)
+## Polish rules (from a human's design review)
 
-Feeling: calm, precise, confident. A dark hero and dark page, lots of space, almost no decoration.
+Each names the fault it fixes. They apply in every tone and mode.
 
-- **Fonts:** headings Space Grotesk 600, text Inter 400/500.
-- **Colors (dark):** background #0B0D12, surface #11151C, border rgba(255,255,255,0.08), text #E8EAF0, muted #9AA3B2. The accent is warm or electric and chosen from the brief's mood. Text on the accent is near-black or white, whichever passes 4.5:1.
-- **Type scale (desktop / phone):** hero headline 64 / 40 px, tracking -0.02em, line height 1.05; section heading 40 / 30; text 18 / 17, line height 1.6; small 14.
-- **Spacing:** sections 112px top and bottom on desktop, 64px on a phone; contained column up to 1200px; hero text no wider than 720px.
-- **Hero:** full screen: `min-height: 100svh` (when a demo notice bar is shown, subtract its height so the headline and the button still fit on a 375 by 667 phone without scrolling), the header floating on top of it, the content centred vertically and horizontally. A small eyebrow label (optional, from the brief), the headline, one subheadline, the main button with the note beside or beneath it. Background image dimmed with a gradient that fades into the page background at the bottom. A small scroll cue at the bottom edge is fine.
-- **Preview:** large, centred, in a window frame with a soft glow in the accent color at low opacity, and a short caption underneath.
-- **Benefits:** cards with an icon, a short title and two lines of text; cards sit on the surface color; the grid follows the card-count table.
-- **Closing box:** two columns on desktop (heading and perks on the left, the main button in a card on the right), one column on a phone. Perks are a plain list with check icons.
-- **Footer:** one row on desktop: name and tagline on the left, links and legal on the right. Muted text.
+1. **One loudest headline per view.** In any one screen there is a single largest headline. A second one beside it is at most two steps smaller, or becomes a caption.
+2. **A picture of a page must be readable at the size it is shown.** Crop a screenshot to the part that matters; text inside it is at least 12 px on screen at 1440 wide, or is cropped out.
+3. **Pin the header to the edges.** The logo sits at the container's left edge and the menu or button at its right edge, with the same side margin as the page.
+4. **Rounded corners on pictures follow the cards.**
+5. **Leave space between a picture and the thing beside it:** at least 48 px on desktop.
+6. **Elements in a card never overlap.** A label, numeral, icon or badge sits in the card's flow, not absolutely positioned over the text.
+7. **Equal things are equal.** Cards in one section have the same padding, and icons or numerals in a column line up.
 
-## Preset: dtc-brand (consumer products and brands)
+## Moves from good product sites
 
-Feeling: warm, human, tactile. A light page, big photography, a little more personality in the headings.
+1. **One idea per section, in a story order:** the promise, the product shown, why it matters, how it works, the ask.
+2. **Alternate layouts down the page:** a full-width block, then two columns, then the sides swap. Never the same shape three times in a row.
+3. **Number the steps** of "how it works".
+4. **Proof is real or absent.** Logos, numbers, ratings and "used by" strips appear only when the brief supplies them. A page with no proof relies on a sharp promise and a clear product image.
+5. **Repeat the ask at the end** with a short closing headline and the main button.
+6. **Small touches that signal care:** consistent shapes, real text in every panel, tidy alignment to one grid.
 
-- **Fonts:** headings Fraunces 500 or 600, text DM Sans 400/500.
-- **Colors (light):** background #FAF7F2, surface #FFFFFF, border #E7E0D6, text #1C1917, muted #6B635A. Accent from the brief's mood.
-- **Type scale (desktop / phone):** hero headline 60 / 38 px, line height 1.08; section heading 38 / 28; text 18 / 17; small 14.
-- **Spacing:** sections 96px on desktop, 56px on a phone; radius 12px; a little more room around images.
-- **Hero:** photo-led and full screen (`min-height: 100svh`). Large image beside or behind the headline, never covering it. One button.
-- **Benefits:** icon or small photo, short title, one line; grid follows the table.
-- **Closing box and footer:** like deep-tech but on the light surface.
-
-## Polish rules (draft, from the owner's design review of 2026-11-03)
-
-These come from a human's corrections of a generated page. Each one names the fault it fixes. They apply to every preset.
-
-1. **One loudest headline per view.** In any one screen there is a single largest headline. A second headline in a side panel or beside a form is at most two steps smaller, or it becomes a caption. Two headlines of similar size fight for the first read.
-2. **A picture of a page must be readable at the size it is shown.** When a screenshot or mock-up of a page sits in a panel, crop it to the part that matters (headline, product shot, main button), not the whole page at small scale. Text inside the picture is at least 12px on screen at 1440 wide, or it is cropped out.
-3. **Pin the header to the edges.** The logo sits at the container's left edge and any badge or menu at its right edge, with the same side margin as the rest of the page (24px on a phone, 40px on desktop). Do not float header items inward so that they match some other block.
-4. **Rounded corners on pictures follow the cards.** Pictures use the same radius as the cards. A picture that runs off one edge of the screen has square corners on that edge and the page's radius on the inner corners.
-5. **Leave space between a picture and the thing beside it.** A picture next to a split line, a column or a form has a gap of at least 48px on desktop, so it never touches the divider.
-
-## Preset: saas-clean (software and fintech product sites; the default for this pack)
-
-Feeling: calm, precise, spacious. A light page, large type, one strong accent, soft rounded cards. The look of Ramp, Mercury or Albert, built from our own words and shapes.
-
-- **Fonts:** one family: Inter, headings 600, text 400/500, loaded with `next/font`.
-- **Colors (light):** background #FFFFFF, surface #F6F7F9, border #E5E7EB, text #0F172A, muted #5B6472. One accent chosen from the brief's tone words; text on the accent is white or near-black, whichever passes 4.5:1.
-- **Type scale (desktop / phone):** hero headline 72 / 40 px on desktop / phone (on a phone use `clamp(32px, 9.6vw, 40px)`, so a long headline still wraps to three lines at most at 375px), tracking -0.03em, line height 1.02, centered, no wider than 18 characters per line; section heading 44 / 30; text 18 / 17, line height 1.6; small 14.
-- **Spacing:** sections 120px top and bottom on desktop, 72px on a phone; contained column up to 1200px; radius 16px for cards, inputs and pictures; shadow `0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.06)`, no heavier.
-- **Header:** the site name left, anchor links, one accent button on the right. Sticky, with a 1px bottom border once the page scrolls.
-- **Hero:** centered, not full screen. Headline, one subheadline (no wider than 56 characters per line), then the main button and, if the brief has one, a quieter secondary button beside it, with the plain image placeholder (16:10, labelled) starting just below it. The headline and the main button are both visible without scrolling at 1440 by 900 and at 375 by 667.
-
-## Section shapes (SaaS pack)
-
-Page order: hero, benefits bento, how it works, (optional: examples gallery, comparison table, use-case cards), pricing, testimonials, FAQ, closing call to action, footer. A section the owner switched off is not on the page at all. Sample sections carry a small muted "Sample" label.
-
-1. **Hero image placeholder:** one plain box, up to 1100px wide, aspect 16:10, on the surface colour with a 1px border and the page radius, labelled "Your product image goes here". No mock-up is drawn. When the owner sends an image it takes the same frame.
-2. **Benefits bento:** a heading, then a grid of up to six cards of mixed size (one or two large, the rest small), each with a small lucide-react icon, a title and one line, on the surface colour with a 1px border and the page radius. On a phone the cards stack. No orphan card in the last row.
-3. **How it works:** a section heading, then up to three columns, each with a number, a title and one line. On a phone the columns stack.
-4. **Pricing:** cards, one per plan, columns equal to the number of plans (1 centred and narrow, 2, or 3). With monthly and yearly billing, a small two-option switch (Monthly / Yearly) above the cards, Monthly by default, and a "Save N%" note beside Yearly where N is the owner's discount. The highlighted plan has an accent border and a "Most popular" label only if the owner marked it; others have the 1px border. Each card: plan name, price large, period small, on Yearly the per-month equivalent in small text, a list of features with check icons, one button (the main button).
-5. **Testimonials:** up to three cards: the quote, the person's name, role and company. One quote is a single wide centred card. Never show a photo or logo the owner did not supply; use initials in a circle. A placeholder quote carries the "Sample" label.
-6. **FAQ:** a heading, then 3 to 6 questions as an accordion in one narrow centred column (up to 760px), a 1px divider between items, a plus or chevron icon that turns when open, and a visible focus ring.
-7. **Optional sections:** examples gallery (a grid of up to six labelled cards), comparison table (up to five rows and three columns, our product highlighted), use-case cards (up to four, each with an icon, a title and one line).
-8. **Closing call to action:** one wide rounded block on the surface colour: headline, one line, the main button.
-9. **Footer:** on the surface colour with a 1px top border. A top row: name and tagline on the left; three link columns on the right (Product: the page's own sections; Company; Resources). A bottom row: the copyright line, and the Privacy, Terms and Security links. Every link goes to a real target: an anchor that exists on the page, a mailto, or a URL from the brief; a link with no page points to the top of the page and is listed as "Set your link". No `href="#"`.
+Under "Decisions on ambiguous points" in AGENT_LOG.md, list the mode, the tone, the accent hex (and any change made for contrast) and anything changed from these rules, with the reason.
 
 ## Checks to run before you finish
 
 Add these to the end-to-end tests, as far as Playwright can measure them:
 
-1. At 375 by 667 and at 1440 by 900: the headline and the main button are both visible without scrolling.
+1. At 375 by 667 and at 1440 by 900, the headline and the main button are visible without scrolling, and the top of the image placeholder is below the bottom of the button.
 2. At 375 wide the page has no horizontal scroll (`scrollWidth <= innerWidth`).
-3. Every block is inside the contained column: no block is wider than 1200px except the hero background and the footer background.
-4. For the `cards` layout and every other grid of cards, no orphan: for each grid, the number of cards in the last row is not 1 unless there is only one card.
-5. Every image has alt text, or `alt=""` if it is decoration.
-6. Body text color against its background has a contrast ratio of at least 4.5:1 (compute it from the computed styles of the hero text, the benefit text and the form labels).
-7. The page with no uploaded images shows no empty box and no broken image icon.
-8. For the `rows` layout: each benefit is in its own row, the image side alternates, and at 375 wide every row stacks with no horizontal scroll.
-9. Polish rule 1: at 1440 by 900, take every heading (h1 to h3) that is visible at the top of the page; the second largest computed font size is not more than 75% of the largest, unless the two are the same element type in a repeated list.
-10. Polish rule 3: at 1440 wide, the header logo's left edge is within 48px of its container's left edge, and the right-hand header item's right edge is within 48px of the container's right edge.
-11. Polish rule 5: for every `img` or background-image block that sits beside a form or text column on desktop, the horizontal gap to its neighbour is at least 48px.
-
-## Moves from elite product sites
-
-These come from studying top product sites (for example tryglen.com). Apply the ones that fit an honest one-page showcase; skip any that need proof the owner has not given.
-
-1. **One idea per section, in a story order:** the promise, then the product shown, then why it matters, then how it works or why to trust it, then the ask. Do not stack features in one long list.
-2. **Show the product as a believable interface, not a stock picture.** Build small UI panels in HTML: a chat or question transcript with the steps visible, a result table or card, a source list, a timeline. Labelled "Concept preview" when it is not the real product.
-3. **Alternate layouts down the page:** a full-width block, then two columns (text one side, panel the other), then the sides swap. Never the same shape three times in a row.
-4. **Number the steps** of "how it works" (1, 2, 3) and give each one a small panel.
-5. **A before and after** panel when the idea is a change from today ("without" and "with"), side by side, in the same frame so the difference is the only thing that changes.
-6. **A trust block** when the brief has privacy or security claims: a small table or list of exactly what is and is not accessed. Only claims marked confirmed in the brief; otherwise leave the block out.
-7. **Proof is real or absent.** Logos, numbers, testimonials and "used by" strips appear only when the brief supplies them. Never invent them. A page with no proof relies on a sharp promise and a clear product image instead.
-8. **Repeat the ask at the end** with a short closing headline and the same form or a button that scrolls to it.
-9. **Small touches that signal care:** copy-to-clipboard feedback if there is a command, a clear success state, consistent icon style, real text in every panel, tidy alignment to one grid.
-10. **A custom illustration or pattern rather than a stock photo** where the owner has no image: simple SVG shapes in the accent and the neutrals.
-
-Under "Decisions on ambiguous points" in AGENT_LOG.md, list the preset, the fonts, the accent hex and anything you changed from the preset, with the reason.
-
-## Checks for the SaaS pack
-
-12. At 1440 by 900 and 375 by 667, the headline and the main button are visible without scrolling, and the top of the image placeholder is below the bottom of the button.
-13. The bento grid has no orphan card and no more than six cards.
-14. Sections switched off do not exist in the page or the navigation. Sample sections carry a "Sample" label, and no block contains "Lorem".
-15. Every link in the page and the footer has a real target: no `href="#"`, no empty `href`, and every anchor target exists on the page.
-16. With a main button link set, every main button opens it; with none, every main button scrolls to the closing section.
-17. Prices: every price shown equals the plan data; yearly and per-month figures are whole dollars rounded down; the FAQ and the pricing section show the same figures.
-18. The FAQ opens and closes with the keyboard.
-19. The footer has the Product, Company and Resources columns and the Privacy, Terms and Security links.
+3. Every block is inside the contained column: none is wider than 1200 px except background fills.
+4. No grid of cards leaves an orphan card alone on its last row.
+5. Every image has alt text, or `alt=""` if decoration.
+6. Body text colour against its background is at least 4.5:1 (hero text, card text, form-free labels), and so is text on every fill (accent block, inverse block, surface).
+7. The page with no uploaded images shows no empty box without a label and no broken image icon.
+8. At 1440 by 900, the second largest of the visible headings (h1 to h3) is not more than 75% of the largest, unless they are the same element type in a repeated list.
+9. At 1440 wide, the header logo's left edge is within 48 px of its container's left edge, and the right-hand header item's right edge is within 48 px of the container's right edge.
+10. Any image beside a text column on desktop has a gap of at least 48 px.
+11. Sections switched off do not exist in the page or the navigation. Sample sections carry a "Sample" label, and no block contains "Lorem".
+12. Every link has a real target: no `href="#"`, no empty `href`, every anchor target exists.
+13. With a main button link set, every main button opens it; with none, every main button scrolls to the pricing section (the closing section when pricing is off).
+14. Prices: every price shown equals the plan data; yearly and per-month figures are whole dollars rounded down; the FAQ and the pricing section show the same figures.
+15. The FAQ opens and closes with the keyboard. The footer has the Product, Company and Resources columns and the Privacy, Terms and Security links.
+16. Bento: with three or more cards at 1440, at least two distinct card areas exist; every card has the same computed padding; the numeral's box does not overlap the title's box in any card; no card has a tinted icon square.
+17. Testimonials: with two or more quotes at 1440, at least two cards are visible at once; the "Sample" label's box does not overlap the quote's box; with more than three quotes a scroll container exists and the next button scrolls it by at least one card.
+18. Tone: the hero headline's computed font size at 1440 equals the tone's size (within 2 px) and its weight equals the tone's weight.
+19. With reduced motion requested, no element has a running transition or animation.
+20. Accent backgrounds: every element whose computed background is the accent (or a tint of it) is a button, or carries `data-accent-block`; there are at most two `data-accent-block` elements on the page, and neither is smaller than 300 px wide. No icon has a background shape.

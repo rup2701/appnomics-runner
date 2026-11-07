@@ -128,10 +128,10 @@
     {
       "id": "S-012",
       "area": "content",
-      "edge": "The brief has one testimonial, a very long one, or none.",
-      "visitor_sees": "One wide centred card, a clipped long quote, or a labelled sample.",
+      "edge": "The brief has one real testimonial, a very long one, or none.",
+      "visitor_sees": "One card at normal width, a clipped long quote, or three labelled samples.",
       "owner_sees": "Sample listed under placeholders.",
-      "default_behavior": "Never invent a person; the sample uses 'Example Name' and a 'Sample' label.",
+      "default_behavior": "Never invent a person; samples use 'Example Name' and a 'Sample' label. More than three quotes scroll sideways.",
       "status": "handled",
       "tested": "no"
     },
@@ -251,7 +251,7 @@
       "edge": "The owner picks the dark colour with a calm tone.",
       "visitor_sees": "A dark page with readable text.",
       "owner_sees": "Nothing.",
-      "default_behavior": "Use deep-tech with the calm wording; contrast stays at least 4.5:1.",
+      "default_behavior": "Use showcase-dark with the calm settings; contrast stays at least 4.5:1.",
       "status": "handled",
       "tested": "no"
     },
