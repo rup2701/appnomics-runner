@@ -51,7 +51,7 @@ If neither near-black nor white reaches 4.5:1 on the accent, move the accent lig
 - **Section headings** are left-aligned, with a small eyebrow above (13 px, bold, uppercase, tracking 0.12em, accent where it passes contrast). The hero and the closing block are centred.
 - **Cards** all have the same radius, the same padding (32 px on desktop, 24 px on a phone) and either a 1px border or a very soft shadow, never both heavy. Every card in a section uses the same padding, so edges and text line up.
 - **Where the accent colour goes.** As a background, the accent fills buttons and, in the bold and playful tones, at most two large blocks: the large benefits card and the closing block (mark each with `data-accent-block`). It is never a background for anything small: no icon squares or circles, badges, labels, tags, step numbers, highlight chips, or tinted tiles, and no tint of the accent as a background (a tint is still an accent background). Everywhere else the accent appears as a line or as text: the stroke of an icon, a border, an underline, a numeral, an eyebrow label, a link, a focus ring.
-- **Icons** come from `lucide-react`, one stroke width, outline only, with no background shape behind them. The stroke may be the accent (it must reach 3:1 against what it sits on) or the text colour. No tinted icon squares, no emoji as icons. Cards use numerals (see the benefits grid).
+- **Icons** come from `lucide-react`, one stroke width, outline only. An icon may sit on a neutral tile (the surface role or a very light grey, with a dark neutral icon at 7:1 or better), never on the accent or a tint of it. The stroke may be the accent (it must reach 3:1 against what it sits on) or the text colour. No emoji as icons. Cards use numerals (see the benefits grid).
 - **Buttons** at least 44 px tall, a visible focus ring, hover and disabled states. The main button is the accent with text-on-accent colour; on an accent block it is the inverse block colour.
 - **Text is never part of an image.** Text over an image sits on an overlay that keeps body text at 4.5:1 and large text at 3:1.
 
@@ -117,6 +117,34 @@ Each names the fault it fixes. They apply in every tone and mode.
 6. **Elements in a card never overlap.** A label, numeral, icon or badge sits in the card's flow, not absolutely positioned over the text.
 7. **Equal things are equal.** Cards in one section have the same padding, and icons or numerals in a column line up.
 
+## Depth and polish
+
+A flat white page with plain boxes looks unfinished. Every build gets three layers of depth, and the tone sets how strong each is. The numbers are floors, not decoration: **a layer the owner cannot see is a layer that is missing.** A pale value that passes a test but cannot be seen on a normal screen counts as missing.
+
+| Layer | calm | bold | playful | serious |
+|---|---|---|---|---|
+| Page background: dot grid | 16 px grid, 1 px dots | same | same, dots 2 px | 16 px grid, 1 px dots, fewer (hero area only) |
+| Page background: top-centre glow | accent at 8% | accent at 16% (dark mode 22%) | accent at 14% (dark mode 20%) | none |
+| Card surface | solid fill, visible edge | glass: fill at 75% opacity, 12 to 16 px background blur, visible gradient edge | glass as bold | solid fill, visible edge, no blur |
+| Card shadow | soft: 0 1px 2px at 6%, 0 8px 24px at 6% | soft, a little stronger at hover | as bold | 0 1px 2px at 6% only |
+| Section headings | tracking -0.02em, weight per tone table | -0.03em | -0.025em | -0.02em |
+
+How to set each, so the result can be seen:
+
+- **Dot grid.** The dot colour is the text colour at about 16% (light mode) or 14% (dark mode). It must reach 1.4:1 against the page background and stay under 2.2:1, so it is seen on a normal screen but never competes with text. The grid covers the whole page; a band with its own solid fill (surface or inverse) simply covers it.
+- **Glow.** One radial ellipse of the accent, about 60% wide and 50% tall, centred at the top of the first screen. It sits behind the hero and fades to nothing before the second section.
+- **Card edge.** A 1 px gradient edge from a lighter to a darker tint of the border role. The lightest part of the edge must reach 1.3:1 against the page background, and a card must be told apart from the page either by that edge or by a fill that differs from the page (surface role). White card on white page with a pale edge is the fault this rule prevents.
+- **Glass only where something shows through.** Blur and transparency need a grid or glow behind the card; where the card sits on a flat band, use a solid fill. Calm and serious tones never blur.
+- **Headline and support text.** The headline is the text colour at the tone's weight; supporting text is the muted role (4.5:1 or better), at weight 400. They differ in colour and in weight, so the headline clearly leads.
+- **Do not trade away what is already there.** If a change removes a visible texture (a hero grid, a border, a shadow), what replaces it must be at least as visible.
+
+**When the owner asks in everyday words, apply this section; never ask for hex codes, pixel sizes or em values.**
+
+- "more premium", "more polished", "more modern", "less flat", "add depth", "feels cheap": apply every row of the table at the site's tone.
+- "bolder", "more energy": raise the strength by one step (calm to bold values for glow and cards); keep the site's tone name and colours.
+- "calmer", "simpler", "cleaner", "too busy": remove the glow and the blur, keep the dot grid at the lower end of its range, keep the edges.
+- If the owner does give a number or a colour, use it, unless it fails a check; then use the nearest value that passes and say so in one plain sentence.
+
 ## Moves from good product sites
 
 1. **One idea per section, in a story order:** the promise, the product shown, why it matters, how it works, the ask.
@@ -151,4 +179,9 @@ Add these to the end-to-end tests, as far as Playwright can measure them:
 17. Testimonials: with two or more quotes at 1440, at least two cards are visible at once; the "Sample" label's box does not overlap the quote's box; with more than three quotes a scroll container exists and the next button scrolls it by at least one card.
 18. Tone: the hero headline's computed font size at 1440 equals the tone's size (within 2 px) and its weight equals the tone's weight.
 19. With reduced motion requested, no element has a running transition or animation.
-20. Accent backgrounds: every element whose computed background is the accent (or a tint of it) is a button, or carries `data-accent-block`; there are at most two `data-accent-block` elements on the page, and neither is smaller than 300 px wide. No icon has a background shape.
+20. Accent backgrounds: every element whose computed background is the accent (or a tint of it) is a button, or carries `data-accent-block`; there are at most two `data-accent-block` elements on the page, and neither is smaller than 300 px wide. No icon sits on an accent or accent-tinted background; a neutral tile is allowed.
+21. Dot grid: crop an empty 300 by 200 area of the page background at 1440 (no text) from a screenshot. Between 0.3% and 6% of its pixels differ from the background colour, and the most different pixel reaches at least 1.4:1 against it. Measure the picture, not the CSS variable.
+22. Glow (tones with a glow): in a screenshot of the top 600 px, the pixel at the top centre differs from the pixel at the far left of the same row by at least 3% in luminance, and the glow's colour leans toward the accent.
+23. Cards: for every card at 1440, the card is told apart from the page behind it: the lightest part of its edge reaches 1.3:1 against the page background, or its fill differs from the page by 1.05:1 or more. Calm and serious cards have no `backdrop-filter`; bold and playful cards on a grid or glow have a blur between 12 and 16 px.
+24. Headline and support text: in each section the heading and its supporting paragraph differ in computed colour and in font weight, and the paragraph reaches 4.5:1.
+25. Tests for look rules sample a screenshot or computed values of the rendered page. A test that only reads a CSS variable does not count for rules 21 to 24.
