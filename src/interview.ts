@@ -1,4 +1,4 @@
-// Usage: npm run interview -- --pack site [--idea "one sentence"] [--out briefs/name.json]
+// Usage: npm run interview -- --pack site|product-showcase|store [--idea "one sentence"] [--out briefs/name.json]
 // A chat in the terminal. The pack's interview.md seeds the questions; the result is a brief.json
 // for the runner. Type /quit to stop. Needs ANTHROPIC_API_KEY.
 import Anthropic from "@anthropic-ai/sdk";
@@ -9,7 +9,7 @@ import { config, costUsd, emptyUsage, addUsage } from "./config.js";
 
 const REQUIRED: Record<string, string[]> = {
   site: ["site", "audience", "blocks", "look"],
-  saas: ["site", "audience", "brand", "main_button", "blocks", "look"],
+  "product-showcase": ["site", "audience", "brand", "main_button", "blocks", "look"],
   store: ["store", "categories", "look", "orders"],
 };
 
@@ -31,7 +31,7 @@ async function main() {
   });
   const example = await readFile(path.join(packDir, "brief.example.json"), "utf8");
 
-  const system = `You are the interview agent of an AI app builder. You talk with a founder in plain, friendly words and, at the end, save a brief.json that the builder uses to build their ${pack === "site" ? "waitlist website" : pack === "saas" ? "product website" : "store"}. The builder never sees this conversation, only the brief.
+  const system = `You are the interview agent of an AI app builder. You talk with a founder in plain, friendly words and, at the end, save a brief.json that the builder uses to build their ${pack === "site" ? "waitlist website" : pack === "product-showcase" ? "product showcase website" : "store"}. The builder never sees this conversation, only the brief.
 
 Follow this interview guide exactly (its questions, defaults, rules and review step):
 

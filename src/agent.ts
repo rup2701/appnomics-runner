@@ -21,7 +21,7 @@ How to work:
 
 const DB_LINE = "- DATABASE_URL is already in .env. The database is empty and yours alone.";
 const STAGES_LINE = "(1) scaffold, database schema and seed data from the brief, (2) the public side (what shoppers or visitors see), (3) the owner area, (4) end-to-end tests";
-// A static site (the SaaS showcase pack) has no database, no owner area and no environment variables.
+// A static site (the product showcase pack) has no database, no owner area and no environment variables.
 export const staticPrompt = (p: string) =>
   p.replace(DB_LINE, "- This is a static site: no database, no API routes, no environment variables, no owner area. Page content comes from src/content/site.ts, written from the brief. Ignore any mention of a database in the instructions above.")
    .replace(STAGES_LINE, "(1) scaffold and the content file from the brief, (2) the public page (every section in the brief's page_plan), (3) end-to-end tests");

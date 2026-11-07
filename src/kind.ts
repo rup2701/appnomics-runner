@@ -1,8 +1,9 @@
-// A static site has no database, no owner area and no environment variables (the SaaS showcase pack).
+// A static site has no database, no owner area and no environment variables (the product showcase pack).
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-export const STATIC_KINDS = ["saas-showcase"];
+// "saas-showcase" is the old name of the product showcase kind; sites already built with it keep working.
+export const STATIC_KINDS = ["product-showcase", "saas-showcase"];
 
 export const isStaticBrief = (brief: unknown): boolean =>
   STATIC_KINDS.includes((brief as { site?: { kind?: string } } | null)?.site?.kind ?? "");
