@@ -11,7 +11,7 @@ import { config, costUsd, emptyUsage } from "./config.js";
 import { standInBrief } from "./brief.js";
 import { createWorkspace } from "./workspace.js";
 import { isStaticBrief, isStaticRun } from "./kind.js";
-import { runAgent, transcriptFile } from "./agent.js";
+import { agentClock, runAgent, transcriptFile } from "./agent.js";
 import { agentEnv } from "./tools.js";
 
 const exec = promisify(execFile);
@@ -70,6 +70,7 @@ async function resume(runDir: string, message: string = RESUME_MESSAGE, label: s
   if (!databaseUrl && !staticSite) throw new Error(`No DATABASE_URL in ${appDir}/.env`);
   const usage = emptyUsage();
   const started = Date.now();
+  agentClock.modelMs = agentClock.toolMs = agentClock.testMs = agentClock.buildMs = 0;
   console.log(`Resuming ${root}`);
   const result = await runAgent({
     client: new Anthropic(), appDir, databaseUrl, usage, firstMessage: message, staticSite,
@@ -91,7 +92,11 @@ async function resume(runDir: string, message: string = RESUME_MESSAGE, label: s
     resumedRun: path.basename(root), stopReason: result.stopReason, turns: result.turns,
     durationMinutes: Math.round((Date.now() - started) / 600) / 100,
     // Where the time went, in seconds: the agent's own work (which includes the tests it runs), then the two independent checks.
-    timingsSeconds: { agent: seconds(agentMs), typecheck: seconds(tscMs), build: seconds(buildMs) },
+    // Inside the agent's time: waiting for the model, running tools (of which tests, and its own build or type checks).
+    timingsSeconds: {
+      agent: seconds(agentMs), typecheck: seconds(tscMs), build: seconds(buildMs),
+      model: seconds(agentClock.modelMs), tools: seconds(agentClock.toolMs), tests: seconds(agentClock.testMs), agentChecks: seconds(agentClock.buildMs),
+    },
     tokens: result.usage, estimatedCostUsd: Math.round(costUsd(result.usage) * 100) / 100,
     checks: { typecheck, build },
     agentLogWritten: await access(path.join(appDir, "AGENT_LOG.md")).then(() => true, () => false),

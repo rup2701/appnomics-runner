@@ -27,6 +27,11 @@ export const staticPrompt = (p: string) =>
    .replace(STAGES_LINE, "(1) scaffold and the content file from the brief, (2) the public page (every section in the brief's page_plan), (3) end-to-end tests");
 export const SYSTEM_PROMPT = BASE_PROMPT;
 
+/** Where the agent's time went, in milliseconds: waiting for the model, running tools, and, as parts of the tool time, running tests and running build or type checks. Reset by the caller before a run. */
+export const agentClock = { modelMs: 0, toolMs: 0, testMs: 0, buildMs: 0 };
+const TEST_COMMAND = /playwright|e2e|\btest\b|vitest|jest/i;
+const BUILD_COMMAND = /\bbuild\b|tsc/i;
+
 type Result = { turns: number; stopReason: "finished" | "max_turns" | "max_cost" | "cut_off" | "no_log"; usage: Usage };
 
 // Keep one cache breakpoint on the newest message so earlier turns are read from cache.
@@ -61,6 +66,7 @@ export async function runAgent(opts: {
     moveCacheMark(messages);
     // A dropped connection should pause the run, not end it. Wait and retry for up to about 15 minutes.
     let res: Anthropic.Message | undefined;
+    const modelStarted = Date.now();
     for (let attempt = 1; !res; attempt++) {
       try {
         res = await opts.client.messages.create({
@@ -79,6 +85,7 @@ export async function runAgent(opts: {
         await new Promise((r) => setTimeout(r, waitSec * 1000));
       }
     }
+    agentClock.modelMs += Date.now() - modelStarted;
     addUsage(opts.usage, res.usage);
     // One line per model call, with the response id, so a run can be matched against the console's usage page.
     await log({ turn, model_call: { id: res.id, model: res.model, stop_reason: res.stop_reason, usage: res.usage } });
@@ -127,8 +134,15 @@ export async function runAgent(opts: {
         output = String(err instanceof Error ? err.message : err);
         isError = true;
       }
+      const toolMs = Date.now() - started;
+      agentClock.toolMs += toolMs;
+      if (block.name === "run_command") {
+        const cmd = JSON.stringify(block.input ?? {});
+        if (TEST_COMMAND.test(cmd)) agentClock.testMs += toolMs;
+        else if (BUILD_COMMAND.test(cmd)) agentClock.buildMs += toolMs;
+      }
       console.log(`[${turn}] ${block.name} ${summarize(block.input)}${isError ? "  (error)" : ""}`);
-      await log({ turn, tool: block.name, input: block.input, ms: Date.now() - started, error: isError, output: output.slice(0, 2000) });
+      await log({ turn, tool: block.name, input: block.input, ms: toolMs, error: isError, output: output.slice(0, 2000) });
       results.push({ type: "tool_result", tool_use_id: block.id, content: output, is_error: isError });
     }
     messages.push({ role: "user", content: results });
