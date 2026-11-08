@@ -79,11 +79,21 @@ async function resume(runDir: string, message: string = RESUME_MESSAGE, label: s
     try { await exec("npx", args, { cwd: appDir, env: agentEnv(databaseUrl), timeout: config.commandTimeoutMs, maxBuffer: 20_000_000 }); return true; }
     catch { return false; }
   };
+  const agentMs = Date.now() - started;
+  const tscStart = Date.now();
+  const typecheck = await check(["tsc", "--noEmit"]);
+  const tscMs = Date.now() - tscStart;
+  const buildStart = Date.now();
+  const build = await check(["next", "build"]);
+  const buildMs = Date.now() - buildStart;
+  const seconds = (ms: number) => Math.round(ms / 100) / 10;
   const summary = {
     resumedRun: path.basename(root), stopReason: result.stopReason, turns: result.turns,
     durationMinutes: Math.round((Date.now() - started) / 600) / 100,
+    // Where the time went, in seconds: the agent's own work (which includes the tests it runs), then the two independent checks.
+    timingsSeconds: { agent: seconds(agentMs), typecheck: seconds(tscMs), build: seconds(buildMs) },
     tokens: result.usage, estimatedCostUsd: Math.round(costUsd(result.usage) * 100) / 100,
-    checks: { typecheck: await check(["tsc", "--noEmit"]), build: await check(["next", "build"]) },
+    checks: { typecheck, build },
     agentLogWritten: await access(path.join(appDir, "AGENT_LOG.md")).then(() => true, () => false),
     note: "This covers the resumed session only. Add it to the cost of the first session.",
   };
