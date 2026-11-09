@@ -68,7 +68,7 @@
         "Cards come from the brief and are at most six.",
         "The layout follows the count table: mixed sizes, no orphan card and no gap at 1440 or 375 wide.",
         "Card titles are larger on larger cards. Every card has the same padding, and a numeral that does not overlap the title; no tinted icon squares.",
-        "Fills follow the tone (accent block, inverse block, surface) and text on each meets 4.5:1.",
+        "Fills follow the tone (tint block, inverse block, surface) and text on each meets 4.5:1. The full accent is never a large background.",
         "Each card's text is real drafted copy, not Lorem."
       ],
       "verification": [
@@ -217,7 +217,7 @@
       "description": "The interview's tone and colour choices set the look, through the numbers in look.md.",
       "acceptance_criteria": [
         "Colour 'light' and 'blue-accent' use the showcase-light mode, 'dark' uses showcase-dark. The accent is the hex in the brief.",
-        "Tone changes the design as well as the words, through the tone table in look.md: heading weight and size, card radius, how much accent is used, and motion. Bold must look noticeably bolder than calm: heavier and larger headlines, an accent block in the benefits grid and the closing section.",
+        "Tone changes the design as well as the words, through the tone table in look.md: heading weight and size, card radius, how much accent is used, and motion. Bold must look noticeably bolder than calm: heavier and larger headlines, a tint block (a soft solid or gradient in the accent's lightest steps) in the benefits grid and the closing section.",
         "Text contrast is at least 4.5:1 in every mode, including text on the accent.",
         "The accent is a background only for buttons and, in bold and playful, the large benefits card and the closing block. Icons, badges, step numbers, labels and tints never have an accent background; icon strokes, borders, numerals and text may be accent."
       ],
