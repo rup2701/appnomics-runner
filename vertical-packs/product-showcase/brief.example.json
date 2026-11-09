@@ -259,6 +259,10 @@
       "cta": {
         "label": "Get started",
         "target": "main_button"
+      },
+      "secondary_cta": {
+        "label": "Watch demo",
+        "target": "secondary_button"
       }
     },
     {
@@ -402,5 +406,6 @@
     "target": "how_it_works",
     "link_status": "placeholder",
     "note": "Optional. A secondary button next to the main one in the hero only. With no link it scrolls to How it works and is flagged 'Set your link'."
-  }
+  },
+  "sign_in": null
 }

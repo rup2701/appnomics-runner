@@ -46,13 +46,15 @@
       "name": "Main and secondary buttons",
       "priority": "must-have",
       "status": "draft",
-      "description": "One main button style used in the header, hero, pricing cards and closing section, pointing to one link from the brief. An optional secondary button sits next to it in the hero only.",
+      "description": "One main button style used in the header, hero, pricing cards and closing section, pointing to one link from the brief. An optional secondary button sits next to it in the hero and repeats in the closing section. The closing section can use its own pair when the brief sets one. An optional Sign in link shows in the header and the footer.",
       "acceptance_criteria": [
         "With a link, every main button opens that link (a URL or a mailto).",
         "With no link, every main button scrolls to the pricing section (the closing section when pricing is off) and the review list shows 'Set your link'.",
         "The link is stored once in the content file and used everywhere.",
-        "An optional secondary button appears in the hero only, in a quieter style. With no link it scrolls to How it works and is flagged 'Set your link'.",
-        "There are never more than two buttons in the hero."
+        "An optional secondary button appears in the hero and again in the closing section, in a quieter style. With no link it scrolls to How it works and is flagged 'Set your link'.",
+        "A closing section with its own pair (target custom) shows those labels and links, not the hero's.",
+        "A brief with a sign_in link shows a plain text Sign in link at the right of the header, before the main button, and a link in the footer. Without one, neither appears.",
+        "There are never more than two buttons in the hero or in the closing section."
       ],
       "verification": [
         "Build with and without links and click each button on the page."
