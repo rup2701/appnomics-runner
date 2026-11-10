@@ -161,7 +161,7 @@
       "edge": "The hero image is missing, huge or fails to load.",
       "visitor_sees": "A plain labelled placeholder box; the page does not jump.",
       "owner_sees": "Listed under placeholders.",
-      "default_behavior": "Always render the placeholder; use an image only when the content file points at one that loads.",
+      "default_behavior": "Always render the placeholder; use an image only when the content file points at one that loads. The check for this sets the picture to none itself and never relies on the default content, because the owner may add a real picture later.",
       "status": "handled",
       "tested": "no"
     },
