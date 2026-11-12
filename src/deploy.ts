@@ -3,6 +3,7 @@
 //   (a first deploy refuses to run if a Vercel project with that name already exists)
 //   npm run deploy -- runs/<run-folder> --set-password "a new password" [--email owner@example.com]   (owner password on a deployed site)
 //   npm run deploy -- runs/<run-folder> --redeploy [--skip-migrate]   (code or migration changes to a site already deployed)
+//   npm run deploy -- runs/<run-folder> --name private-bayleaf-x7k2 --private   (a PRIVATE TEST: only a static site, only behind a login or password, see below)
 // Needs VERCEL_TOKEN and NEON_API_KEY in the runner's environment (never in the app folder).
 // Optional: VERCEL_SCOPE (team slug), NEON_ORG_ID, APP_DOMAIN (default appnomics.live), NEON_POOLED=0.
 // The app's own commands (migrate, seed, hash) run with a clean environment: no tokens.
@@ -11,6 +12,7 @@ import { readFile, writeFile, readdir } from "node:fs/promises";
 import { randomBytes } from "node:crypto";
 import path from "node:path";
 import { isStaticRun } from "./kind.js";
+import { checkProtected, protectProject } from "./private-deploy.js";
 
 const secrets: string[] = [];
 const redact = (s: string) => secrets.reduce((t, v) => (v ? t.split(v).join("***") : t), s);
@@ -175,6 +177,18 @@ async function main() {
   const root = path.resolve(runDir);
   const appDir = path.join(root, "app");
   const statePath = path.join(root, "deploy.json");
+
+  // A brief marked as a private test was built from someone's public site before they agreed. It must not go online open to everyone.
+  // The only way it goes online is `--private` on a first deploy of a static site: the project is created with protection switched on
+  // BEFORE anything is deployed, and the deploy stops if that cannot be done. A site deployed that way (deploy.json says private) can be redeployed.
+  // To publish it for everyone, the owner must agree and the mark must be cleared on purpose: "private_test": false in the run's brief.json and app/specs/brief.json,
+  // on a run that was not deployed privately.
+  const briefMark = await readFile(path.join(root, "brief.json"), "utf8").then((t) => JSON.parse(t)?.private_test === true, () => false);
+  const deployedPrivately = await readFile(statePath, "utf8").then((t) => JSON.parse(t)?.private === true, () => false);
+  const privateRun = flag("private");
+  if (privateRun && !briefMark) throw new Error("--private is only for a run whose brief says private_test: true.");
+  if (briefMark && !privateRun && !deployedPrivately) throw new Error("This run is a private test (its brief says private_test: true), so it will not be deployed. A private test can be deployed only with --private, behind a login or password. To publish for everyone, the owner must have agreed and private_test must be cleared on purpose (brief.json and app/specs/brief.json).");
+  if (briefMark && !privateRun && deployedPrivately && arg("set-password") !== undefined) throw new Error("A private test has no owner password to set.");
   const domainBase = process.env.APP_DOMAIN ?? "appnomics.live";
 
   // ---- set a new owner password on a deployed site ----
@@ -237,6 +251,11 @@ async function main() {
   if (exists.status !== 404) throw new Error(`Could not check whether the Vercel project "${name}" exists (HTTP ${exists.status}). Nothing was changed. Check VERCEL_TOKEN and VERCEL_SCOPE and try again.`);
 
 
+  if (privateRun) {
+    if (!staticSite) throw new Error("--private is only for static sites (a restaurant or a product showcase).");
+    if (!/^private-[a-z0-9-]{3,33}$/.test(name)) throw new Error("A private test's --name must start with private- (for example private-bayleaf-x7k2).");
+  }
+
   if (staticSite) {
     // A static site: no database, no owner password, no environment variables except the public address.
     const host = `${name}.${domainBase}`;
@@ -245,6 +264,12 @@ async function main() {
     log("[1/4] Linking the Vercel project");
     await writeFile(path.join(appDir, "vercel.json"), JSON.stringify({ framework: "nextjs" }, null, 2));
     await vercel(appDir, ["link", "--yes", "--project", name]);
+    let protection: string | undefined;
+    if (privateRun) {
+      log("  private test: switching protection on before anything is deployed");
+      protection = await protectProject(name);
+      log(`  protection is on (${protection})`);
+    }
     log("[2/4] Setting the public address");
     await vercel(appDir, ["env", "add", "NEXT_PUBLIC_SITE_URL", "production", "--force"], siteUrl);
     log("[3/4] Deploying to production (the build runs on Vercel)");
@@ -252,6 +277,13 @@ async function main() {
     log("[4/4] Adding the address and checking the site");
     try { await vercel(appDir, ["domains", "add", host, name]); }
     catch { await vercel(appDir, ["alias", "set", deployUrl, host]); }
+    if (privateRun) {
+      const gate = await checkProtected(siteUrl);
+      await writeFile(statePath, JSON.stringify({ name, host, static: true, private: true, protection, deployUrl, deployedAt: new Date().toISOString() }, null, 2));
+      if (!gate.protectedOk) throw new Error(`The private test is deployed at ${siteUrl} but a visitor who is not signed in got HTTP ${gate.status}, not a login. Take it down now: vercel project rm ${name}`);
+      log(`\nPrivate test (protected: ${protection}, a visitor who is not signed in gets HTTP ${gate.status}): ${siteUrl}\nOpen it after signing in. Remove it when done: vercel project rm ${name}`);
+      return;
+    }
     const result = await verify(siteUrl, true);
     await writeFile(statePath, JSON.stringify({ name, host, static: true, deployUrl, deployedAt: new Date().toISOString() }, null, 2));
     log(`\nLive: ${siteUrl}\nChecks: home ${result.home}`);

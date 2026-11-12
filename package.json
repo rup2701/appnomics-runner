@@ -8,7 +8,7 @@
     "change": "tsx src/cli.ts change",
     "verify": "tsx src/cli.ts verify",
     "check": "tsc --noEmit",
-    "test": "tsx test/tools.test.ts && tsx test/agent.test.ts && tsx test/verify.test.ts && tsx test/local-business.test.ts && tsx test/local-business-interview.test.ts",
+    "test": "tsx test/tools.test.ts && tsx test/agent.test.ts && tsx test/verify.test.ts && tsx test/local-business.test.ts && tsx test/local-business-interview.test.ts && tsx test/private-deploy.test.ts",
     "deploy": "tsx src/deploy.ts",
     "interview": "tsx src/interview.ts"
   },
