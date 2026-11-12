@@ -1,0 +1,163 @@
+/* restaurant_001 "Marina clean card". Tokens come from the design descriptor; the accent comes from the brief (look.accent). */
+.rb {
+  --accent: #ff6b35;
+  --accent-hover: color-mix(in srgb, var(--accent) 88%, black);
+  --accent-text: #ffffff;
+  --text: #222222;
+  --muted: #666666;
+  --soft: #888888;
+  --surface: #ffffff;
+  --alt: #f8f9fa;
+  --card: #fafafa;
+  --border: #e9ecef;
+  --star: #ffc107;
+  --r-btn: 8px;
+  --r-card: 12px;
+  --r-panel: 16px;
+  --r-hero: 20px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-up: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-family: var(--font-body, "DM Sans", Arial, sans-serif);
+  color: var(--text);
+  line-height: 1.6;
+  background: var(--surface);
+  overflow-x: hidden;
+}
+.rb *, .rb *::before, .rb *::after { box-sizing: border-box; }
+/* :where() keeps these resets at zero specificity so every class below can override them. */
+:where(.rb) :is(h1, h2, h3, p, blockquote, figure) { margin: 0; }
+:where(.rb) :is(h1, h2, h3) { font-family: var(--font-heading, inherit); }
+:where(.rb) a { color: inherit; text-decoration: none; }
+.rb-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.rb section[id] { scroll-margin-top: 80px; }
+
+/* Buttons */
+.rb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 12px 25px; border-radius: var(--r-btn); background: var(--accent); color: var(--accent-text); font-weight: 500; transition: all 0.3s ease; border: 0; cursor: pointer; font-size: 1rem; }
+.rb-btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent); }
+.rb-btn:focus-visible, .rb a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.rb-btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.rb-btn.ghost:hover { background: var(--alt); box-shadow: none; }
+
+/* Navigation */
+.rb-nav { position: fixed; top: 0; width: 100%; z-index: 990; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); transition: all 0.3s ease; }
+.rb-nav.scrolled { background: rgba(255, 255, 255, 0.98); box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1); }
+.rb-nav-in { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 68px; }
+.rb-logo { font-size: 20px; font-weight: 600; color: var(--accent); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rb-links { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
+.rb-links a { font-weight: 500; position: relative; transition: color 0.3s ease; }
+.rb-links a:hover { color: var(--accent); }
+.rb-links a::after { content: ""; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background: var(--accent); transition: width 0.3s ease; }
+.rb-links a:hover::after { width: 100%; }
+
+/* Sticky reserve bar */
+.rb-sticky { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); padding: 12px 0; box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1); transform: translateY(-100%); transition: transform 0.3s ease; }
+.rb-sticky.show { transform: translateY(0); }
+.rb-sticky-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.rb-sticky strong { font-weight: 600; }
+
+/* Hero */
+.rb-hero { min-height: 65vh; padding: 110px 0 60px; display: flex; align-items: center; justify-content: center; text-align: center; background-size: cover; background-position: center; }
+.rb-hero-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 40px; border-radius: var(--r-hero); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); width: 90%; max-width: 760px; }
+.rb-hero h1 { font-size: 3rem; line-height: 1.1; font-weight: 700; margin-bottom: 16px; }
+.rb-hero .kind { color: var(--accent); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.85rem; margin-bottom: 12px; }
+.rb-hero .lead { font-size: 1.3rem; color: var(--muted); margin-bottom: 28px; }
+.rb-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.rb-hours-line { margin-top: 22px; color: var(--soft); font-size: 0.95rem; }
+
+/* Sections */
+.rb-sec { padding: 100px 0; }
+.rb-sec.alt { background: var(--alt); }
+.rb-title { text-align: center; font-size: 3rem; font-weight: 600; line-height: 1.15; margin-bottom: 50px; }
+.rb-grid { display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+/* Dish cards */
+.rb-dish { background: var(--surface); border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.rb-dish:hover { transform: translateY(-2px); box-shadow: var(--shadow-up); }
+.rb-dish img { display: block; width: 100%; height: 200px; object-fit: cover; }
+.rb-dish-body { padding: 24px 28px 28px; }
+.rb-dish-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.rb-dish-head h3 { min-width: 0; }
+.rb-dish h3 { font-size: 1.35rem; font-weight: 600; line-height: 1.3; }
+.rb-dish p { color: var(--muted); margin-top: 10px; }
+.rb-price { font-size: 1.2rem; font-weight: 600; color: var(--accent); white-space: nowrap; }
+
+/* Full menu */
+.rb-menu-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 0 0 12px; margin: 0 0 32px; scrollbar-width: thin; }
+.rb-menu-tabs a { white-space: nowrap; padding: 8px 16px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); font-weight: 500; font-size: 0.95rem; }
+.rb-menu-tabs a:hover { border-color: var(--accent); color: var(--accent); }
+.rb-cat { margin-bottom: 48px; scroll-margin-top: 90px; }
+.rb-cat h3 { font-size: 1.6rem; font-weight: 600; line-height: 1.3; padding-bottom: 10px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; }
+.rb-cat ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); column-gap: 48px; }
+.rb-cat li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.rb-cat li .n { font-weight: 500; }
+.rb-cat li .d { display: block; color: var(--muted); font-size: 0.92rem; font-weight: 400; }
+.rb-cat li .p { font-weight: 600; color: var(--accent); white-space: nowrap; }
+
+/* Gallery */
+.rb-gallery { display: grid; gap: 20px; grid-template-columns: repeat(3, 1fr); }
+.rb-tile { position: relative; height: 260px; border-radius: var(--r-card); overflow: hidden; }
+.rb-tile.large { grid-column: span 2; }
+.rb-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rb-tile .ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 16px; text-align: center; font-weight: 500; color: #fff; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 45%, #2a2a2a)); }
+.rb-tile .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 20px 16px; color: #fff; font-weight: 500; background: linear-gradient(transparent, rgba(0, 0, 0, 0.72)); transform: translateY(100%); transition: transform 0.3s ease; }
+.rb-tile:hover .cap, .rb-tile:focus-within .cap { transform: translateY(0); }
+
+/* About */
+.rb-about { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.rb-about.solo { grid-template-columns: 1fr; max-width: 760px; margin: 0 auto; }
+.rb-about h2 { font-size: 3rem; font-weight: 600; margin-bottom: 28px; line-height: 1.15; }
+.rb-about p { font-size: 1.2rem; color: var(--muted); line-height: 1.7; margin-bottom: 18px; }
+.rb-about img { width: 100%; height: 400px; object-fit: cover; border-radius: var(--r-card); display: block; }
+
+/* Reviews */
+.rb-review { background: var(--surface); padding: 36px 30px; border-radius: var(--r-card); border: 1px solid var(--border); border-left: 4px solid var(--accent); box-shadow: var(--shadow); }
+.rb-review blockquote { margin: 0 0 22px; font-size: 1.1rem; line-height: 1.7; color: #555; font-style: italic; }
+.rb-review footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 500; }
+.rb-review .src { color: var(--soft); font-weight: 400; font-size: 0.9rem; display: flex; gap: 8px; align-items: center; }
+.rb-stars { color: var(--star); font-size: 1.1rem; letter-spacing: 1px; }
+
+/* Catering band and ways to order */
+.rb-band { text-align: center; max-width: 960px; margin: 0 auto; }
+.rb-band h2 { font-size: 3rem; font-weight: 600; margin-bottom: 40px; line-height: 1.15; }
+.rb-band .lead { font-size: 1.25rem; color: var(--muted); margin: -16px 0 40px; }
+.rb-feats { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin: 0 0 40px; text-align: left; }
+.rb-feat { background: var(--surface); padding: 28px 24px; border-radius: var(--r-card); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.rb-feat h3 { font-size: 1.2rem; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
+.rb-feat p { color: var(--muted); }
+.rb-ways { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.rb-way { padding: 2.5rem 1.5rem; background: var(--card); border-radius: var(--r-panel); display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.rb-way svg { width: 28px; height: 28px; color: var(--accent); }
+.rb-way h3 { font-size: 1.3rem; font-weight: 600; line-height: 1.3; }
+.rb-way p { color: var(--muted); flex: 1; }
+
+/* Footer */
+.rb-foot { background: var(--card); border-top: 1px solid var(--border); padding: 60px 0 30px; color: var(--text); }
+.rb-foot-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
+.rb-foot h3 { font-size: 1.4rem; margin-bottom: 18px; }
+.rb-foot p, .rb-foot a { display: block; margin-bottom: 8px; }
+.rb-foot a:hover { color: var(--accent); }
+.rb-foot-bottom { text-align: center; padding-top: 28px; border-top: 1px solid var(--border); color: var(--muted); }
+
+/* Tablets: two columns, the odd last tile fills its row. */
+@media (max-width: 900px) {
+  .rb-gallery { grid-template-columns: repeat(2, 1fr); }
+  .rb-tile.large { grid-column: span 1; }
+  .rb-gallery > :last-child:nth-child(odd) { grid-column: span 2; }
+}
+
+/* Phones */
+@media (max-width: 768px) {
+  .rb-links { display: none; }
+  .rb-btn { padding: 10px 16px; white-space: nowrap; }
+  .rb-nav-in { gap: 12px; }
+  .rb-hero h1, .rb-title, .rb-about h2, .rb-band h2 { font-size: 2.2rem; }
+  .rb-hero-card { padding: 28px 20px; }
+  .rb-hero .lead { font-size: 1.15rem; }
+  .rb-sec { padding: 64px 0; }
+  .rb-about { grid-template-columns: 1fr; gap: 32px; }
+  .rb-gallery { grid-template-columns: 1fr; }
+  .rb-gallery > :last-child:nth-child(odd) { grid-column: span 1; }
+  .rb-cat ul { grid-template-columns: 1fr; }
+  .rb-sticky-in strong { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .rb * { transition: none !important; } }

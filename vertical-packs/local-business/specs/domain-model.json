@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "app_type": "local-business",
+  "about": "This pack stores no data. There is no database. The page is rendered from one typed content file written from the brief at build time.",
+  "entities": [],
+  "content_file": {
+    "path": "src/content/site.ts",
+    "type": "Content, from src/lib/content.ts",
+    "holds": [
+      "name, kind, tagline",
+      "contact: address, phone, email, hours (one line per day or range, as written)",
+      "links: reserve, order, catering, menu, delivery (only addresses the owner's own site or the owner gave)",
+      "about text",
+      "menu: show_prices switch, categories with items (name, optional description, optional price as written), pinned highlights",
+      "pictures (gallery, hero, about) and the usePhotos switch",
+      "catering heading, text and up to four cards",
+      "testimonials (quote, author, source, rating only if stated)",
+      "socials",
+      "sections switched off",
+      "accent colour"
+    ]
+  },
+  "rules": [
+    "Page content lives only in the content file. It is not edited in a screen; changes are made by asking the builder.",
+    "Text read from the owner's site is copied word for word, including its spelling. The builder does not correct, shorten, translate or reword it.",
+    "A price is stored as the owner's site wrote it (for example $6.95) and shown as written. A missing price stays missing. show_prices false hides every price on the page and nothing else.",
+    "A picture is used only when usePhotos is true. usePhotos is true only when the brief records that the owner confirmed they own the site and its pictures (images.owner_confirmed).",
+    "A picture belongs to a dish only when its alt text equals the dish name exactly.",
+    "A section with nothing real to show is not drawn and not in the navigation. visibleSections() in src/lib/content.ts decides this and is not reimplemented.",
+    "Stars are drawn only for a rating the owner's site showed next to the quote.",
+    "A button or link exists only when it has a real https, tel or mailto address."
+  ]
+}

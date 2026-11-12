@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "app_type": "local-business",
+  "global_experience": {
+    "layout": "Content sits in a centred column up to 1200px wide. The top bar is fixed and translucent. Sections alternate white and a very light grey.",
+    "look": "Design restaurant_001 ('Marina clean card'): clean, friendly, bright, one accent colour from the brief, 8, 12 and 16px corners, soft card shadows. The reference components in reference/ are used as written.",
+    "header": "The restaurant name at the left in the accent colour, links to the sections that exist, and one accent button (Reserve a table, or Call to reserve). On phones the links hide and the name shortens with an ellipsis; the button stays.",
+    "feedback": "There are no forms. Every button opens a real link or a phone call. A slim reserve bar slides in under the top of the page once the hero has scrolled away.",
+    "empty_states": "A section with nothing real to show is not drawn. A missing picture is never a broken image or a grey box: hero and gallery use a colour field made from the accent, a dish card simply has no picture strip."
+  },
+  "pages": [
+    {
+      "id": "home",
+      "path": "/",
+      "purpose": "Show what the place is, what it serves, when it is open and how to reach it, within five seconds on a phone.",
+      "sections": "In order: hero, menu highlights, full menu, about, gallery, reviews, catering, ways to enjoy us, footer. Only the sections that have real content are drawn.",
+      "states": {
+        "loading": "Rendered at build time, so there is no loading state.",
+        "reserve": "Opens the owner's booking link in a new tab, or starts a phone call when only a phone exists. With neither, the button is not drawn.",
+        "menu_chips": "Category chips scroll sideways on narrow screens and jump to the category."
+      }
+    },
+    {
+      "id": "not-found",
+      "path": "any unknown path",
+      "purpose": "Tell the visitor the page does not exist and offer a way home.",
+      "sections": "A short message and a link to the home page."
+    }
+  ]
+}

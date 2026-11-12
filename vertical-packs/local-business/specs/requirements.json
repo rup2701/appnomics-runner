@@ -1,0 +1,203 @@
+{
+  "schema_version": "1.0",
+  "product": "A one page website for a local business (a restaurant first), built from what the owner's site already says.",
+  "features": [
+    {
+      "id": "page-sections",
+      "name": "The page is a set of sections in order",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "The home page shows the sections from the reference visibleSections() list, in its order, read from src/content/site.ts. A section with nothing real to show is not drawn.",
+      "acceptance_criteria": [
+        "The page shows only sections that have real content, in the default order: hero, menu highlights, full menu, about, gallery, reviews, catering, ways to enjoy us, footer.",
+        "A switched-off section (brief page_plan.off) is absent from the page and from the navigation. The hero and the footer cannot be switched off.",
+        "All content is read from src/content/site.ts. There is no database, no API route and no environment variable.",
+        "The layout works from 360px to wide desktop with no horizontal scrolling."
+      ],
+      "verification": [
+        "Render the page with the brief, then with reviews, catering, about and pictures removed one at a time, and compare the sections drawn.",
+        "Check the page at 360px and 1440px for horizontal scrolling.",
+        "Confirm the project has no database, ORM or API route."
+      ]
+    },
+    {
+      "id": "design",
+      "name": "The page uses design restaurant_001",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "The components, styles and display rules in reference/ are copied into the app and used as written. The agent writes the content file, the layout, the fonts and the tests.",
+      "acceptance_criteria": [
+        "src/lib/content.ts is the reference file unchanged. Section components are the reference components. The agent does not rewrite their markup or restyle them.",
+        "The accent colour comes from look.accent in the brief and is set as --accent on the page wrapper. Text on the accent is white or near-black, whichever passes 4.5:1, set as --accent-text.",
+        "Fonts are loaded with next/font and set as --font-heading and --font-body. A change to the look goes through the brief, not through edits to the components."
+      ],
+      "verification": [
+        "Diff src/lib/content.ts and src/components/restaurant against reference/.",
+        "Check button text contrast against the accent."
+      ]
+    },
+    {
+      "id": "hero",
+      "name": "Hero with the name as the heading",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "A fixed top bar, then a hero with the restaurant name as the h1, the kind of place, the tagline, and up to three buttons.",
+      "acceptance_criteria": [
+        "The restaurant name is the page's only h1.",
+        "The buttons are: Reserve (link or call), Order online (when an order link exists), View menu (only when neither of the first two exists) and Call us (only when Reserve is a link and a phone exists).",
+        "Every button has a real https, tel or mailto address. No button has href='#' or an empty address.",
+        "With a photo allowed the hero uses it under a dark scrim; otherwise a colour field made from the accent. Text contrast is at least 4.5:1.",
+        "There is no date, time or guests form. Booking happens at the owner's own link."
+      ],
+      "verification": [
+        "Check the hero for each case: reserve link, phone only, neither.",
+        "Confirm there is no form element in the hero."
+      ]
+    },
+    {
+      "id": "reserve",
+      "name": "Reserve button and slim bar",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "One reserve action used in the top bar, the hero and a slim bar that slides in when the hero has scrolled away.",
+      "acceptance_criteria": [
+        "With a booking link, the button reads Reserve a table and opens the link in a new tab with rel noopener noreferrer.",
+        "With only a phone, the button reads Call to reserve and starts a call.",
+        "With neither, no reserve button, no slim bar and no reserve card exist.",
+        "The slim bar appears after scrolling past the hero and disappears when scrolling back."
+      ],
+      "verification": [
+        "Render the three cases and count the reserve buttons.",
+        "Scroll the page in a browser and check the slim bar."
+      ]
+    },
+    {
+      "id": "menu",
+      "name": "Full menu by category",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "Every category and dish from the owner, in order, with the owner's spelling, descriptions and prices.",
+      "acceptance_criteria": [
+        "All categories and all items appear, in the order given, with names exactly as given. Spelling is not corrected.",
+        "A price shows exactly as written. A dish without a price shows no price and no placeholder.",
+        "With show_prices false no price appears anywhere on the page, including the highlights.",
+        "With two or more categories, chips above the menu jump to each category and scroll sideways on a narrow screen.",
+        "A menu of 120 or more items renders without layout breaks. A category with no items is not drawn."
+      ],
+      "verification": [
+        "Compare the page's dish count with the brief's.",
+        "Render with show_prices false and search the page for a currency sign.",
+        "Render a menu of 126 items at 390px."
+      ]
+    },
+    {
+      "id": "highlights",
+      "name": "Menu highlights",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "Up to six dish cards near the top. Pinned dishes first; otherwise dishes that have a picture.",
+      "acceptance_criteria": [
+        "A card has a picture strip only when pictures are allowed and the picture's alt text equals the dish name exactly.",
+        "Without pins, and without permission to use pictures, there are no highlights and the section is not drawn.",
+        "The section needs at least three cards.",
+        "A card shows the dish name, its price (if prices are on) and its description (if the owner's site has one)."
+      ],
+      "verification": [
+        "Run the highlight tests in test/local-business.test.ts.",
+        "Render with and without pictures allowed."
+      ]
+    },
+    {
+      "id": "about",
+      "name": "About us",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "The owner's own words, one or two columns.",
+      "acceptance_criteria": [
+        "The text is the owner's text word for word. The heading is the owner's heading, or About us.",
+        "With no allowed picture the text uses one column. No box and no slogan is invented.",
+        "With no about text the section is not drawn."
+      ],
+      "verification": [
+        "Render with and without about text and a picture."
+      ]
+    },
+    {
+      "id": "gallery",
+      "name": "Gallery and picture permission",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "Pictures from the owner's site appear only after the owner confirms they own the site and its pictures.",
+      "acceptance_criteria": [
+        "With usePhotos false the gallery shows labelled colour tiles made from each picture's alt text; with no labels it is not drawn.",
+        "With usePhotos true it shows the pictures, with the alt text as a caption on hover and on keyboard focus.",
+        "The grid is three columns on desktop with every fifth tile double wide, trimmed so the last row is full; two columns on tablets and one on phones.",
+        "The section needs at least three tiles."
+      ],
+      "verification": [
+        "Run the gallery tests (every count from 0 to 12 leaves no gap).",
+        "Render with usePhotos true and false."
+      ]
+    },
+    {
+      "id": "reviews",
+      "name": "Reviews",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "The owner's testimonials, word for word.",
+      "acceptance_criteria": [
+        "Quotes appear exactly as the owner's site has them. The builder never writes a quote.",
+        "Stars appear only for a rating the owner's site showed with the quote.",
+        "With no testimonials the section is not drawn and not in the navigation."
+      ],
+      "verification": [
+        "Render with no testimonials, one without a rating, one with a rating of 5."
+      ]
+    },
+    {
+      "id": "catering",
+      "name": "Catering band",
+      "priority": "nice-to-have",
+      "status": "draft",
+      "description": "The owner's catering words and up to four cards, with one button.",
+      "acceptance_criteria": [
+        "Heading, text and cards come from the owner's catering page. Nothing is written for the owner.",
+        "The button opens the catering page when there is one, else starts a call, else is not drawn.",
+        "With no catering content the section is not drawn."
+      ],
+      "verification": [
+        "Render with and without catering content and links."
+      ]
+    },
+    {
+      "id": "ways",
+      "name": "Ways to enjoy us",
+      "priority": "nice-to-have",
+      "status": "draft",
+      "description": "Up to four action cards: reserve, catering, order online, see the menu.",
+      "acceptance_criteria": [
+        "A card exists only when its link or phone exists. The section needs at least two cards.",
+        "Order online opens the restaurant's own ordering page, never a delivery company's home page."
+      ],
+      "verification": [
+        "Run the ways-to-order tests."
+      ]
+    },
+    {
+      "id": "footer",
+      "name": "Footer",
+      "priority": "must-have",
+      "status": "draft",
+      "description": "Contact, Hours and Follow columns and a copyright line.",
+      "acceptance_criteria": [
+        "Address, phone (as a call link) and email (as a mail link) show only when they exist.",
+        "Hours show one line per entry exactly as written.",
+        "Social links show only with a real https address. A column with nothing in it is not drawn.",
+        "The copyright line uses the restaurant's name and the current year."
+      ],
+      "verification": [
+        "Render with missing columns."
+      ]
+    }
+  ]
+}

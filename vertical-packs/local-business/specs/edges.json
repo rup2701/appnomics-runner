@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "app_type": "local-business",
+  "purpose": "Awkward cases for the local business pack and what the page does about each.",
+  "how_to_read": {
+    "status": {
+      "handled": "Defined behaviour, clear to the visitor and the owner.",
+      "partial": "Copes, but someone may be left unaware.",
+      "open": "Needs an owner decision or a feature this version excludes."
+    },
+    "tested": {
+      "yes": "An automated check proves it (test/local-business.test.ts, or an e2e check).",
+      "partial": "Part is checked.",
+      "no": "Built in, no check yet."
+    }
+  },
+  "edges": [
+    {
+      "id": "L-001",
+      "area": "reserve",
+      "edge": "The site has no booking link but has a phone.",
+      "visitor_sees": "A Call to reserve button.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "reserveMode returns phone mode; the link is tel:.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-002",
+      "area": "reserve",
+      "edge": "The site has neither a booking link nor a phone.",
+      "visitor_sees": "No reserve button, no slim bar, no reserve card.",
+      "owner_sees": "'Add a booking link or phone' in the review list.",
+      "default_behavior": "reserveMode returns none and every reserve surface is omitted.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-003",
+      "area": "reserve",
+      "edge": "The booking link is not https (http, javascript:, #).",
+      "visitor_sees": "The same as no link.",
+      "owner_sees": "'Check your booking link' in the review list.",
+      "default_behavior": "safeHref rejects it and the phone fallback applies.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-004",
+      "area": "menu",
+      "edge": "The menu has no prices.",
+      "visitor_sees": "Dishes without prices; nothing in their place.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "priceText returns nothing; no placeholder is drawn.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-005",
+      "area": "menu",
+      "edge": "The owner asks to hide prices.",
+      "visitor_sees": "No price anywhere, including the highlight cards.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "menu.showPrices false; every price call goes through priceText.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-006",
+      "area": "menu",
+      "edge": "There is no menu at all.",
+      "visitor_sees": "No Menu section and no Menu link in the top bar.",
+      "owner_sees": "'Menu not found' in the review list.",
+      "default_behavior": "visibleSections omits menu; the nav follows.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-007",
+      "area": "menu",
+      "edge": "The menu has 100 or more dishes and 10 or more categories.",
+      "visitor_sees": "Category chips that scroll sideways, then every category in order.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "FullMenu renders all items; chips scroll with overflow-x.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "L-008",
+      "area": "menu",
+      "edge": "A category has no items, or two dishes share a name.",
+      "visitor_sees": "The empty category is not drawn; both dishes show.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Empty categories are filtered; list keys use name and position.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "L-009",
+      "area": "menu",
+      "edge": "The owner's menu has spelling mistakes or odd capitals.",
+      "visitor_sees": "The same words as the owner's site.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Text is copied as is; the builder does not correct it.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "L-010",
+      "area": "pictures",
+      "edge": "The owner has not confirmed the pictures are theirs.",
+      "visitor_sees": "Colour blocks with labels, no photographs, no highlight cards.",
+      "owner_sees": "'Confirm your pictures to show them' in the review list.",
+      "default_behavior": "usePhotos false.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-011",
+      "area": "pictures",
+      "edge": "Fewer than three pictures or labels.",
+      "visitor_sees": "No gallery section.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "galleryTiles has fewer than three entries and the section is omitted.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-012",
+      "area": "pictures",
+      "edge": "The number of pictures does not fill the grid.",
+      "visitor_sees": "A full last row.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "galleryTiles trims the count so every row is full.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-013",
+      "area": "pictures",
+      "edge": "Pictures have blank alt text.",
+      "visitor_sees": "They do not become dish pictures and have no caption.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Matching needs alt equal to the dish name.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-014",
+      "area": "pictures",
+      "edge": "A picture address fails to load.",
+      "visitor_sees": "A broken-image icon.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Not handled in this version.",
+      "status": "open",
+      "tested": "no"
+    },
+    {
+      "id": "L-015",
+      "area": "reviews",
+      "edge": "The site shows no testimonials.",
+      "visitor_sees": "No reviews section.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "visibleSections omits reviews.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-016",
+      "area": "reviews",
+      "edge": "A quote has no rating or no author.",
+      "visitor_sees": "The quote alone, no stars.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "stars returns 0 unless a whole rating from 1 to 5 was read.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-017",
+      "area": "about",
+      "edge": "There is no about text.",
+      "visitor_sees": "No about section.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "visibleSections omits about.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-018",
+      "area": "catering",
+      "edge": "There is no catering content, or only a paragraph.",
+      "visitor_sees": "Nothing, or heading and paragraph without cards.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "The band draws only what exists.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "L-019",
+      "area": "ways",
+      "edge": "Only one way to order exists.",
+      "visitor_sees": "No Ways to enjoy us section.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "waysToOrder needs two cards.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-020",
+      "area": "footer",
+      "edge": "No hours, no socials, or no email.",
+      "visitor_sees": "The column is not drawn; the others widen.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "footerColumns skips empty columns.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-021",
+      "area": "footer",
+      "edge": "Hours are one line (Open every day 10 to 10) or seven lines.",
+      "visitor_sees": "Each line as written.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Hours are lines of text, not a table.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "L-022",
+      "area": "text",
+      "edge": "The restaurant name is very long.",
+      "visitor_sees": "The top bar shortens it with an ellipsis; the hero shows it in full.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "min-width 0, overflow hidden, text-overflow ellipsis on the logo.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "L-023",
+      "area": "text",
+      "edge": "Names or text hold quotes, ampersands, angle brackets or non-Latin letters.",
+      "visitor_sees": "The text as written.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "React escapes text; nothing is set as raw HTML.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "L-024",
+      "area": "look",
+      "edge": "The accent colour is very light.",
+      "visitor_sees": "Text on the accent stays readable.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "--accent-text is chosen white or near-black by contrast. The reference stylesheet defaults to white, so the agent must set it.",
+      "status": "partial",
+      "tested": "no"
+    },
+    {
+      "id": "L-025",
+      "area": "look",
+      "edge": "The visitor prefers reduced motion.",
+      "visitor_sees": "No sliding or hover transitions.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Transitions are switched off under prefers-reduced-motion.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "L-026",
+      "area": "site",
+      "edge": "The page is opened at 360px.",
+      "visitor_sees": "One column, no sideways scrolling.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "Responsive rules in restaurant.css.",
+      "status": "handled",
+      "tested": "partial"
+    },
+    {
+      "id": "L-027",
+      "area": "site",
+      "edge": "A visitor opens an address that does not exist.",
+      "visitor_sees": "A short not-found page with a link home.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "not-found page.",
+      "status": "handled",
+      "tested": "no"
+    }
+  ]
+}

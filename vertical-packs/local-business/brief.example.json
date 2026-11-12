@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Example brief for a local business site (a restaurant). It shows the shape and the defaults only. Every business-specific value below belongs to a made-up place and must be replaced by what the owner says or what their own site states.",
+  "site": {
+    "name": "Himal Table",
+    "kind": "local-business",
+    "business_type": "restaurant",
+    "cuisine": "Indian and Nepalese",
+    "tagline": "Curries, momo and tandoor, cooked to order."
+  },
+  "look": {
+    "design": "restaurant_001",
+    "mode": "light",
+    "accent": "#c2410c",
+    "accent_note": "A warm spice colour. The owner can ask Scout for another."
+  },
+  "contact": {
+    "address": "100 Example Avenue, Sampletown",
+    "phone": "555-0100",
+    "email": null,
+    "hours": [
+      "Open every day 11:00 AM to 9:00 PM"
+    ]
+  },
+  "links": {
+    "reserve": null,
+    "order": null,
+    "catering": null,
+    "menu": null,
+    "delivery": []
+  },
+  "about": {
+    "heading": "Our story",
+    "body": "Sample text. Replace it with the owner's own words, or leave this section out."
+  },
+  "menu": {
+    "show_prices": true,
+    "highlights": [],
+    "categories": [
+      {
+        "name": "Starters",
+        "items": [
+          {
+            "name": "Vegetable Samosa",
+            "price": "$6"
+          },
+          {
+            "name": "Chicken Pakora",
+            "price": "$11"
+          }
+        ]
+      },
+      {
+        "name": "Momo",
+        "items": [
+          {
+            "name": "Steamed Chicken Momo",
+            "price": "$14"
+          },
+          {
+            "name": "Steamed Vegetable Momo",
+            "price": "$13"
+          }
+        ]
+      },
+      {
+        "name": "Curries",
+        "items": [
+          {
+            "name": "Dal Makhani",
+            "price": "$15"
+          },
+          {
+            "name": "Butter Chicken",
+            "price": "$17"
+          }
+        ]
+      }
+    ]
+  },
+  "images": {
+    "use_photos": false,
+    "owner_confirmed": false,
+    "note": "Pictures from an existing site are shown only after the owner confirms they own the site and its pictures. Until then the page uses labelled colour blocks.",
+    "hero": null,
+    "about": null,
+    "gallery": []
+  },
+  "catering": null,
+  "testimonials": [],
+  "socials": [],
+  "page_plan": {
+    "default_order": [
+      "hero",
+      "highlights",
+      "menu",
+      "about",
+      "gallery",
+      "reviews",
+      "catering",
+      "ways",
+      "footer"
+    ],
+    "off": []
+  },
+  "placeholders": [
+    {
+      "where": "all text and the menu",
+      "what": "Everything in this example is made up",
+      "fix": "Replace it with the owner's real details or the facts read from their site"
+    },
+    {
+      "where": "links.reserve",
+      "what": "No booking link",
+      "fix": "The Reserve button becomes Call to reserve when there is a phone, and is left out when there is neither"
+    }
+  ],
+  "not_found": [
+    "email",
+    "social links",
+    "customer reviews",
+    "catering page"
+  ],
+  "not_in_this_version": [
+    "table booking forms",
+    "online ordering and payments",
+    "a separate owner screen",
+    "multiple locations",
+    "languages other than English"
+  ],
+  "assumptions": [
+    "Prices are shown because the menu has them. The owner can hide them with one request."
+  ]
+}
