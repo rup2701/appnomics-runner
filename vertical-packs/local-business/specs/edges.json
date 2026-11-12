@@ -29,7 +29,7 @@
       "id": "L-002",
       "area": "reserve",
       "edge": "The site has neither a booking link nor a phone.",
-      "visitor_sees": "No reserve button, no slim bar, no reserve card.",
+      "visitor_sees": "No reserve button and no reserve card. The slim bar is drawn only if an order link exists, with just that button.",
       "owner_sees": "'Add a booking link or phone' in the review list.",
       "default_behavior": "reserveMode returns none and every reserve surface is omitted.",
       "status": "handled",

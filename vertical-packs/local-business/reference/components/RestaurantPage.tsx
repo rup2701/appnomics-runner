@@ -1,4 +1,4 @@
-import { reserveMode, visibleSections, type Content } from "../lib/content";
+import { reserveMode, safeHref, telHref, visibleSections, type Content } from "../lib/content";
 import { About } from "./About";
 import { Catering } from "./Catering";
 import { Footer } from "./Footer";
@@ -18,6 +18,9 @@ import { WaysToOrder } from "./WaysToOrder";
 export function RestaurantPage({ c, year = new Date().getFullYear() }: { c: Content; year?: number }) {
   const shown = visibleSections(c);
   const r = reserveMode(c);
+  const order = safeHref(c.links.order) ?? safeHref(c.links.delivery[0]?.url);
+  const call = r.mode === "link" ? telHref(c.contact.phone) : undefined;
+  const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
   const parts: Record<string, React.ReactNode> = {
     hero: <Hero c={c} key="hero" />,
     highlights: <MenuHighlights c={c} key="highlights" />,
@@ -32,11 +35,15 @@ export function RestaurantPage({ c, year = new Date().getFullYear() }: { c: Cont
   return (
     <div className="rb" style={{ ["--accent" as string]: c.accent }}>
       <Nav c={c} />
-      {r.href ? (
+      {r.href || order ? (
         <div className="rb-sticky" id="rb-sticky">
           <div className="rb-container rb-sticky-in">
             <strong>{c.name}</strong>
-            <a className="rb-btn" href={r.href} {...(r.mode === "link" ? { target: "_blank", rel: "noopener noreferrer" } : {})}>{r.label}</a>
+            <div className="rb-sticky-actions">
+              {r.href ? <a className="rb-btn" href={r.href} {...(r.mode === "link" ? ext : {})}>{r.label}</a> : null}
+              {order ? <a className={r.href ? "rb-btn ghost" : "rb-btn"} href={order} {...ext}>Order online</a> : null}
+              {call ? <a className="rb-btn ghost" href={call}>Call us</a> : null}
+            </div>
           </div>
         </div>
       ) : null}

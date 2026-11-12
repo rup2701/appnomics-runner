@@ -59,7 +59,7 @@
       "name": "Reserve button and slim bar",
       "priority": "must-have",
       "status": "draft",
-      "description": "One reserve action used in the top bar, the hero and a slim bar that slides in when the hero has scrolled away.",
+      "description": "One reserve action used in the top bar, the hero and a slim bar that slides in when the hero has scrolled away. The slim bar carries the same buttons as the hero (Reserve, Order online, Call us), each only when it goes somewhere real.",
       "acceptance_criteria": [
         "With a booking link, the button reads Reserve a table and opens the link in a new tab with rel noopener noreferrer.",
         "With only a phone, the button reads Call to reserve and starts a call.",

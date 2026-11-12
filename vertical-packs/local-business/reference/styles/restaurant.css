@@ -54,6 +54,7 @@
 .rb-sticky.show { transform: translateY(0); }
 .rb-sticky-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .rb-sticky strong { font-weight: 600; }
+.rb-sticky-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
 
 /* Hero */
 .rb-hero { min-height: 65vh; padding: 110px 0 60px; display: flex; align-items: center; justify-content: center; text-align: center; background-size: cover; background-position: center; }
@@ -159,5 +160,8 @@
   .rb-gallery > :last-child:nth-child(odd) { grid-column: span 1; }
   .rb-cat ul { grid-template-columns: 1fr; }
   .rb-sticky-in strong { display: none; }
+  .rb-sticky-in { justify-content: center; }
+  .rb-sticky-actions { justify-content: center; gap: 8px; }
+  .rb-sticky .rb-btn { padding: 8px 12px; font-size: 0.9rem; }
 }
 @media (prefers-reduced-motion: reduce) { .rb * { transition: none !important; } }
