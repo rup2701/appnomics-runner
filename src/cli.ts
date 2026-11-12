@@ -9,7 +9,7 @@ import { promisify } from "node:util";
 import path from "node:path";
 import { config, costUsd, emptyUsage } from "./config.js";
 import { standInBrief } from "./brief.js";
-import { createWorkspace } from "./workspace.js";
+import { copyReference, createWorkspace } from "./workspace.js";
 import { isStaticBrief, isStaticRun } from "./kind.js";
 import { agentClock, runAgent, transcriptFile } from "./agent.js";
 import { agentEnv } from "./tools.js";
@@ -170,6 +170,7 @@ async function main() {
       const keep = await readFile(path.join(target, "brief.json"), "utf8").catch(() => null);
       await cp(path.resolve(specsFrom), target, { recursive: true, force: true, filter: (src) => path.basename(src) !== "brief.json" });
       if (keep) await writeFile(path.join(target, "brief.json"), keep);
+      await copyReference(specsFrom, path.join(root, "app"));
       console.log(`Specs refreshed from ${specsFrom}`);
     }
     const briefFile = arg("brief");

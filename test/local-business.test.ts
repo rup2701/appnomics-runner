@@ -3,6 +3,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { galleryTiles, navLinks, pickHighlights, priceText, reserveMode, safeHref, stars, visibleSections, waysToOrder, footerColumns, type Content } from "../vertical-packs/local-business/reference/lib/content.js";
 import { isStaticBrief } from "../src/kind.js";
+import { createWorkspace } from "../src/workspace.js";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
 const dishes = ["Kale Chat", "Chicken Pakoda", "Chili Chicken", "Lentil Soup", "Himalayan Noodle Soup", "Organic Green Mix Salad", "Samosa"];
 const base = (over: Partial<Content> = {}): Content => ({
@@ -111,5 +115,16 @@ assert.equal(isStaticBrief({ site: { kind: "waitlist" } }), false);
 const example = JSON.parse(readFileSync(new URL("../vertical-packs/local-business/brief.example.json", import.meta.url), "utf8"));
 assert.equal(example.site.kind, "local-business");
 assert.equal(example.look.design, "restaurant_001");
+
+// The run folder gets the pack's reference components next to specs/, and a pack without a reference folder gets none.
+const tmp = mkdtempSync(path.join(tmpdir(), "lb-"));
+const pack = new URL("../vertical-packs/local-business/specs", import.meta.url).pathname;
+const ws = await createWorkspace({ prompt: "test", specsDir: pack, brief: example, runsDir: tmp, skipDb: true });
+assert.ok(existsSync(path.join(ws.appDir, "reference", "lib", "content.ts")), "reference/lib/content.ts is in the run");
+assert.ok(existsSync(path.join(ws.appDir, "reference", "components", "RestaurantPage.tsx")));
+assert.ok(existsSync(path.join(ws.appDir, "reference", "styles", "restaurant.css")));
+const store = await createWorkspace({ prompt: "test2", specsDir: new URL("../vertical-packs/store/specs", import.meta.url).pathname, brief: {}, runsDir: tmp, skipDb: true });
+assert.ok(!existsSync(path.join(store.appDir, "reference")), "a pack without a reference folder gets none");
+rmSync(tmp, { recursive: true, force: true });
 
 console.log("local-business tests passed");

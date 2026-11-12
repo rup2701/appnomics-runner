@@ -1,11 +1,19 @@
 // Makes a fresh folder and a fresh database for one run.
-import { cp, mkdir, writeFile } from "node:fs/promises";
+import { access, cp, mkdir, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import path from "node:path";
 import { config } from "./config.js";
 
 const run = promisify(execFile);
+
+/** A pack may keep ready-made components next to its specs (vertical-packs/<pack>/reference). They go into the app as reference/ so the agent can copy them as written. */
+export async function copyReference(specsDir: string, appDir: string): Promise<boolean> {
+  const from = path.join(path.dirname(path.resolve(specsDir)), "reference");
+  const there = await access(from).then(() => true, () => false);
+  if (there) await cp(from, path.join(appDir, "reference"), { recursive: true });
+  return there;
+}
 
 export type Workspace = { runId: string; root: string; appDir: string; dbName: string; databaseUrl: string };
 
@@ -19,6 +27,7 @@ export async function createWorkspace(opts: {
   const appDir = path.join(root, "app");
   await mkdir(appDir, { recursive: true });
   await cp(opts.specsDir, path.join(appDir, "specs"), { recursive: true });
+  await copyReference(opts.specsDir, appDir);
   await writeFile(path.join(appDir, "specs", "brief.json"), JSON.stringify(opts.brief, null, 2));
 
   const dbName = `run_${stamp}_${Math.random().toString(36).slice(2, 6)}`;
