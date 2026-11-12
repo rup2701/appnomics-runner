@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "kind": "restaurant",
+  "how_to_read": "The interview after the website is read. Scout calls nextQuestions(brief, state) to get the one or two questions that matter most right now, puts them to the owner in its own words using `ask` and `why`, and sends the answer to applyAnswer(). Code decides which question comes next, the model only words it. `when` is a list of conditions that must all hold. `apply` names the handler that checks the answer and writes it into the brief; nothing else may write to the brief. A skipped question is never asked again.",
+  "questions": [
+    {
+      "id": "confirm-owner",
+      "priority": 100,
+      "when": [{ "path": "private_test", "op": "notTrue" }, { "path": "images.owner_confirmed", "op": "notTrue" }],
+      "ask": "Before anything goes live: are you the owner of {name}, and is it fine to use the text, menu and pictures from your current site?",
+      "why": "Nothing is published until the owner says so.",
+      "options": ["Yes, I am the owner and it is fine", "Not yet"],
+      "apply": "confirmOwner"
+    },
+    {
+      "id": "story",
+      "priority": 90,
+      "when": [{ "path": "story", "op": "empty" }],
+      "ask": "Your site has only a couple of lines about {name}. Want a page for your story? You can paste it, or I can ask three short questions (how it started, who cooks, what you are proud of) and write it up in your words.",
+      "why": "An Our story page is on most restaurant sites and it is where an owner's own words matter most.",
+      "options": ["Paste it", "Ask me three questions", "Skip"],
+      "apply": "story",
+      "clears": "story page"
+    },
+    {
+      "id": "reviews",
+      "priority": 80,
+      "when": [{ "path": "testimonials", "op": "empty" }],
+      "ask": "Do you have two or three kind things guests have said about you? Paste them exactly as written, with a name or a source if you like.",
+      "why": "Reviews are only shown when they are real, and your site did not have any.",
+      "options": ["Paste reviews", "Skip"],
+      "apply": "reviews",
+      "clears": "customer reviews"
+    },
+    {
+      "id": "highlights",
+      "priority": 60,
+      "when": [{ "path": "menu.highlights", "op": "empty" }],
+      "ask": "Which three to six dishes should lead the page? For example {dishes}.",
+      "why": "These become the signature dishes at the top. Without a choice the page uses dishes that have a photo.",
+      "options": ["Name the dishes", "Let the photos decide"],
+      "apply": "highlights"
+    },
+    {
+      "id": "booking",
+      "priority": 50,
+      "when": [{ "path": "links.reserve", "op": "empty" }],
+      "ask": "How do guests book a table today? If you use OpenTable, Resy, Tock or another service, paste its link and the Reserve button will open it.",
+      "why": "Without a booking link the Reserve button becomes Call us, or is left out.",
+      "options": ["Paste a link", "We take calls only"],
+      "apply": "bookingLink",
+      "clears": "booking link"
+    },
+    {
+      "id": "email",
+      "priority": 45,
+      "when": [{ "path": "contact.email", "op": "empty" }],
+      "ask": "What email address should guests see for questions and catering?",
+      "why": "Your site did not show one.",
+      "options": ["Give an address", "Leave it out"],
+      "apply": "email",
+      "clears": "email"
+    },
+    {
+      "id": "socials",
+      "priority": 40,
+      "when": [{ "path": "socials", "op": "empty" }],
+      "ask": "Are you on Instagram or Facebook? Paste the links and they will appear in the footer.",
+      "why": "Your site did not link to any.",
+      "options": ["Paste links", "Skip"],
+      "apply": "socials",
+      "clears": "social links"
+    },
+    {
+      "id": "hours",
+      "priority": 70,
+      "when": [{ "path": "contact.hours", "op": "empty" }],
+      "ask": "What are your opening hours? One line per day or range is fine.",
+      "why": "Your site did not list hours, and guests look for them first.",
+      "options": ["Type them", "Skip"],
+      "apply": "hours",
+      "clears": "opening hours"
+    },
+    {
+      "id": "prices",
+      "priority": 30,
+      "when": [{ "path": "menu.show_prices", "op": "true" }],
+      "ask": "Prices are shown as your site wrote them. Do you want to keep showing them?",
+      "why": "One switch hides every price. Some owners prefer to show prices only on the printed menu.",
+      "options": ["Keep prices", "Hide prices"],
+      "apply": "showPrices"
+    }
+  ]
+}
