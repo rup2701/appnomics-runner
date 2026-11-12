@@ -130,5 +130,9 @@
   ],
   "assumptions": [
     "Prices are shown because the menu has them. The owner can hide them with one request."
-  ]
+  ],
+  "story": {
+    "heading": "Our story",
+    "body": "Himal Table began as a Sunday supper for friends who missed the food of home.\nThe first menu had six dishes. The recipes came from family kitchens in the hills and from the cook's own mother.\n(Fictional example text for the pack. Replace it with the owner's own words.)"
+  }
 }

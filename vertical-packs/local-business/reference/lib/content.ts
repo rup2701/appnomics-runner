@@ -8,6 +8,9 @@ export type Card = { title: string; body: string };
 export type Testimonial = { quote: string; author?: string; source?: string; rating?: number };
 export type Link = { label: string; url: string };
 
+/** The site has three pages: the home page, the full menu at /menu and the owner's story at /story. */
+export type PageId = "home" | "menu" | "story";
+
 export type SectionId = "hero" | "highlights" | "menu" | "about" | "gallery" | "reviews" | "catering" | "ways" | "footer";
 
 export type Content = {
@@ -18,6 +21,8 @@ export type Content = {
   /** Links the owner's own site already uses. Never a made-up address. */
   links: { reserve?: string; order?: string; menu?: string; catering?: string; delivery: Link[] };
   about?: { heading?: string; body: string };
+  /** The owner's own story. It gets its own page at /story only when the owner (or their site) gave real words for it. */
+  story?: { heading?: string; body: string; image?: Img };
   menu: { showPrices: boolean; categories: MenuCategory[]; /** Dish names the owner pinned, in order. */ highlights: string[] };
   /** Pictures from the owner's site. Shown only when images.usePhotos is true. */
   gallery: Img[];
@@ -38,6 +43,16 @@ export const MIN_HIGHLIGHTS = 3;
 export const MIN_GALLERY = 3;
 
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
+
+export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+export const hasMenu = (c: Content) => c.menu.categories.some((k) => k.items.length > 0);
+/** The story page exists only when there are real words for it. */
+export const hasStory = (c: Content) => !!c.story?.body?.trim();
+/** Where "the menu" lives: the menu page when there is a menu, else a menu link the owner's site already has. */
+export function menuHref(c: Content): string | undefined {
+  return hasMenu(c) ? "/menu" : safeHref(c.links.menu);
+}
 
 /** Only https links and tel or mailto links are used. Anything else is treated as no link. */
 export function safeHref(url: string | undefined): string | undefined {
@@ -109,7 +124,7 @@ export function waysToOrder(c: Content): Way[] {
   if (cat && c.catering) out.push({ id: "catering", title: "Catering", text: "Let us cater your next event.", href: cat, cta: "Ask about catering" });
   const order = safeHref(c.links.order) ?? safeHref(c.links.delivery[0]?.url);
   if (order) out.push({ id: "delivery", title: "Order online", text: "Takeout and delivery, straight from the restaurant.", href: order, cta: "Order now" });
-  const menu = c.menu.categories.length ? "#menu" : safeHref(c.links.menu);
+  const menu = menuHref(c);
   if (menu) out.push({ id: "menu", title: "See the menu", text: "Everything we cook, with prices.", href: menu, cta: "View menu" });
   return out;
 }
@@ -119,8 +134,8 @@ export function visibleSections(c: Content): SectionId[] {
   const has: Record<SectionId, boolean> = {
     hero: true,
     highlights: pickHighlights(c).length >= MIN_HIGHLIGHTS,
-    menu: c.menu.categories.some((k) => k.items.length > 0),
-    about: !!c.about?.body?.trim(),
+    menu: hasMenu(c),
+    about: !!c.about?.body?.trim() || hasStory(c),
     // Without permission to use the owner's pictures the gallery shows labelled colour tiles, so it needs labels instead of pictures.
     gallery: galleryTiles(c).length >= MIN_GALLERY,
     reviews: c.testimonials.some((t) => t.quote.trim().length > 0),
@@ -132,14 +147,23 @@ export function visibleSections(c: Content): SectionId[] {
   return SECTION_ORDER.filter((id) => has[id] && (id === "hero" || id === "footer" || !(c.off ?? []).includes(id)));
 }
 
-export const NAV_LABELS: Partial<Record<SectionId, string>> = { menu: "Menu", about: "About", gallery: "Gallery", reviews: "Reviews", catering: "Catering" };
-
-/** Links for the top bar: only sections that are on the page, plus Contact for the footer. */
+/** Links for the top bar. Pages that exist get a link to the page, sections on the home page get a link to their place on it, and Contact goes to the footer. */
 export function navLinks(c: Content): { label: string; href: string }[] {
   const shown = visibleSections(c);
-  const links = shown.filter((id) => NAV_LABELS[id]).map((id) => ({ label: NAV_LABELS[id] as string, href: `#${id}` }));
-  links.push({ label: "Contact", href: "#contact" });
+  const links: { label: string; href: string }[] = [];
+  if (hasMenu(c)) links.push({ label: "Menu", href: "/menu" });
+  if (hasStory(c)) links.push({ label: "Our story", href: "/story" });
+  else if (shown.includes("about")) links.push({ label: "About", href: "/#about" });
+  if (shown.includes("gallery")) links.push({ label: "Gallery", href: "/#gallery" });
+  if (shown.includes("reviews")) links.push({ label: "Reviews", href: "/#reviews" });
+  if (shown.includes("catering")) links.push({ label: "Catering", href: "/#catering" });
+  links.push({ label: "Contact", href: "/#contact" });
   return links;
+}
+
+/** The first paragraph of a text, as the owner wrote it. Used for the short version on the home page. */
+export function firstParagraph(text: string): string {
+  return text.split(/\n+/).map((p) => p.trim()).find(Boolean) ?? "";
 }
 
 /** Stars are drawn only for a rating the page itself showed. */

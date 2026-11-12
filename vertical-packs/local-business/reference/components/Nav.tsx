@@ -6,7 +6,7 @@ export function Nav({ c }: { c: Content }) {
   return (
     <nav className="rb-nav" id="rb-nav">
       <div className="rb-container rb-nav-in">
-        <a href="#top" className="rb-logo">{c.name}</a>
+        <a href="/" className="rb-logo">{c.name}</a>
         <ul className="rb-links">
           {navLinks(c).map((l) => (
             <li key={l.href}><a href={l.href}>{l.label}</a></li>

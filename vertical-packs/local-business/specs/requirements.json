@@ -4,20 +4,23 @@
   "features": [
     {
       "id": "page-sections",
-      "name": "The page is a set of sections in order",
+      "name": "The site has a home page, a menu page and a story page",
       "priority": "must-have",
       "status": "draft",
-      "description": "The home page shows the sections from the reference visibleSections() list, in its order, read from src/content/site.ts. A section with nothing real to show is not drawn.",
+      "description": "The home page shows the sections from the reference visibleSections() list, in its order, read from src/content/site.ts. The full menu is its own page at /menu, and the owner's story is its own page at /story. A section or page with nothing real to show is not drawn and its link is not shown.",
       "acceptance_criteria": [
-        "The page shows only sections that have real content, in the default order: hero, menu highlights, full menu, about, gallery, reviews, catering, ways to enjoy us, footer.",
+        "The home page shows only sections that have real content, in the default order: hero, menu highlights, menu teaser (category chips and one button to /menu), about or short story, gallery, reviews, catering, ways to enjoy us, footer.",
+        "/menu exists only when the menu has dishes. It shows every category and dish with the category chips. Nothing on it is added or reworded.",
+        "/story exists only when the brief has a story with real words (hasStory). When it exists the home page shows its first paragraph with a Read our story link, and the top bar shows Our story. When it does not exist there is no /story route, no link to it, and the home page shows the About text instead.",
         "A switched-off section (brief page_plan.off) is absent from the page and from the navigation. The hero and the footer cannot be switched off.",
         "All content is read from src/content/site.ts. There is no database, no API route and no environment variable.",
+        "The top bar and footer are the same on every page (components/Shell.tsx). The slim bar with Reserve, Order online and Call us is on the home page only.",
         "The layout works from 360px to wide desktop with no horizontal scrolling."
       ],
       "verification": [
-        "Render the page with the brief, then with reviews, catering, about and pictures removed one at a time, and compare the sections drawn.",
-        "Check the page at 360px and 1440px for horizontal scrolling.",
-        "Confirm the project has no database, ORM or API route."
+        "Render /, /menu and /story at 360px and 1280px and look at them.",
+        "Open /story on a brief with no story: it is a 404, and no link anywhere points to it.",
+        "Check that every top bar link goes to a page or section that exists."
       ]
     },
     {
@@ -76,7 +79,7 @@
       "name": "Full menu by category",
       "priority": "must-have",
       "status": "draft",
-      "description": "Every category and dish from the owner, in order, with the owner's spelling, descriptions and prices.",
+      "description": "Every category and dish from the owner, in order, with the owner's spelling, descriptions and prices. It is shown on its own page at /menu.",
       "acceptance_criteria": [
         "All categories and all items appear, in the order given, with names exactly as given. Spelling is not corrected.",
         "A price shows exactly as written. A dish without a price shows no price and no placeholder.",

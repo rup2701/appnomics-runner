@@ -1,7 +1,7 @@
 // The display rules of the local-business reference: what is drawn, and what is never invented.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { galleryTiles, navLinks, pickHighlights, priceText, reserveMode, safeHref, stars, visibleSections, waysToOrder, footerColumns, type Content } from "../vertical-packs/local-business/reference/lib/content.js";
+import { firstParagraph, galleryTiles, hasMenu, hasStory, menuHref, navLinks, pickHighlights, priceText, reserveMode, safeHref, stars, visibleSections, waysToOrder, footerColumns, type Content } from "../vertical-packs/local-business/reference/lib/content.js";
 import { isStaticBrief } from "../src/kind.js";
 import { createWorkspace } from "../src/workspace.js";
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
@@ -95,6 +95,23 @@ assert.ok(!visibleSections(base({ links: { delivery: [] }, contact: { hours: [] 
 // Navigation follows the sections that exist.
 assert.deepEqual(navLinks(base()).map((l) => l.label), ["Menu", "About", "Gallery", "Catering", "Contact"]);
 assert.deepEqual(navLinks(base({ about: undefined, catering: undefined })).map((l) => l.label), ["Menu", "Gallery", "Contact"]);
+
+// Pages: the menu has its own page, the story has one only when there are real words for it.
+assert.equal(hasMenu(base()), true);
+assert.equal(hasMenu(base({ menu: { showPrices: true, categories: [{ name: "Empty", items: [] }], highlights: [] } })), false);
+assert.equal(menuHref(base()), "/menu");
+assert.equal(menuHref(base({ menu: { showPrices: true, categories: [], highlights: [] }, links: { menu: "https://example.com/menu", delivery: [] } })), "https://example.com/menu");
+assert.equal(menuHref(base({ menu: { showPrices: true, categories: [], highlights: [] }, links: { menu: "http://example.com/menu", delivery: [] } })), undefined);
+assert.equal(waysToOrder(base()).find((w) => w.id === "menu")?.href, "/menu");
+assert.equal(hasStory(base()), false);
+assert.equal(hasStory(base({ story: { body: "  " } })), false);
+assert.equal(hasStory(base({ story: { body: "We started in 2010." } })), true);
+assert.deepEqual(navLinks(base({ story: { body: "We started in 2010." } })).map((l) => l.label), ["Menu", "Our story", "Gallery", "Catering", "Contact"]);
+assert.deepEqual(navLinks(base({ story: { body: "We started in 2010." } })).map((l) => l.href), ["/menu", "/story", "/#gallery", "/#catering", "/#contact"]);
+assert.ok(visibleSections(base({ about: undefined, story: { body: "We started in 2010." } })).includes("about"), "the home page shows the short story even with no separate about text");
+assert.deepEqual(navLinks(base({ menu: { showPrices: true, categories: [], highlights: [] } })).map((l) => l.label), ["About", "Gallery", "Catering", "Contact"], "no menu, no menu link");
+assert.equal(firstParagraph("One.\n\nTwo."), "One.");
+assert.equal(firstParagraph("  \n"), "");
 
 // Stars only for a stated rating.
 assert.equal(stars({ quote: "x" }), 0);

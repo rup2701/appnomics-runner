@@ -7,7 +7,18 @@ Read this after contract.md. The brief says what the site says; this file says h
 - `look.design` is `restaurant_001`. No other design exists in this version; if the brief names another, use restaurant_001 and record it in AGENT_LOG.md.
 - `look.accent` is one hex colour, set as `--accent` on the page wrapper (the reference page component does this from `content.accent`). Pick it from the brief's mood if it names none, and record the value. Everything else is a neutral.
 - `look.mode` is light. A dark page is not part of this design.
-- `images.use_photos` becomes `usePhotos`. It is true only when `images.owner_confirmed` is true.
+- `story` (heading, body, optional image) becomes `Content.story`. It is present only when the brief has real story words.
+- `images.use_photos` becomes `usePhotos`. It is true only when `images.owner_confirmed` is true, or when the brief has `private_test: true` (a private test is never published).
+
+## Pages
+
+The site has three routes, built from the reference page components. Do not add other pages in this version.
+
+- `src/app/page.tsx` renders `<RestaurantPage c={content} />` (home).
+- `src/app/menu/page.tsx` renders `<MenuPage c={content} />`. If `hasMenu(content)` is false, call `notFound()`.
+- `src/app/story/page.tsx` renders `<StoryPage c={content} />`. If `hasStory(content)` is false, call `notFound()`.
+- Give each page its own `generateMetadata` title (the restaurant name, then Menu or Our story) using only words from the brief.
+- Add a `sitemap` only for routes that exist.
 
 ## Tokens (in `restaurant.css`, do not scatter new values)
 
@@ -52,10 +63,11 @@ Read this after contract.md. The brief says what the site says; this file says h
 ## Checks to run before you finish
 
 1. Open the page at 360px and 1440px. There is no horizontal scrolling.
-2. Count the h1 elements. There is exactly one, and it is the restaurant's name.
+2. Count the h1 elements on each page. There is exactly one. On the home page it is the restaurant's name; on /menu it is Menu; on /story it is the story heading.
 3. Search the page for `href="#"` and empty links. There are none.
 4. With `show_prices` false, search the page for a currency sign. There is none.
-5. Compare the number of dishes on the page with the brief's.
+5. Compare the number of dishes on /menu with the brief's.
 6. Diff `src/lib/content.ts` and `src/components/restaurant/` against `reference/`. They are the same.
 7. Check the text on every accent button against the accent for 4.5:1.
 8. With the brief's pictures switched off (`usePhotos` false), confirm no `<img>` from the owner's site is on the page.
+9. Open /, /menu and /story at 360px and 1280px. /menu and /story exist only when the brief has a menu or a story; every top bar link goes somewhere that exists; the home page shows only the first paragraph of the story, with a link to the rest.

@@ -1,6 +1,4 @@
-import { priceText, type Content } from "../lib/content";
-
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+import { priceText, slug, type Content } from "../lib/content";
 
 /** FullMenu01: every category and dish exactly as the owner's site lists them. Category chips jump down the page. Prices follow the switch. */
 export function FullMenu({ c }: { c: Content }) {
@@ -8,7 +6,7 @@ export function FullMenu({ c }: { c: Content }) {
   return (
     <section className="rb-sec" id="menu">
       <div className="rb-container">
-        <h2 className="rb-title">Menu</h2>
+        <h1 className="rb-title">Menu</h1>
         {cats.length > 1 ? (
           <nav className="rb-menu-tabs" aria-label="Menu categories">
             {cats.map((k) => <a key={k.name} href={`#menu-${slug(k.name)}`}>{k.name}</a>)}

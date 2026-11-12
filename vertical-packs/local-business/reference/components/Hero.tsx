@@ -1,4 +1,4 @@
-import { reserveMode, safeHref, telHref, type Content } from "../lib/content";
+import { menuHref, reserveMode, safeHref, telHref, type Content } from "../lib/content";
 
 /** HeroRestaurant01 + ReserveRow01. The name is always the h1. Buttons only exist when they go somewhere real. */
 export function Hero({ c }: { c: Content }) {
@@ -20,7 +20,7 @@ export function Hero({ c }: { c: Content }) {
           <div className="rb-actions">
             {r.href ? <a className="rb-btn" href={r.href} {...(r.mode === "link" ? ext : {})}>{r.label}</a> : null}
             {order ? <a className={r.href ? "rb-btn ghost" : "rb-btn"} href={order} {...ext}>Order online</a> : null}
-            {!r.href && !order && c.menu.categories.length ? <a className="rb-btn" href="#menu">View menu</a> : null}
+            {!r.href && !order && menuHref(c) ? <a className="rb-btn" href={menuHref(c)}>View menu</a> : null}
             {r.mode === "link" && call ? <a className="rb-btn ghost" href={call}>Call us</a> : null}
           </div>
           {c.contact.hours[0] ? <p className="rb-hours-line">{c.contact.hours[0]}</p> : null}

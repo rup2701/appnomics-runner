@@ -108,7 +108,7 @@
     {
       "id": "L-010",
       "area": "pictures",
-      "edge": "The owner has not confirmed the pictures are theirs.",
+      "edge": "The owner has not confirmed the pictures are theirs and the brief is not a private test.",
       "visitor_sees": "Colour blocks with labels, no photographs, no highlight cards.",
       "owner_sees": "'Confirm your pictures to show them' in the review list.",
       "default_behavior": "usePhotos false.",
@@ -282,6 +282,36 @@
       "visitor_sees": "A short not-found page with a link home.",
       "owner_sees": "Nothing.",
       "default_behavior": "not-found page.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "L-028",
+      "area": "pages",
+      "edge": "The site has no story text.",
+      "visitor_sees": "No Our story link and no /story page (404). The home page shows the About text if there is any.",
+      "owner_sees": "Asked in the review list to tell their story.",
+      "default_behavior": "hasStory false.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-029",
+      "area": "pages",
+      "edge": "The menu has no dishes.",
+      "visitor_sees": "No Menu link, no menu section and no /menu page (404). The Menu card in Ways to enjoy us uses the owner's own menu link if they gave one.",
+      "owner_sees": "'Add your menu' in the review list.",
+      "default_behavior": "hasMenu false.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-030",
+      "area": "pages",
+      "edge": "A visitor opens a page that does not exist.",
+      "visitor_sees": "The site's not found page, with a link home.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "notFound()",
       "status": "handled",
       "tested": "no"
     }
