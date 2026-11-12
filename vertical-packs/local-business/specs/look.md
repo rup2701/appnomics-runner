@@ -67,7 +67,7 @@ The site has three routes, built from the reference page components. Do not add 
 3. Search the page for `href="#"` and empty links. There are none.
 4. With `show_prices` false, search the page for a currency sign. There is none.
 5. Compare the number of dishes on /menu with the brief's.
-6. Diff `src/lib/content.ts` and `src/components/restaurant/` against `reference/`. They are the same.
+6. Diff `src/lib/content.ts`, `src/components/restaurant/` and `src/styles/restaurant.css` against `reference/`. They are the same. `src/components/lib/content.ts` is the one-line re-export described in reference/README.md.
 7. Check the text on every accent button against the accent for 4.5:1.
 8. With the brief's pictures switched off (`usePhotos` false), confirm no `<img>` from the owner's site is on the page.
 9. Open /, /menu and /story at 360px and 1280px. /menu and /story exist only when the brief has a menu or a story; every top bar link goes somewhere that exists; the home page shows only the first paragraph of the story, with a link to the rest.

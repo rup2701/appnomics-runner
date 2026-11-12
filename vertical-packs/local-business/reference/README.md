@@ -7,6 +7,9 @@ Copy into the generated app, and use as written:
 | `lib/content.ts` | `src/lib/content.ts` |
 | `components/*.tsx` | `src/components/restaurant/` |
 | `styles/restaurant.css` | `src/styles/restaurant.css`, imported once in the root layout |
+| (new file, one line) | `src/components/lib/content.ts` containing `export * from "../../lib/content";` |
+
+The components import `../lib/content`, which from `src/components/restaurant/` is `src/components/lib/content`. The one-line file above makes that import work, so the components stay byte-identical to the reference. Do not edit the components' imports.
 
 Then write `src/content/site.ts` (a `Content` object from the brief) and render `<RestaurantPage c={content} />` from `src/app/page.tsx`, `<MenuPage c={content} />` from `src/app/menu/page.tsx` (404 unless `hasMenu`) and `<StoryPage c={content} />` from `src/app/story/page.tsx` (404 unless `hasStory`). `Shell.tsx` is the frame all three share. Set `--font-heading` and `--font-body` from `next/font`, and `--accent-text` when the accent is light.
 
