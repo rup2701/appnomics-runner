@@ -1,10 +1,10 @@
 import { menuHref, requestEndpoint, reserveMode, safeHref, telHref, type Content } from "../lib/content";
 import { ReserveForm } from "./ReserveForm";
 
-/** HeroRestaurant01 + ReserveRow01. The name is always the h1. Buttons only exist when they go somewhere real. */
+/** HeroRestaurant01 + ReserveRow01. The name is always the h1, in white on the picture. The request form is one white pill under it. Buttons only exist when they go somewhere real. */
 export function Hero({ c }: { c: Content }) {
   const photo = c.usePhotos && c.heroImage?.src ? c.heroImage.src : undefined;
-  const scrim = "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5))";
+  const scrim = "linear-gradient(rgba(0,0,0,0.48), rgba(0,0,0,0.48))";
   const field = "linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 40%, #1f1f1f))";
   const style = { backgroundImage: photo ? `${scrim}, url("${photo}")` : `${scrim}, ${field}` };
   const r = reserveMode(c);

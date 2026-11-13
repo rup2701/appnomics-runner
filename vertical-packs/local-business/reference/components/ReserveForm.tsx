@@ -8,7 +8,7 @@ const GUESTS = Array.from({ length: 12 }, (_, i) => i + 1);
 /**
  * The table request form. It asks for a day, a time and a party size first; then, in a second step, a name and a way to reach the guest.
  * It sends a REQUEST: nothing here knows what is free, so the words are "Request a table" and "We will confirm", never "Find tables" or "Booked".
- * Used twice on the home page: in the hero (variant "hero") and in the slim bar once the hero has scrolled away (variant "bar").
+ * Used twice on the home page: in the hero (variant "hero", a white pill on the picture) and in the slim bar once the hero has scrolled away (variant "bar").
  * The only client code besides PageBehaviour. It posts JSON to the endpoint the builder gave the site, and has no other network call.
  */
 export function ReserveForm({ endpoint, phone, variant }: { endpoint: string; phone?: string; variant: "hero" | "bar" }) {
@@ -56,17 +56,25 @@ export function ReserveForm({ endpoint, phone, variant }: { endpoint: string; ph
     );
   }
   const busy = status.kind === "sending";
+  // In the hero the three labels are shown above their values; in the slim bar they are for screen readers only.
+  const lab = variant === "hero" ? "rb-lab" : "rb-sr";
   return (
     <div className={`rb-reserve ${variant}`}>
       <form className="rb-reserve-row" onSubmit={next} aria-label="Request a table">
-        <label htmlFor={id("day")} className="rb-sr">Day</label>
-        <input id={id("day")} type="date" min={today} value={v.day} onChange={set("day")} required />
-        <label htmlFor={id("time")} className="rb-sr">Time</label>
-        <input id={id("time")} type="time" value={v.time} onChange={set("time")} required />
-        <label htmlFor={id("party")} className="rb-sr">Guests</label>
-        <select id={id("party")} value={v.party} onChange={set("party")}>
-          {GUESTS.map((n) => <option key={n} value={n}>{n} {n === 1 ? "guest" : "guests"}</option>)}
-        </select>
+        <div className="rb-field">
+          <label htmlFor={id("day")} className={lab}>Day</label>
+          <input id={id("day")} type="date" min={today} value={v.day} onChange={set("day")} required />
+        </div>
+        <div className="rb-field">
+          <label htmlFor={id("time")} className={lab}>Time</label>
+          <input id={id("time")} type="time" value={v.time} onChange={set("time")} required />
+        </div>
+        <div className="rb-field">
+          <label htmlFor={id("party")} className={lab}>Guests</label>
+          <select id={id("party")} value={v.party} onChange={set("party")}>
+            {GUESTS.map((n) => <option key={n} value={n}>{n} {n === 1 ? "guest" : "guests"}</option>)}
+          </select>
+        </div>
         <button type="submit" className="rb-btn" disabled={step === 2}>Request a table</button>
       </form>
       {step === 2 ? (
