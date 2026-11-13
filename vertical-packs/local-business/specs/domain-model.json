@@ -10,6 +10,7 @@
       "name, kind, tagline",
       "contact: address, phone, email, hours (one line per day or range, as written)",
       "links: reserve, order, catering, menu, delivery (only addresses the owner's own site or the owner gave)",
+      "reservations: endpoint, copied exactly from the brief's reservations.endpoint. Leave the key out when the brief has none; the page then has no form.",
       "about text",
       "menu: show_prices switch, categories with items (name, optional description, optional price as written), pinned highlights",
       "pictures (gallery, hero, about) and the usePhotos switch",
@@ -28,6 +29,7 @@
     "A picture belongs to a dish only when its alt text equals the dish name exactly.",
     "A section with nothing real to show is not drawn and not in the navigation. visibleSections() in src/lib/content.ts decides this and is not reimplemented.",
     "Stars are drawn only for a rating the owner's site showed next to the quote.",
-    "A button or link exists only when it has a real https, tel or mailto address."
+    "A button or link exists only when it has a real https, tel or mailto address.",
+    "The site stores no requests. The table request form posts to the Builder at reservations.endpoint, which saves the request and emails the owner. The endpoint address is given by the builder and is never invented or edited."
   ]
 }

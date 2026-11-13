@@ -47,31 +47,35 @@
       "description": "A fixed top bar, then a hero with the restaurant name as the h1, the kind of place, the tagline, and up to three buttons.",
       "acceptance_criteria": [
         "The restaurant name is the page's only h1.",
-        "The buttons are: Reserve (link or call), Order online (when an order link exists), View menu (only when neither of the first two exists) and Call us (only when Reserve is a link and a phone exists).",
+        "The reserve action is, in this order: the owner's own booking link (Reserve a table, new tab), else the request form when the brief gives reservations.endpoint (see the reserve feature), else a phone call (Call to reserve), else nothing. Order online shows when an order link exists, View menu only when there is no reserve action and no order link, and Call us only when the reserve action is a link or the request form and a phone exists.",
         "Every button has a real https, tel or mailto address. No button has href='#' or an empty address.",
         "With a photo allowed the hero uses it under a dark scrim; otherwise a colour field made from the accent. Text contrast is at least 4.5:1.",
-        "There is no date, time or guests form. Booking happens at the owner's own link."
+        "The only form in the hero is the table request form, and only in request mode. With the owner's own booking link, or with only a phone, there is no form."
       ],
       "verification": [
         "Check the hero for each case: reserve link, phone only, neither.",
-        "Confirm there is no form element in the hero."
+        "Confirm there is exactly one form in the hero in request mode and none in the other cases."
       ]
     },
     {
       "id": "reserve",
-      "name": "Reserve button and slim bar",
+      "name": "Reserve action and slim bar",
       "priority": "must-have",
       "status": "draft",
-      "description": "One reserve action used in the top bar, the hero and a slim bar that slides in when the hero has scrolled away. The slim bar carries the same buttons as the hero (Reserve, Order online, Call us), each only when it goes somewhere real.",
+      "description": "One reserve action used in the top bar, the hero and a slim bar that slides in when the hero has scrolled away. Order: the owner's own booking link, else the table request form, else a phone call, else nothing. The slim bar carries the same action as the hero, each button only when it goes somewhere real.",
       "acceptance_criteria": [
         "With a booking link, the button reads Reserve a table and opens the link in a new tab with rel noopener noreferrer.",
         "With only a phone, the button reads Call to reserve and starts a call.",
-        "With neither, no reserve button, no slim bar and no reserve card exist.",
-        "The slim bar appears after scrolling past the hero and disappears when scrolling back."
+        "With neither a link, an endpoint nor a phone, no reserve button, no slim bar and no reserve card exist.",
+        "The slim bar appears after scrolling past the hero and disappears when scrolling back.",
+        "Request mode needs reservations.endpoint to be an https address and no booking link. The hero then holds the form from components/ReserveForm.tsx, used as written: day, time and guests first; then name and a phone or an email. The button reads Request a table. After sending, the guest is told the restaurant will confirm by phone or email and that it is not a booking until they do. The words Find tables, Book now, Booked and Confirmed are never used.",
+        "In request mode the slim bar carries the same form in compact form on wide screens, and a single Request a table button that scrolls to the hero form on phones. The top bar button reads Request a table and goes to /#reserve.",
+        "The form posts JSON to the endpoint and to nowhere else. A failed send shows the reason and, when a phone exists, a Call link. A hidden field named website is left empty by people."
       ],
       "verification": [
         "Render the three cases and count the reserve buttons.",
-        "Scroll the page in a browser and check the slim bar."
+        "Scroll the page in a browser and check the slim bar.",
+        "In a browser, fill the form on a wide and a narrow screen and check the request posted to the endpoint with the day, time, party, name and phone."
       ]
     },
     {

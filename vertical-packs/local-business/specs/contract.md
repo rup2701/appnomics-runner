@@ -23,7 +23,7 @@ The brief is written from the owner's existing website (read by the website read
 
 ## What it is not
 
-No online ordering or payments, no table booking system or form, no visitor accounts, no database, no blog, no multi-page site, no analytics, no page editor, no reviews written by the builder, no stock photos.
+No online ordering or payments, no table booking system (a guest can send a table request that the owner confirms; nothing checks which tables are free), no visitor accounts, no database, no blog, no multi-page site, no analytics, no page editor, no reviews written by the builder, no stock photos.
 
 ## Principles
 

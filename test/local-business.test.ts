@@ -1,7 +1,7 @@
 // The display rules of the local-business reference: what is drawn, and what is never invented.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { firstParagraph, galleryTiles, hasMenu, hasStory, menuHref, navLinks, pickHighlights, priceText, reserveMode, safeHref, stars, visibleSections, waysToOrder, footerColumns, type Content } from "../vertical-packs/local-business/reference/lib/content.js";
+import { requestEndpoint, firstParagraph, galleryTiles, hasMenu, hasStory, menuHref, navLinks, pickHighlights, priceText, reserveMode, safeHref, stars, visibleSections, waysToOrder, footerColumns, type Content } from "../vertical-packs/local-business/reference/lib/content.js";
 import { isStaticBrief } from "../src/kind.js";
 import { createWorkspace } from "../src/workspace.js";
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
@@ -43,6 +43,18 @@ assert.equal(reserveMode(base()).mode, "link");
 assert.equal(reserveMode(base({ links: { delivery: [] } })).mode, "phone");
 assert.equal(reserveMode(base({ links: { delivery: [] }, contact: { hours: [] } })).mode, "none");
 assert.equal(reserveMode(base({ links: { reserve: "javascript:x", delivery: [] }, contact: { phone: "12", hours: [] } })).mode, "none");
+// Request mode: the table request form, only with an https endpoint, and the owner's own link always wins.
+const EP = "https://builder.example/api/reserve/11111111-2222-3333-4444-555555555555";
+assert.equal(reserveMode(base({ links: { delivery: [] }, reservations: { endpoint: EP } })).mode, "request");
+assert.equal(reserveMode(base({ links: { delivery: [] }, reservations: { endpoint: EP } })).label, "Request a table");
+assert.equal(reserveMode(base({ links: { delivery: [] }, reservations: { endpoint: EP } })).href, "/#reserve");
+assert.equal(reserveMode(base({ reservations: { endpoint: EP } })).mode, "link", "the owner's own booking link wins over the form");
+assert.equal(reserveMode(base({ links: { delivery: [] }, reservations: { endpoint: "http://builder.example/x" } })).mode, "phone", "an http endpoint is ignored");
+assert.equal(reserveMode(base({ links: { delivery: [] }, reservations: { endpoint: "javascript:alert(1)" } })).mode, "phone");
+assert.equal(reserveMode(base({ links: { delivery: [] }, contact: { hours: [] }, reservations: { endpoint: EP } })).mode, "request", "the form needs no phone");
+assert.equal(requestEndpoint(base()), undefined);
+assert.equal(requestEndpoint(base({ reservations: { endpoint: `  ${EP}  ` } })), EP);
+assert.equal(requestEndpoint(base({ reservations: { endpoint: "https://a b" } })), undefined);
 
 // Highlights: pictures belong to a dish only when the alt text is the dish name and pictures are allowed.
 let h = pickHighlights(base());

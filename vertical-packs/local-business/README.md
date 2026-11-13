@@ -1,6 +1,6 @@
 # Local business pack
 
-A one page website for a neighbourhood business, restaurant first, built from what the owner's own website already says. Static: no database, no owner area, no email. Changes go through Scout.
+A one page website for a neighbourhood business, restaurant first, built from what the owner's own website already says. Static: no database and no owner area on the site. A table request form, when the builder gives it an address, posts to the Builder, which emails the owner. Changes go through Scout.
 
 Design: `restaurant_001` ("Marina clean card"), taken from a restaurant page built by hand and turned into reusable components. See `reference/README.md`.
 

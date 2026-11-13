@@ -1,4 +1,5 @@
-import { reserveMode, safeHref, telHref, type Content } from "../lib/content";
+import { requestEndpoint, reserveMode, safeHref, telHref, type Content } from "../lib/content";
+import { ReserveForm } from "./ReserveForm";
 import { Footer } from "./Footer";
 import { Nav } from "./Nav";
 import { PageBehaviour } from "./PageBehaviour";
@@ -10,7 +11,7 @@ import { PageBehaviour } from "./PageBehaviour";
 export function Shell({ c, year = new Date().getFullYear(), slimBar = false, children }: { c: Content; year?: number; slimBar?: boolean; children: React.ReactNode }) {
   const r = reserveMode(c);
   const order = safeHref(c.links.order) ?? safeHref(c.links.delivery[0]?.url);
-  const call = r.mode === "link" ? telHref(c.contact.phone) : undefined;
+  const call = r.mode === "link" || r.mode === "request" ? telHref(c.contact.phone) : undefined;
   const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
   return (
     <div className="rb" style={{ ["--accent" as string]: c.accent }}>
@@ -20,7 +21,13 @@ export function Shell({ c, year = new Date().getFullYear(), slimBar = false, chi
           <div className="rb-container rb-sticky-in">
             <strong>{c.name}</strong>
             <div className="rb-sticky-actions">
-              {r.href ? <a className="rb-btn" href={r.href} {...(r.mode === "link" ? ext : {})}>{r.label}</a> : null}
+              {r.mode === "request" ? (
+                <>
+                  <span className="rb-only-wide"><ReserveForm endpoint={requestEndpoint(c)!} phone={c.contact.phone} variant="bar" /></span>
+                  <a className="rb-btn rb-only-narrow" href={r.href}>{r.label}</a>
+                </>
+              ) : null}
+              {r.href && r.mode !== "request" ? <a className="rb-btn" href={r.href} {...(r.mode === "link" ? ext : {})}>{r.label}</a> : null}
               {order ? <a className={r.href ? "rb-btn ghost" : "rb-btn"} href={order} {...ext}>Order online</a> : null}
               {call ? <a className="rb-btn ghost" href={call}>Call us</a> : null}
             </div>

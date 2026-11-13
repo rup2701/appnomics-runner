@@ -4,7 +4,7 @@ These are known gaps, not mistakes. The builder records its own choices in AGENT
 
 | # | Gap | Default in this version |
 | --- | --- | --- |
-| 1 | Booking tables inside the page (date, time, guests) | Not built. The Reserve button opens the owner's own booking link, or starts a phone call. A form that did nothing was left out of the original design on purpose. |
+| 1 | Booking tables inside the page | A table REQUEST form (day, time, guests, name, phone or email) when the builder gives the site an address to send it to. The owner is emailed and confirms by phone or email. Nothing checks which tables are free, and there is no owner screen for requests yet. The owner's own booking link, when there is one, always wins. |
 | 2 | Online ordering and payments | Not built. Order online opens the restaurant's own ordering page. |
 | 3 | A screen for editing the menu and hours | Not built on purpose. Changes are made by asking Scout. |
 | 4 | Pictures from JavaScript-built galleries | The website reader sees only pictures present in the page source. The owner can send pictures later. |

@@ -314,6 +314,56 @@
       "default_behavior": "notFound()",
       "status": "handled",
       "tested": "no"
+    },
+    {
+      "id": "L-031",
+      "area": "reserve",
+      "edge": "The brief has a reservations endpoint and no booking link.",
+      "visitor_sees": "The table request form in the hero and in the slim bar; the top button reads Request a table.",
+      "owner_sees": "Requests arrive by email.",
+      "default_behavior": "reserveMode returns request mode.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-032",
+      "area": "reserve",
+      "edge": "The brief has both a booking link and a reservations endpoint.",
+      "visitor_sees": "Only the owner's own booking link. No form.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "The owner's link wins in reserveMode.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-033",
+      "area": "reserve",
+      "edge": "The reservations endpoint is not an https address.",
+      "visitor_sees": "The same as no endpoint: a phone call, or nothing.",
+      "owner_sees": "Nothing.",
+      "default_behavior": "requestEndpoint rejects it.",
+      "status": "handled",
+      "tested": "yes"
+    },
+    {
+      "id": "L-034",
+      "area": "reserve",
+      "edge": "The request could not be sent (no connection, the Builder refused it, too many requests).",
+      "visitor_sees": "A short reason in plain words and, when a phone exists, a Call link. What the guest typed stays on the screen.",
+      "owner_sees": "Nothing; the request was not received.",
+      "default_behavior": "ReserveForm shows the server's message or a general one.",
+      "status": "handled",
+      "tested": "no"
+    },
+    {
+      "id": "L-035",
+      "area": "reserve",
+      "edge": "A bot fills the hidden website field.",
+      "visitor_sees": "Looks like success.",
+      "owner_sees": "Nothing is saved or emailed.",
+      "default_behavior": "The Builder drops the request without saying so.",
+      "status": "handled",
+      "tested": "yes"
     }
   ]
 }

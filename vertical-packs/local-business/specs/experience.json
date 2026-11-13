@@ -4,8 +4,8 @@
   "global_experience": {
     "layout": "Content sits in a centred column up to 1200px wide. The top bar is fixed and translucent. Sections alternate white and a very light grey.",
     "look": "Design restaurant_001 ('Marina clean card'): clean, friendly, bright, one accent colour from the brief, 8, 12 and 16px corners, soft card shadows. The reference components in reference/ are used as written.",
-    "header": "The restaurant name at the left in the accent colour, links to the sections that exist, and one accent button (Reserve a table, or Call to reserve). On phones the links hide and the name shortens with an ellipsis; the button stays.",
-    "feedback": "There are no forms. Every button opens a real link or a phone call. A slim reserve bar slides in under the top of the page once the hero has scrolled away.",
+    "header": "The restaurant name at the left in the accent colour, links to the sections that exist, and one accent button (Reserve a table, Request a table, or Call to reserve). On phones the links hide and the name shortens with an ellipsis; the button stays.",
+    "feedback": "The only form is the table request form, shown only when the builder gave the site an address to send it to; every other button opens a real link or a phone call. A slim bar slides in under the top of the page once the hero has scrolled away.",
     "empty_states": "A section with nothing real to show is not drawn. A missing picture is never a broken image or a grey box: hero and gallery use a colour field made from the accent, a dish card simply has no picture strip."
   },
   "pages": [
@@ -16,7 +16,7 @@
       "sections": "In order: hero, menu highlights, full menu, about, gallery, reviews, catering, ways to enjoy us, footer. Only the sections that have real content are drawn.",
       "states": {
         "loading": "Rendered at build time, so there is no loading state.",
-        "reserve": "Opens the owner's booking link in a new tab, or starts a phone call when only a phone exists. With neither, the button is not drawn.",
+        "reserve": "Opens the owner's booking link in a new tab, or starts a phone call when only a phone exists. With neither, the button is not drawn. With a request address and no booking link it is the table request form: a request the restaurant confirms, never a booking.",
         "menu_chips": "Category chips scroll sideways on narrow screens and jump to the category."
       }
     },

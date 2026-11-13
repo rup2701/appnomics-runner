@@ -32,6 +32,8 @@ export type Content = {
   catering?: { heading: string; body?: string; features: Card[] };
   testimonials: Testimonial[];
   socials: Link[];
+  /** Table requests: the address the booking form posts to. Present only when the builder set it up; without it there is no form. */
+  reservations?: { endpoint: string };
   /** Sections the owner switched off. */
   off: SectionId[];
   accent: string;
@@ -66,10 +68,20 @@ export function telHref(phone: string | undefined): string | undefined {
   return digits.replace(/\D/g, "").length >= 7 ? `tel:${digits}` : undefined;
 }
 
-/** How the Reserve button works: a link the site already has, else a phone call, else it is not drawn. */
-export function reserveMode(c: Content): { mode: "link" | "phone" | "none"; href?: string; label: string } {
+/** The address the booking form posts to: https only, and only when the builder gave one. Anything else means no form. */
+export function requestEndpoint(c: Content): string | undefined {
+  const u = c.reservations?.endpoint?.trim();
+  return u && /^https:\/\/[^\s]+$/i.test(u) && u.length < 300 ? u : undefined;
+}
+
+/**
+ * How the Reserve button works. The owner's own booking link comes first; else the request form (when the builder set one up);
+ * else a phone call; else it is not drawn. The form is a request, not a booking, so its button says so.
+ */
+export function reserveMode(c: Content): { mode: "link" | "request" | "phone" | "none"; href?: string; label: string } {
   const link = safeHref(c.links.reserve);
   if (link) return { mode: "link", href: link, label: "Reserve a table" };
+  if (requestEndpoint(c)) return { mode: "request", href: "/#reserve", label: "Request a table" };
   const tel = telHref(c.contact.phone);
   if (tel) return { mode: "phone", href: tel, label: "Call to reserve" };
   return { mode: "none", label: "" };

@@ -49,7 +49,8 @@ The site has three routes, built from the reference page components. Do not add 
 - **No photo for the hero:** a colour field made from the accent and a deep neutral, under the same dark scrim. Never a flat grey box and never a stock photo.
 - **Pictures not allowed:** gallery tiles are labelled colour blocks (from each picture's alt text); dish cards have no picture strip; highlights drop out unless dishes are pinned.
 - **No about picture:** one column. No invented slogan or caption.
-- **No reserve link and no phone:** no reserve button, bar or card.
+- **Request mode (a request address and no booking link):** the hero card holds the table request form under the tagline: day, time, guests and a Request a table button, then name and a phone or an email in a second step. On wide screens the slim bar carries the same form in a compact row; on phones it is one Request a table button. Use components/ReserveForm.tsx and the .rb-reserve styles as written.
+- **No reserve link, no request address and no phone:** no reserve button, bar or card.
 
 ## Rules for every build
 
