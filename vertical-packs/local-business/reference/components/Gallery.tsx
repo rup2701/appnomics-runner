@@ -6,7 +6,7 @@ export function Gallery({ c }: { c: Content }) {
   return (
     <section className="rb-sec alt" id="gallery">
       <div className="rb-container">
-        <h2 className="rb-title">Gallery</h2>
+        <h2 className="rb-title">Our Food</h2>
         <div className="rb-gallery">
           {tiles.map(({ img: g, large }, n) => (
             <figure className={large ? "rb-tile large" : "rb-tile"} key={`${g.src}-${n}`}>

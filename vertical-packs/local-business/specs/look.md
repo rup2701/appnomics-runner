@@ -41,7 +41,7 @@ The site has three routes, built from the reference page components. Do not add 
 - **Highlights:** up to six cards in an auto-fit grid, picture strip only with a real picture.
 - **Full menu:** category chips, then each category with an accent underline and a two column list that wraps to one column on phones.
 - **About:** two columns with a picture, one column without.
-- **Gallery:** three columns on desktop, two on tablets, one on phones; every fifth tile double wide from five tiles up; equal row height.
+- **Gallery (titled "Our Food" on the page and in the menu bar):** three columns on desktop, two on tablets, one on phones; every fifth tile double wide from five tiles up; equal row height.
 - **Reviews, catering, ways to enjoy us, footer:** as in the components.
 
 ## When something is missing

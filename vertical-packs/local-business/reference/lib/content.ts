@@ -166,7 +166,7 @@ export function navLinks(c: Content): { label: string; href: string }[] {
   if (hasMenu(c)) links.push({ label: "Menu", href: "/menu" });
   if (hasStory(c)) links.push({ label: "Our story", href: "/story" });
   else if (shown.includes("about")) links.push({ label: "About", href: "/#about" });
-  if (shown.includes("gallery")) links.push({ label: "Gallery", href: "/#gallery" });
+  if (shown.includes("gallery")) links.push({ label: "Our Food", href: "/#gallery" });
   if (shown.includes("reviews")) links.push({ label: "Reviews", href: "/#reviews" });
   if (shown.includes("catering")) links.push({ label: "Catering", href: "/#catering" });
   links.push({ label: "Contact", href: "/#contact" });

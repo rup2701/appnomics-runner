@@ -105,8 +105,8 @@ assert.deepEqual(waysToOrder(base({ links: { delivery: [] }, contact: { hours: [
 assert.ok(!visibleSections(base({ links: { delivery: [] }, contact: { hours: [] }, catering: undefined })).includes("ways"), "one card is not a section");
 
 // Navigation follows the sections that exist.
-assert.deepEqual(navLinks(base()).map((l) => l.label), ["Menu", "About", "Gallery", "Catering", "Contact"]);
-assert.deepEqual(navLinks(base({ about: undefined, catering: undefined })).map((l) => l.label), ["Menu", "Gallery", "Contact"]);
+assert.deepEqual(navLinks(base()).map((l) => l.label), ["Menu", "About", "Our Food", "Catering", "Contact"]);
+assert.deepEqual(navLinks(base({ about: undefined, catering: undefined })).map((l) => l.label), ["Menu", "Our Food", "Contact"]);
 
 // Pages: the menu has its own page, the story has one only when there are real words for it.
 assert.equal(hasMenu(base()), true);
@@ -118,10 +118,10 @@ assert.equal(waysToOrder(base()).find((w) => w.id === "menu")?.href, "/menu");
 assert.equal(hasStory(base()), false);
 assert.equal(hasStory(base({ story: { body: "  " } })), false);
 assert.equal(hasStory(base({ story: { body: "We started in 2010." } })), true);
-assert.deepEqual(navLinks(base({ story: { body: "We started in 2010." } })).map((l) => l.label), ["Menu", "Our story", "Gallery", "Catering", "Contact"]);
+assert.deepEqual(navLinks(base({ story: { body: "We started in 2010." } })).map((l) => l.label), ["Menu", "Our story", "Our Food", "Catering", "Contact"]);
 assert.deepEqual(navLinks(base({ story: { body: "We started in 2010." } })).map((l) => l.href), ["/menu", "/story", "/#gallery", "/#catering", "/#contact"]);
 assert.ok(visibleSections(base({ about: undefined, story: { body: "We started in 2010." } })).includes("about"), "the home page shows the short story even with no separate about text");
-assert.deepEqual(navLinks(base({ menu: { showPrices: true, categories: [], highlights: [] } })).map((l) => l.label), ["About", "Gallery", "Catering", "Contact"], "no menu, no menu link");
+assert.deepEqual(navLinks(base({ menu: { showPrices: true, categories: [], highlights: [] } })).map((l) => l.label), ["About", "Our Food", "Catering", "Contact"], "no menu, no menu link");
 assert.equal(firstParagraph("One.\n\nTwo."), "One.");
 assert.equal(firstParagraph("  \n"), "");
 
