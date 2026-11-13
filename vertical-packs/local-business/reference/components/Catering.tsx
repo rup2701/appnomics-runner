@@ -1,8 +1,9 @@
+import { ComingSoon } from "./ComingSoon";
 import { safeHref, telHref, type Content } from "../lib/content";
 
 /** FeatureBand01: the owner's catering words and up to four short cards, with one button to the catering page or phone. */
 export function Catering({ c }: { c: Content }) {
-  if (!c.catering) return null;
+  if (!c.catering) return c.scaffold ? <ComingSoon id="catering" title="Catering" text="Catering details are coming soon." alt /> : null;
   const href = safeHref(c.links.catering) ?? telHref(c.contact.phone);
   const external = href?.startsWith("https://");
   return (

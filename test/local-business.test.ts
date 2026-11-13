@@ -1,7 +1,7 @@
 // The display rules of the local-business reference: what is drawn, and what is never invented.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { requestEndpoint, firstParagraph, galleryTiles, hasMenu, hasStory, menuHref, navLinks, pickHighlights, priceText, reserveMode, safeHref, stars, visibleSections, waysToOrder, footerColumns, type Content } from "../vertical-packs/local-business/reference/lib/content.js";
+import { requestEndpoint, firstParagraph, galleryTiles, hasMenu, hasStory, menuHref, navLinks, pickHighlights, priceText, reserveMode, safeHref, stars, visibleSections, waysToOrder, footerColumns, highlightCards, type Content } from "../vertical-packs/local-business/reference/lib/content.js";
 import { isStaticBrief } from "../src/kind.js";
 import { createWorkspace } from "../src/workspace.js";
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
@@ -156,4 +156,29 @@ const store = await createWorkspace({ prompt: "test2", specsDir: new URL("../ver
 assert.ok(!existsSync(path.join(store.appDir, "reference")), "a pack without a reference folder gets none");
 rmSync(tmp, { recursive: true, force: true });
 
+
+// Template mode (scaffold): every section is drawn, with labelled placeholders and no invented facts.
+{
+  const empty = base({ scaffold: true, usePhotos: false, gallery: [], about: undefined, menu: { showPrices: true, categories: [], highlights: [] }, catering: undefined, testimonials: [], contact: { hours: [] }, links: { delivery: [] } });
+  const sec = visibleSections(empty);
+  for (const id of ["highlights", "menu", "about", "gallery", "reviews", "catering"] as const) assert.ok(sec.includes(id), id + " is drawn in template mode");
+  const cards = highlightCards(empty);
+  assert.deepEqual(cards.map((x) => x.name), ["Dish 1", "Dish 2", "Dish 3", "Dish 4"]);
+  assert.ok(cards.every((x) => x.placeholder && !x.price && !x.description), "placeholder dishes carry no price or text");
+  const tiles = galleryTiles(empty);
+  assert.deepEqual(tiles.map((t) => t.img.alt), ["Photo 1", "Photo 2", "Photo 3", "Photo 4", "Photo 5"]);
+  assert.ok(tiles.every((t) => t.placeholder && !t.img.src));
+  assert.deepEqual(footerColumns(empty), [{ title: "Hours", lines: [{ text: "Coming soon" }] }]);
+  assert.ok(navLinks(empty).some((l) => l.label === "Menu" && l.href === "/#menu"));
+  assert.ok(!navLinks(empty).some((l) => l.href === "/story"), "no story page without story words");
+  assert.ok(!visibleSections({ ...empty, off: ["about", "reviews"] }).includes("about"), "a switched off section stays off");
+  // Real dishes come first, by name, then placeholders fill up to four.
+  const some = highlightCards(base({ scaffold: true, usePhotos: false, menu: { showPrices: true, categories: [{ name: "S", items: [{ name: "Samosa", price: "$5" }, { name: "Soup" }] }], highlights: [] } }));
+  assert.deepEqual(some.map((x) => x.name), ["Samosa", "Soup", "Dish 3", "Dish 4"]);
+  assert.equal(some[0].price, "$5");
+  // Without the flag nothing changes.
+  const plain = visibleSections({ ...empty, scaffold: false });
+  assert.ok(!plain.includes("reviews") && !plain.includes("gallery") && !plain.includes("menu"));
+  assert.deepEqual(footerColumns({ ...empty, scaffold: false }), []);
+}
 console.log("local-business tests passed");

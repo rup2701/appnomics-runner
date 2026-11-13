@@ -73,6 +73,8 @@
 .rb-sec.alt { background: var(--alt); }
 .rb-title { text-align: center; font-size: 3rem; font-weight: 600; line-height: 1.15; margin-bottom: 50px; }
 .rb-grid { display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.rb-grid.two { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 680px) { .rb-grid.two { grid-template-columns: 1fr; } }
 
 /* Dish cards */
 .rb-dish { background: var(--surface); border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -222,3 +224,9 @@
   .rb-only-narrow { display: inline-flex; }
 }
 @media (prefers-reduced-motion: reduce) { .rb * { transition: none !important; } }
+
+/* Template mode: blocks for sections that have no content yet */
+.rb-dish-ph { height: 200px; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 45%, #2a2a2a)); opacity: 0.85; }
+.rb-soon { display: flex; align-items: center; justify-content: center; min-height: 240px; padding: 40px 24px; border: 2px dashed var(--border); border-radius: var(--r-card); background: var(--surface); text-align: center; }
+.rb-soon p { font-size: 1.3rem; color: var(--muted); }
+.rb-soon-line { font-size: 0.95rem; color: var(--soft, var(--muted)); font-style: italic; }

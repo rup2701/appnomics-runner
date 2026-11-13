@@ -1,3 +1,4 @@
+import { ComingSoon } from "./ComingSoon";
 import { firstParagraph, hasStory, type Content } from "../lib/content";
 
 /**
@@ -7,7 +8,7 @@ import { firstParagraph, hasStory, type Content } from "../lib/content";
 export function About({ c }: { c: Content }) {
   const story = hasStory(c);
   const body = story ? c.story?.body?.trim() : c.about?.body?.trim();
-  if (!body) return null;
+  if (!body) return c.scaffold ? <ComingSoon id="about" title="Our story" text="Our story is coming soon." /> : null;
   const pic = c.usePhotos ? (c.aboutImage?.src ? c.aboutImage : c.story?.image?.src ? c.story.image : undefined) : undefined;
   const paras = story ? [firstParagraph(body)] : body.split(/\n+/).filter(Boolean);
   return (

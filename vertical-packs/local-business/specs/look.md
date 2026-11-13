@@ -8,6 +8,7 @@ Read this after contract.md. The brief says what the site says; this file says h
 - `look.accent` is one hex colour, set as `--accent` on the page wrapper (the reference page component does this from `content.accent`). Pick it from the brief's mood if it names none, and record the value. Everything else is a neutral.
 - `look.mode` is light. A dark page is not part of this design.
 - `story` (heading, body, optional image) becomes `Content.story`. It is present only when the brief has real story words.
+- `page_plan.scaffold` becomes `scaffold` (default false). When true the page is a template: a section with nothing real to show is still drawn, as a labelled placeholder block ("Coming soon", "Dish 1" to "Dish 4", "Photo 1" to "Photo 5"). Never write words, prices, hours, reviews or a story into a placeholder; the reference components draw them.
 - `images.use_photos` becomes `usePhotos`. It is true only when `images.owner_confirmed` is true, or when the brief has `private_test: true` (a private test is never published).
 
 ## Pages

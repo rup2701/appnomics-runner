@@ -36,6 +36,12 @@ export type Content = {
   reservations?: { endpoint: string };
   /** Sections the owner switched off. */
   off: SectionId[];
+  /**
+   * Template mode. Set by the builder (brief page_plan.scaffold). A section with nothing real to show is still drawn, as a labelled
+   * placeholder block ("Coming soon", "Dish 1", "Photo 1"), so the owner sees the whole page and can fill it in later. Facts are never invented:
+   * prices, hours, address, phone, story words and reviews stay empty, and a placeholder says so.
+   */
+  scaffold?: boolean;
   accent: string;
 };
 
@@ -94,7 +100,11 @@ export function priceText(item: MenuItem, showPrices: boolean): string | undefin
   return p ? p : undefined;
 }
 
-export type Highlight = MenuItem & { image?: Img };
+export type Highlight = MenuItem & { image?: Img; placeholder?: boolean };
+
+export const SCAFFOLD_DISHES = 4;
+export const SCAFFOLD_TILES = 5;
+export const isScaffold = (c: Content) => c.scaffold === true;
 
 /**
  * Dish cards for the top of the page. Pinned names come first; when none are pinned, dishes that have a real picture are used.
@@ -110,10 +120,22 @@ export function pickHighlights(c: Content): Highlight[] {
 }
 
 /**
+ * The dish cards actually drawn. Normally the same as pickHighlights. In template mode, when there are not enough dishes with pictures, the cards are
+ * the first real dishes by name (no picture, a colour block) padded with "Dish 1", "Dish 2" placeholders up to four. A placeholder has no price or text.
+ */
+export function highlightCards(c: Content): Highlight[] {
+  const real = pickHighlights(c);
+  if (real.length >= MIN_HIGHLIGHTS || !isScaffold(c)) return real;
+  const dishes: Highlight[] = c.menu.categories.flatMap((cat) => cat.items).slice(0, SCAFFOLD_DISHES);
+  for (let n = dishes.length + 1; dishes.length < SCAFFOLD_DISHES; n++) dishes.push({ name: `Dish ${n}`, placeholder: true });
+  return dishes;
+}
+
+/**
  * Gallery tiles in a 3 column grid. From five tiles up, every fifth tile is double wide, and the count is trimmed so the last row is full
  * (5, 7, 10, 12 tiles fit). Under five tiles all are the same size and the count is a multiple of three.
  */
-export function galleryTiles(c: Content): { img: Img; large: boolean }[] {
+export function galleryTiles(c: Content): { img: Img; large: boolean; placeholder?: boolean }[] {
   const all = c.gallery.filter((g) => (c.usePhotos ? g.src : g.alt.trim())).slice(0, 10);
   let n = all.length;
   if (n < 5) n -= n % 3;
@@ -121,6 +143,9 @@ export function galleryTiles(c: Content): { img: Img; large: boolean }[] {
     const m = n % 5;
     if (m === 1 || m === 3) n -= 1;
     else if (m === 4) n -= 2;
+  }
+  if (n < MIN_GALLERY && isScaffold(c)) {
+    return Array.from({ length: SCAFFOLD_TILES }, (_, i) => ({ img: { src: "", alt: `Photo ${i + 1}` }, large: i % 5 === 0, placeholder: true }));
   }
   return all.slice(0, n).map((img, i) => ({ img, large: n >= 5 && i % 5 === 0 }));
 }
@@ -145,13 +170,13 @@ export function waysToOrder(c: Content): Way[] {
 export function visibleSections(c: Content): SectionId[] {
   const has: Record<SectionId, boolean> = {
     hero: true,
-    highlights: pickHighlights(c).length >= MIN_HIGHLIGHTS,
-    menu: hasMenu(c),
-    about: !!c.about?.body?.trim() || hasStory(c),
+    highlights: highlightCards(c).length >= MIN_HIGHLIGHTS,
+    menu: hasMenu(c) || isScaffold(c),
+    about: !!c.about?.body?.trim() || hasStory(c) || isScaffold(c),
     // Without permission to use the owner's pictures the gallery shows labelled colour tiles, so it needs labels instead of pictures.
     gallery: galleryTiles(c).length >= MIN_GALLERY,
-    reviews: c.testimonials.some((t) => t.quote.trim().length > 0),
-    catering: !!c.catering && (!!c.catering.body || c.catering.features.length > 0),
+    reviews: c.testimonials.some((t) => t.quote.trim().length > 0) || isScaffold(c),
+    catering: (!!c.catering && (!!c.catering.body || c.catering.features.length > 0)) || isScaffold(c),
     ways: waysToOrder(c).length >= 2,
     footer: true,
   };
@@ -164,6 +189,7 @@ export function navLinks(c: Content): { label: string; href: string }[] {
   const shown = visibleSections(c);
   const links: { label: string; href: string }[] = [];
   if (hasMenu(c)) links.push({ label: "Menu", href: "/menu" });
+  else if (shown.includes("menu")) links.push({ label: "Menu", href: "/#menu" });
   if (hasStory(c)) links.push({ label: "Our story", href: "/story" });
   else if (shown.includes("about")) links.push({ label: "About", href: "/#about" });
   if (shown.includes("gallery")) links.push({ label: "Our Food", href: "/#gallery" });
@@ -191,6 +217,7 @@ export function footerColumns(c: Content): { title: string; lines: { text: strin
   const cols = [] as { title: string; lines: { text: string; href?: string }[] }[];
   if (contact.length) cols.push({ title: "Contact us", lines: contact });
   if (c.contact.hours.length) cols.push({ title: "Hours", lines: c.contact.hours.map((h) => ({ text: h })) });
+  else if (isScaffold(c)) cols.push({ title: "Hours", lines: [{ text: "Coming soon" }] });
   const soc = c.socials.map((s) => ({ text: s.label, href: safeHref(s.url) })).filter((s) => s.href);
   if (soc.length) cols.push({ title: "Follow us", lines: soc });
   return cols;
