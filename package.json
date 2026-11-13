@@ -8,7 +8,7 @@
     "change": "tsx src/cli.ts change",
     "verify": "tsx src/cli.ts verify",
     "check": "tsc --noEmit",
-    "test": "tsx test/tools.test.ts && tsx test/agent.test.ts && tsx test/verify.test.ts && tsx test/local-business.test.ts && tsx test/local-business-interview.test.ts && tsx test/private-deploy.test.ts",
+    "test": "tsx test/tools.test.ts && tsx test/agent.test.ts && tsx test/verify.test.ts && tsx test/local-business.test.ts && tsx test/local-business-interview.test.ts && tsx test/restaurant-admin.test.ts && tsx test/private-deploy.test.ts",
     "deploy": "tsx src/deploy.ts",
     "interview": "tsx src/interview.ts"
   },
@@ -16,6 +16,7 @@
     "@anthropic-ai/sdk": "^0.40.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16",
     "@types/node": "^22.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0"
