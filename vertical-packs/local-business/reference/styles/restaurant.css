@@ -191,7 +191,7 @@
 .rb-field { min-width: 0; }
 .rb-lab { display: block; font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 2px; }
 .rb-reserve.bar { position: relative; }
-.rb-reserve.bar .rb-reserve-row { grid-template-columns: 150px 110px 120px auto; gap: 8px; }
+.rb-reserve.bar .rb-reserve-row { grid-template-columns: 150px 150px 120px auto; gap: 8px; }
 .rb-reserve.bar input, .rb-reserve.bar select { min-height: 40px; padding: 6px 10px; font-size: 0.95rem; }
 .rb-sticky .rb-btn, .rb-reserve.bar .rb-btn { min-height: 40px; padding: 8px 16px; white-space: nowrap; }
 .rb-reserve.bar .rb-reserve-more { position: fixed; top: 64px; left: 50%; transform: translateX(-50%); width: min(560px, 94vw); margin: 0; padding: 18px; background: #fff; border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); z-index: 1000; }
