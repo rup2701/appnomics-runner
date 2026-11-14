@@ -1,68 +1,77 @@
 # Appnomics runner
 
-Turns an idea and a brief into a built, tested app, and deploys it to a live address. It runs on your own machine with your own API keys.
+Turns an idea and a brief into a built, tested site or app and deploys it to a live address. In production it runs inside the worker on Fly (see `../appnomics-builder/ARCHITECTURE.md`); you can also run it by hand on your own machine with your own keys.
 
-    idea + brief
-      -> fresh folder and fresh database
-      -> the agent builds from the specs, running its own checks
+    brief
+      -> fresh folder (runs/<id>/app) and, for packs that need one, a fresh database
+      -> the agent builds from the pack's specs, running its own checks
       -> (sites) a second look pass applies the pack's look rules
       -> the runner runs typecheck and build itself and writes run.json
-      -> optional: deploy to Neon + Vercel on a live subdomain
+      -> deploy to Vercel (and Neon where the pack has a database) on <name>.appnomics.live
 
-Two packs exist today:
+## Packs
+A pack is a kind of site. `vertical-packs/<pack>/specs/` is the contract the agent builds against (read-only to the agent). The brief holds the facts for one site and overrides anything product-specific in the specs.
 
-| Pack | What it builds | State |
+| Pack | Builds | Deploy |
 |---|---|---|
-| `vertical-packs/site` | One-page waitlist website: hero, tools strip, preview, benefits, sign-up form, owner area for sign-ups | Built, deployed and tested end to end on one site |
-| `vertical-packs/store` | Online store with owner area | Built and tested; deploy script is not yet mapped to its variable names |
+| `site` | Waitlist website with an owner area for sign-ups | Neon database + Vercel. Tested end to end |
+| `product-showcase` | Website for an existing product | Static, Vercel only |
+| `local-business` | Restaurant website (home, /menu, /story) from reference components | Static first. Owner area and own database added afterwards with `--add-database` |
+| `store` | Online store with owner area | Built and tested; deploy is not mapped to its variable names |
+
+Which packs are static is decided in `src/kind.ts`. The restaurant pack has its own README with details.
 
 ## You need
 - Node 22+ and git
-- A local Postgres where your user can run `createdb` (set `RUNNER_DB_BASE_URL` if it is not `postgres://localhost:5432`)
+- A local Postgres where your user can run `createdb` (set `RUNNER_DB_BASE_URL` if it is not `postgres://localhost:5432`). On Fly the image provides one.
 - `ANTHROPIC_API_KEY` in your shell
-- Playwright's browser for the end-to-end tests: `npx playwright install chromium`
-- To deploy: `VERCEL_TOKEN` and `NEON_API_KEY` (see Deploy)
+- Playwright's browser for end-to-end tests: `npx playwright install chromium`
+- To deploy: `VERCEL_TOKEN` and `NEON_API_KEY`
 
 ## Setup
     npm install
-    npm test            # tool limits and the agent loop; no API key needed
-    npm run check       # typecheck
+    npm test         # all runner tests; no API key needed
+    npm run check    # typecheck
 
 ## Commands
 
-### Interview (site pack): turn a conversation into a brief
+### Interview: turn a conversation into a brief
     npm run interview -- --pack site
 
-Asks about 14 questions, states a default whenever you skip one, and saves `briefs/<name>.json`. It never overwrites an existing brief (it writes `-2`, `-3`). Cost cap: `INTERVIEW_MAX_COST_USD` (default 1).
+Asks the pack's questions, states a default whenever you skip one, and saves `briefs/<name>.json` (never overwrites; it writes `-2`, `-3`). Cost cap `INTERVIEW_MAX_COST_USD` (default 1).
 
-### Create: build an app
+### Create
     npm run create -- "A waitlist website for Mealwise" \
       --specs vertical-packs/site/specs --brief briefs/mealwise.json
 
-`--specs` picks the pack. The default is the store pack, so pass the site specs for a site. For a site, a second look pass runs automatically after the main build. Skip it with `--no-look-pass` (put it after the prompt).
+`--specs` picks the pack; the default is the store pack. Sites run a look pass afterwards; skip it with `--no-look-pass` (after the prompt). Restaurant example:
 
-### Change: edit an existing run
-    npm run change -- runs/<run-folder> "what to change"
-    npm run change -- runs/<run-folder> --brief briefs/updated.json "apply the new brief"
-    npm run change -- runs/<run-folder> --specs vertical-packs/site/specs "refresh the specs"
+    RUNNER_MAX_COST_USD=10 npm run create -- "A website for my restaurant" \
+      --specs vertical-packs/local-business/specs --brief briefs/<restaurant>.json
 
-`--specs` refreshes the run's specs from the pack and keeps the run's own brief. Use plain words for the instruction; the agent reads the project log and changes only what you ask.
+### Change
+    npm run change -- runs/<run> "what to change"
+    npm run change -- runs/<run> --brief briefs/updated.json "apply the new brief"
+    npm run change -- runs/<run> --specs vertical-packs/site/specs "refresh the specs"
 
-### Resume: continue a stopped build
-    npm run resume -- runs/<run-folder>
+`--specs` refreshes the run's specs and keeps its own brief.
 
-### Deploy: put a run on a live address
-    npm run deploy -- runs/<run-folder> --name mealwise --email owner@example.com
-    npm run deploy -- runs/<run-folder> --set-password "a new password (10+ chars)"
-    npm run deploy -- runs/<run-folder> --redeploy [--skip-migrate]
+### Resume
+    npm run resume -- runs/<run>
 
-Creates a Neon database through its API, deploys from the folder with the Vercel CLI, and puts the site on `<name>.appnomics.live`. If no password is given, one is generated and printed once. Keep it; only a hash is stored.
+### Deploy
+    npm run deploy -- runs/<run> --name mealwise --email owner@example.com
+    npm run deploy -- runs/<run> --set-password "a new password (10+ chars)"
+    npm run deploy -- runs/<run> --redeploy [--skip-migrate]
+    npm run deploy -- runs/<run> --add-database --email owner@example.com    # restaurant sites, after they are live
+
+The first deploy creates the Neon database (waitlist sites), deploys with the Vercel CLI and puts the site on `<name>.appnomics.live`. Static sites skip the database. `--add-database` creates a database for a live static restaurant site, adds the owner area, deploys again and checks the sign-in page; on failure before the final deploy it removes the new database and leaves the live site untouched. If no password is given one is generated and printed once; only a hash is stored. Private test deploys are supported (see `test/private-deploy.test.ts`).
 
 Environment, read by the runner only (never written into the app folder):
 - `VERCEL_TOKEN`, `NEON_API_KEY` (required)
-- `VERCEL_SCOPE` (team slug), `NEON_ORG_ID`, `APP_DOMAIN` (default `appnomics.live`), `NEON_POOLED=0` (optional)
+- `VERCEL_SCOPE`, `NEON_ORG_ID`, `APP_DOMAIN` (default `appnomics.live`), `NEON_POOLED=0` (optional)
 
-The app's own commands (migrate, seed, hash) run with a clean environment that has no tokens. Production env vars on Vercel are sensitive and cannot be pulled back, so the deploy state (including the Neon project id) is kept in `runs/<run>/deploy.json`. Keep that file; `--redeploy` needs it.
+The app's own commands (migrate, seed, hash) run with a clean environment that has no tokens. Production env vars on Vercel cannot be pulled back, so state lives in `runs/<run>/deploy.json` (name, host, Neon project, URL). Keep it; redeploys need it.
 
 ## Settings
 | Variable | Default | What it does |
@@ -72,28 +81,23 @@ The app's own commands (migrate, seed, hash) run with a clean environment that h
 | `RUNNER_MAX_TURNS` | 150 | Stops a stuck run |
 | `RUNNER_DB_BASE_URL` | `postgres://localhost:5432` | Where run databases are created |
 
-Prices used for the cost estimate are in `src/config.ts`. In practice the estimate has run 14 to 20 percent above the billed amount. Check the Anthropic console for the real figure.
+Prices for the cost estimate are in `src/config.ts`. The estimate has run 14 to 20 percent above the billed amount.
 
 ## Each run leaves, under runs/<id>/
-- `app/` the built app (a git repo; the first commit is the specs and brief). Includes `AGENT_LOG.md`: what was built, choices on unclear points, what was not verified.
-- `brief.json` the brief the build used
-- `transcript.jsonl` every tool call, in order
-- `run.json` stop reason, turns, tokens, estimated cost, typecheck and build results
-- `deploy.json` after a deploy: name, host, Neon project, URL
+- `app/` the built app (a git repo; first commit is the specs and brief), with `AGENT_LOG.md`: what was built, choices, what was not verified
+- `brief.json`, `transcript.jsonl` (every tool call), `run.json` (stop reason, turns, tokens, cost, typecheck and build results), `deploy.json`
 
-Rough costs from real runs (site pack): a build is about $3 and 20 to 28 minutes; a look or copy change is about $0.40 to $1.50; an interview is about $0.30.
+Rough costs from real runs: a waitlist build about $3 and 20 to 28 minutes; a look or copy change $0.40 to $1.50; an interview about $0.30.
 
 ## Layout
-    src/            runner: agent loop, tools, cli, deploy, interview
-    vertical-packs/ site/ and store/: specs, example brief, interview questions
-    briefs/         saved briefs (examples and your own)
-    test/           tool and loop tests
-    PARKING_LOT.md  ideas not being built now
-
-A pack's `specs/` folder is the contract the agent builds against (vision, stack, requirements, experience, domain model, edges, and for sites `look.md`). It is read-only to the agent. The brief holds the facts for one app and overrides anything in the specs that is specific to one product.
+    src/              agent loop, tools, cli, deploy, add-admin, interview, kind
+    vertical-packs/   one folder per pack: specs, brief.example.json, interview, (restaurant) reference
+    briefs/           example briefs. Real restaurants' briefs are not committed
+    test/             tests
+    parked/           shelved work
+    PARKING_LOT.md    ideas not being built now
 
 ## What this is not (yet)
-- **Not a sandbox.** Tools keep the agent inside its folder and limit commands, which stops accidents. Run it on a machine where that is acceptable. A container per run comes later.
-- **No approval step or live preview.** Deploys are a command you run.
-- **Deploy covers the site pack.** Variable names (`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `SESSION_SECRET`) are hard-coded; the store pack needs them mapped. Creating the Blob storage for image uploads is still a dashboard step, and verification does not sign in.
-- **Operator-held keys.** Your own keys and accounts do the work. Customer-owned accounts come later.
+- Not a sandbox. Tools keep the agent inside its folder and limit commands, which stops accidents, not attacks. A machine per build comes before strangers use it.
+- Operator-held keys. Your own accounts do the work; customer-owned accounts come later.
+- Store deploy is not mapped, and Blob storage for image uploads is a dashboard step.
