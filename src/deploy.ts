@@ -3,9 +3,10 @@
 //   (a first deploy refuses to run if a Vercel project with that name already exists)
 //   npm run deploy -- runs/<run-folder> --set-password "a new password" [--email owner@example.com]   (owner password on a deployed site)
 //   npm run deploy -- runs/<run-folder> --redeploy [--skip-migrate]   (code or migration changes to a site already deployed)
+//   npm run deploy -- runs/<run-folder> --add-database --email owner@example.com [--password "..."]   (stage two of a restaurant site: owner area + its own database, on a site that is already live)
 //   npm run deploy -- runs/<run-folder> --name private-bayleaf-x7k2 --private   (a PRIVATE TEST: only a static site, only behind a login or password, see below)
 // Needs VERCEL_TOKEN and NEON_API_KEY in the runner's environment (never in the app folder).
-// Optional: VERCEL_SCOPE (team slug), NEON_ORG_ID, APP_DOMAIN (default appnomics.live), NEON_POOLED=0.
+// Optional: VERCEL_SCOPE (team slug), NEON_ORG_ID, APP_DOMAIN (default appnomics.live), NEON_POOLED=0, RESEND_API_KEY and EMAIL_FROM (table request emails; set on the site when present).
 // The app's own commands (migrate, seed, hash) run with a clean environment: no tokens.
 import { spawn } from "node:child_process";
 import { readFile, writeFile, readdir } from "node:fs/promises";
@@ -13,6 +14,7 @@ import { randomBytes } from "node:crypto";
 import path from "node:path";
 import { isStaticRun } from "./kind.js";
 import { checkProtected, protectProject } from "./private-deploy.js";
+import { addAdmin } from "./add-admin.js";
 
 const secrets: string[] = [];
 const redact = (s: string) => secrets.reduce((t, v) => (v ? t.split(v).join("***") : t), s);
@@ -51,18 +53,44 @@ function sh(cmd: string, args: string[], opts: { cwd: string; env: Record<string
   });
 }
 
+const NEON = process.env.NEON_API_URL ?? "https://console.neon.tech/api/v2";
 const pooled = (uri: string) => (process.env.NEON_POOLED === "0" ? uri : uri.replace(/@([^.@/]+?)(-pooler)?\./, "@$1-pooler."));
 const direct = (uri: string) => uri.replace("-pooler.", ".");
 
 async function neonDirectUrl(state: { neonProjectId: string; neonDatabase?: string; neonRole?: string }): Promise<string> {
   if (!process.env.NEON_API_KEY) throw new Error("Set NEON_API_KEY (source ~/.appnomics/keys.env)");
   const q = new URLSearchParams({ database_name: state.neonDatabase ?? "neondb", role_name: state.neonRole ?? "neondb_owner" });
-  const res = await fetch(`https://console.neon.tech/api/v2/projects/${state.neonProjectId}/connection_uri?${q}`, {
+  const res = await fetch(`${NEON}/projects/${state.neonProjectId}/connection_uri?${q}`, {
     headers: { Authorization: `Bearer ${process.env.NEON_API_KEY}`, Accept: "application/json" },
   });
   const body = (await res.json()) as { uri?: string; message?: string };
   if (!res.ok || !body.uri) throw new Error(`Neon did not return the database address (${res.status}): ${body.message ?? "no address"}`);
   return direct(body.uri);
+}
+
+type NeonProject = { id: string; uri: string; database?: string; role?: string };
+
+/** Creates the site's own Neon project. Used by a first deploy of a waitlist site and by --add-database. */
+async function createNeonProject(name: string): Promise<NeonProject> {
+  const res = await fetch(`${NEON}/projects`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${process.env.NEON_API_KEY}`, "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ project: { name: `appnomics-${name}`, ...(process.env.NEON_ORG_ID ? { org_id: process.env.NEON_ORG_ID } : {}) } }),
+  });
+  const neon = (await res.json()) as { project?: { id: string }; connection_uris?: { connection_uri: string; connection_parameters?: { database?: string; role?: string } }[]; message?: string };
+  const params = neon.connection_uris?.[0]?.connection_parameters;
+  const uri = neon.connection_uris?.[0]?.connection_uri;
+  if (!res.ok || !uri || !neon.project) throw new Error(`Neon did not create the project (${res.status}): ${neon.message ?? "no connection address returned"}`);
+  secrets.push(uri, direct(uri), pooled(uri));
+  return { id: neon.project.id, uri, database: params?.database, role: params?.role };
+}
+
+/** Best effort: removes a Neon project this run created, after a failure, so a retry starts clean. Returns whether it is gone. */
+async function deleteNeonProject(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${NEON}/projects/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${process.env.NEON_API_KEY}`, Accept: "application/json" } });
+    return res.ok;
+  } catch { return false; }
 }
 
 /** The agent names its package.json scripts; the pack asks for fixed names, but builds have varied. Find the one that exists. */
@@ -150,21 +178,22 @@ async function deployProd(appDir: string): Promise<string> {
   return url;
 }
 
-async function verify(siteUrl: string, staticSite = false): Promise<{ home: number; signIn: number; adminRedirects: boolean }> {
+/** `slug` is the owner sign-in page name: a waitlist site uses sign-in, a restaurant site uses login. */
+async function verify(siteUrl: string, staticSite = false, slug = "sign-in"): Promise<{ home: number; signIn: number; adminRedirects: boolean }> {
   const get = async (p: string, manual = false) => fetch(siteUrl + p, { redirect: manual ? "manual" : "follow" });
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < Number(process.env.VERIFY_TRIES ?? 12); i++) {
     try {
       const home = await get("/");
       if (staticSite) { // no owner area on a static site: only the home page is checked
         if (home.status === 200) return { home: 200, signIn: 0, adminRedirects: false };
         throw new Error("not ready");
       }
-      const signIn = await get("/admin/sign-in");
+      const signIn = await get(`/admin/${slug}`);
       const admin = await get("/admin", true);
-      const adminRedirects = admin.status >= 300 && admin.status < 400 && (admin.headers.get("location") ?? "").includes("sign-in");
+      const adminRedirects = admin.status >= 300 && admin.status < 400 && (admin.headers.get("location") ?? "").includes(slug);
       if (home.status === 200) return { home: home.status, signIn: signIn.status, adminRedirects };
     } catch { /* domain may not be live yet */ }
-    await new Promise((r) => setTimeout(r, 5000));
+    await new Promise((r) => setTimeout(r, Number(process.env.VERIFY_WAIT_MS ?? 5000)));
   }
   return { home: 0, signIn: 0, adminRedirects: false };
 }
@@ -194,8 +223,9 @@ async function main() {
   // ---- set a new owner password on a deployed site ----
   const staticSite = await isStaticRun(root);
   if (arg("set-password") !== undefined) {
-    if (staticSite) throw new Error("This site has no owner area, so there is no password to set.");
     const state = JSON.parse(await readFile(statePath, "utf8"));
+    const restaurantAdmin = staticSite && Boolean(state.neonProjectId); // a restaurant site that has had its owner area added
+    if (staticSite && !restaurantAdmin) throw new Error("This site has no owner area, so there is no password to set.");
     const pw = arg("set-password")!;
     if (pw.length < 10) throw new Error("--set-password needs at least 10 characters");
     secrets.push(pw);
@@ -207,9 +237,10 @@ async function main() {
     // --email also (re)sets the owner email, for a site deployed before the variable names were detected.
     if (arg("email")) await vercel(appDir, ["env", "add", names.email, "production", "--force"], arg("email")!);
     const deployUrl = await deployProd(appDir);
-    const result = await verify(`https://${state.host}`);
+    const slug = restaurantAdmin ? "login" : "sign-in";
+    const result = await verify(`https://${state.host}`, false, slug);
     await writeFile(statePath, JSON.stringify({ ...state, deployUrl, passwordSetAt: new Date().toISOString() }, null, 2));
-    log(`\nDone. Sign in at https://${state.host}/admin/sign-in\n${JSON.stringify(result)}`);
+    log(`\nDone. Sign in at https://${state.host}/admin/${slug}\n${JSON.stringify(result)}`);
     return;
   }
 
@@ -217,7 +248,8 @@ async function main() {
   if (flag("redeploy")) {
     const state = JSON.parse(await readFile(statePath, "utf8"));
     log(`Redeploying ${state.host}`);
-    if (staticSite) log("  static site: no migrations");
+    const hasDb = Boolean(state.neonProjectId);
+    if (staticSite && !hasDb) log("  static site: no migrations");
     else if (flag("skip-migrate")) log("  skipping migrations (--skip-migrate)");
     else {
       const url = await neonDirectUrl(state);
@@ -226,9 +258,80 @@ async function main() {
     }
     await relink(appDir, state.name);
     const deployUrl = await deployProd(appDir);
-    const result = await verify(`https://${state.host}`, staticSite);
+    const result = await verify(`https://${state.host}`, staticSite && !hasDb, hasDb && staticSite ? "login" : "sign-in");
     await writeFile(statePath, JSON.stringify({ ...state, deployUrl, redeployedAt: new Date().toISOString() }, null, 2));
     log(`\nDone: https://${state.host}\n${JSON.stringify(result)}`);
+    return;
+  }
+
+  // ---- stage two of a restaurant site: the owner area and the site's own database ----
+  // The public site is already live and is not touched until the very last step (the deploy). Any failure before that leaves it exactly as it was,
+  // and the Neon project this run created is deleted so a retry starts clean.
+  if (flag("add-database")) {
+    if (!staticSite) throw new Error("--add-database is only for a restaurant site.");
+    if (privateRun || deployedPrivately) throw new Error("A private test does not get an owner area.");
+    if (!process.env.NEON_API_KEY) throw new Error("Set NEON_API_KEY (source ~/.appnomics/keys.env)");
+    const state = JSON.parse(await readFile(statePath, "utf8"));
+    if (state.neonProjectId) throw new Error(`${state.host} already has a database (Neon project ${state.neonProjectId}). Use --redeploy for code changes or --set-password for the owner password.`);
+    if (!state.name || !state.host) throw new Error("deploy.json has no project name, so the owner area cannot be added safely.");
+    const ownerEmail = arg("email") ?? "";
+    if (!/^\S+@\S+\.\S+$/.test(ownerEmail)) throw new Error("--email must be the owner's email address");
+    const generated = !arg("password") && !process.env.ADMIN_PASSWORD;
+    const password = arg("password") ?? process.env.ADMIN_PASSWORD ?? randomBytes(12).toString("base64url");
+    if (password.length < 10) throw new Error("The owner password needs at least 10 characters.");
+    secrets.push(password, process.env.RESEND_API_KEY ?? "");
+    const siteUrl = `https://${state.host}`;
+    log(`Adding the owner area and a database to ${siteUrl}`);
+
+    log("1/8 Adding the owner area files");
+    await addAdmin(appDir);
+    log("2/8 Installing the extra packages");
+    await sh("npm", ["install", "--no-audit", "--no-fund"], { cwd: appDir, env: baseEnv() });
+    log("3/8 Checking the site still builds");
+    await sh("npm", ["run", "build"], { cwd: appDir, env: baseEnv({ NEXT_PUBLIC_SITE_URL: siteUrl }) });
+
+    log("4/8 Creating the database on Neon");
+    const project = await createNeonProject(state.name);
+    log(`  project ${project.id}`);
+    let live = false;
+    try {
+      log("5/8 Creating tables");
+      await migrate(appDir, direct(project.uri), true);
+      log("6/8 Hashing the owner password");
+      const hash = await hashPassword(appDir, password);
+      secrets.push(hash);
+      log("7/8 Setting production settings");
+      await relink(appDir, state.name);
+      const names = await ownerVarNames(appDir);
+      const vars: Record<string, string> = {
+        DATABASE_URL: pooled(project.uri),
+        [names.email]: ownerEmail,
+        [names.hash]: forVercel(hash),
+        SESSION_SECRET: randomBytes(32).toString("hex"),
+        NEXT_PUBLIC_SITE_URL: siteUrl,
+      };
+      // Table request emails go through Resend. Without a key the requests are still saved and shown in the owner area.
+      if (process.env.RESEND_API_KEY) vars.RESEND_API_KEY = process.env.RESEND_API_KEY;
+      if (process.env.EMAIL_FROM) vars.EMAIL_FROM = process.env.EMAIL_FROM;
+      for (const [k, v] of Object.entries(vars)) await vercel(appDir, ["env", "add", k, "production", "--force"], v);
+      if (!vars.RESEND_API_KEY) log("  NOTE: RESEND_API_KEY is not set on the runner, so table requests are saved in the owner area but not emailed.");
+      log("8/8 Deploying to production (the build runs on Vercel; this takes a few minutes)");
+      const deployUrl = await deployProd(appDir);
+      // From here the live site uses this database, so it must not be deleted, whatever the checks say.
+      live = true;
+      await writeFile(statePath, JSON.stringify({ ...state, neonProjectId: project.id, neonDatabase: project.database, neonRole: project.role, deployUrl, adminAddedAt: new Date().toISOString() }, null, 2));
+      const result = await verify(siteUrl, false, "login");
+      if (result.home !== 200 || result.signIn !== 200) throw new Error(`The new version is deployed, but the site did not answer as expected (home ${result.home}, owner sign-in page ${result.signIn}). The database was kept. Check ${siteUrl} and ${siteUrl}/admin/login.`);
+      log(`\nAdmin: ${siteUrl}/admin/login\nChecks: home ${result.home}, sign-in page ${result.signIn}, /admin sends visitors to sign-in: ${result.adminRedirects}`);
+      console.log(`Owner sign-in: ${ownerEmail}${generated ? `\nGenerated password (shown once, save it): ${password}` : " (the password you gave)"}`); // printed raw on purpose
+    } catch (e) {
+      if (live) log(`\nThe owner area is deployed with database ${project.id}, but a check failed. Nothing was removed.`);
+      else {
+        const gone = await deleteNeonProject(project.id);
+        log(`\nFAILED. The live site was not changed. ${gone ? "The new database was removed, so a retry starts clean." : `Delete Neon project ${project.id} in the Neon console before you retry.`}`);
+      }
+      throw e;
+    }
     return;
   }
 
@@ -299,17 +402,11 @@ async function main() {
   log(`Deploying ${root} to ${siteUrl}`);
 
   log("1/7 Creating the database on Neon");
-  const res = await fetch("https://console.neon.tech/api/v2/projects", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${process.env.NEON_API_KEY}`, "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ project: { name: `appnomics-${name}`, ...(process.env.NEON_ORG_ID ? { org_id: process.env.NEON_ORG_ID } : {}) } }),
-  });
-  const neon = (await res.json()) as { project?: { id: string }; connection_uris?: { connection_uri: string; connection_parameters?: { database?: string; role?: string } }[]; message?: string };
-  const neonParams = neon.connection_uris?.[0]?.connection_parameters;
-  const uri = neon.connection_uris?.[0]?.connection_uri;
-  if (!res.ok || !uri || !neon.project) throw new Error(`Neon did not create the project (${res.status}): ${neon.message ?? "no connection address returned"}`);
-  secrets.push(uri, direct(uri), pooled(uri));
-  log(`  project ${neon.project.id}`);
+  const created = await createNeonProject(name);
+  const neon = { project: { id: created.id } };
+  const uri = created.uri;
+  const neonParams = { database: created.database, role: created.role };
+  log(`  project ${created.id}`);
 
   try {
     log("2/7 Creating tables and sample content");
