@@ -6,12 +6,13 @@ Copy into the generated app, and use as written:
 | --- | --- |
 | `lib/content.ts` | `src/lib/content.ts` |
 | `components/*.tsx` | `src/components/restaurant/` |
+| `lib/fonts.ts` | `src/lib/fonts.ts`. The root layout is `<html lang="en" className={fontClasses}>` with `import { fontClasses } from "../lib/fonts"`; do not load fonts anywhere else |
 | `styles/restaurant.css` | `src/styles/restaurant.css`, imported once in the root layout |
 | (new file, one line) | `src/components/lib/content.ts` containing `export * from "../../lib/content";` |
 
 The components import `../lib/content`, which from `src/components/restaurant/` is `src/components/lib/content`. The one-line file above makes that import work, so the components stay byte-identical to the reference. Do not edit the components' imports.
 
-Then write `src/content/site.ts` (a `Content` object from the brief) and render `<RestaurantPage c={content} />` from `src/app/page.tsx`, `<MenuPage c={content} />` from `src/app/menu/page.tsx` (404 unless `hasMenu`) and `<StoryPage c={content} />` from `src/app/story/page.tsx` (404 unless `hasStory`). `Shell.tsx` is the frame all three share. Set `--font-heading` and `--font-body` from `next/font`, and `--accent-text` when the accent is light.
+Then write `src/content/site.ts` (a `Content` object from the brief) and render `<RestaurantPage c={content} />` from `src/app/page.tsx`, `<MenuPage c={content} />` from `src/app/menu/page.tsx` (404 unless `hasMenu`) and `<StoryPage c={content} />` from `src/app/story/page.tsx` (404 unless `hasStory`). `Shell.tsx` is the frame all three share. The fonts come from `src/lib/fonts.ts` (copied as written), and set `--accent-text` when the accent is light.
 
 `lib/content.ts` holds every rule about what is drawn (`visibleSections`, `pickHighlights`, `reserveMode`, `waysToOrder`, `galleryTiles`, `priceText`, `safeHref`). It has no React in it so it can be tested alone; the tests are `test/local-business.test.ts` in the runner. Do not reimplement these rules in a component.
 

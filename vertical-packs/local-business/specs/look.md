@@ -33,7 +33,7 @@ The site has three routes, built from the reference page components. Do not add 
 | Shadow | cards 0 2px 8px rgba(0,0,0,0.08), hover 0 8px 24px rgba(0,0,0,0.12) |
 | Section padding | 100px desktop, 64px phone; content column up to 1200px |
 | Type | h1 and h2 3rem desktop, 2.2rem phone; h3 1.35rem; lead 1.3rem; body 1rem at 1.6 |
-| Fonts | Two at most, loaded with `next/font`, set as `--font-heading` and `--font-body`. Default DM Sans for both. Weights 400, 500, 600, 700 |
+| Fonts | Already wired: `src/lib/fonts.ts` (copied from the reference) loads them with `next/font`, and the root layout puts `fontClasses` on `<html>`. Do not load fonts anywhere else; edit that file only when the brief names other fonts. Two at most, set as `--font-heading` and `--font-body`. Default: Vollkorn for headings (h1 and h2, set as `--font-heading`) and DM Sans for everything else (`--font-body`). Weights 400, 500, 600, 700 |
 
 ## Section shapes (all in the reference)
 

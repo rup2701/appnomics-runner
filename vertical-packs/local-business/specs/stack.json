@@ -59,7 +59,7 @@
     },
     {
       "id": "fonts",
-      "choice": "Two fonts loaded with next/font, set as --font-heading and --font-body on the page wrapper. Default: DM Sans for both unless the brief asks for more",
+      "choice": "Two fonts loaded with next/font in src/lib/fonts.ts (copied from reference/lib/fonts.ts), applied with fontClasses on the html element in the root layout, set as --font-heading and --font-body. Default: Vollkorn for h1 and h2 (--font-heading) and DM Sans for the rest (--font-body), unless the brief asks for more",
       "why": "The original design used a paid font (Sofia Pro). A free near match avoids a licence problem."
     }
   ]

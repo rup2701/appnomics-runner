@@ -181,4 +181,17 @@ rmSync(tmp, { recursive: true, force: true });
   assert.ok(!plain.includes("reviews") && !plain.includes("gallery") && !plain.includes("menu"));
   assert.deepEqual(footerColumns({ ...empty, scaffold: false }), []);
 }
+
+// The look: the menu button names no count, and the heading font cannot be lost to the model's wiring or to a plain h1 rule.
+{
+  const ref = (f: string) => readFileSync(new URL(`../vertical-packs/local-business/reference/${f}`, import.meta.url), "utf8");
+  const spec = (f: string) => readFileSync(new URL(`../vertical-packs/local-business/specs/${f}`, import.meta.url), "utf8");
+  assert.ok(/See the full menu</.test(ref("components/MenuTeaser.tsx")) && !/\{dishes\} dishes/.test(ref("components/MenuTeaser.tsx")), "the button has no dish count");
+  const fonts = ref("lib/fonts.ts");
+  assert.ok(/Vollkorn\(/.test(fonts) && /DM_Sans\(/.test(fonts) && /--font-heading/.test(fonts) && /--font-body/.test(fonts) && /export const fontClasses/.test(fonts), "fonts.ts loads both fonts and exports the classes");
+  const css = ref("styles/restaurant.css");
+  assert.ok(/^\.rb :is\(h1, h2\) \{ font-family: var\(--font-heading/m.test(css) && !/:where\(\.rb\) :is\(h1, h2\) \{ font-family/.test(css), "the heading rule is not zero-specificity");
+  for (const f of ["look.md", "stack.json", "requirements.json"]) assert.ok(/fonts\.ts/.test(spec(f)), `${f} sends the model to src/lib/fonts.ts`);
+  assert.ok(/lib\/fonts\.ts/.test(ref("README.md")), "the README copy table has fonts.ts");
+}
 console.log("local-business tests passed");

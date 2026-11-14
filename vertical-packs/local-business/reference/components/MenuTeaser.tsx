@@ -15,7 +15,7 @@ export function MenuTeaser({ c }: { c: Content }) {
             {cats.map((k) => <a key={k.name} href={`/menu#menu-${slug(k.name)}`}>{k.name}</a>)}
           </nav>
         ) : null}
-        <p className="rb-center"><a className="rb-btn" href="/menu">See the full menu ({dishes} dishes)</a></p>
+        <p className="rb-center"><a className="rb-btn" href="/menu">See the full menu</a></p>
       </div>
     </section>
   );

@@ -33,7 +33,7 @@
       "acceptance_criteria": [
         "src/lib/content.ts is the reference file unchanged. Section components are the reference components. The agent does not rewrite their markup or restyle them.",
         "The accent colour comes from look.accent in the brief and is set as --accent on the page wrapper. Text on the accent is white or near-black, whichever passes 4.5:1, set as --accent-text.",
-        "Fonts are loaded with next/font and set as --font-heading and --font-body. A change to the look goes through the brief, not through edits to the components."
+        "Fonts come from src/lib/fonts.ts (copied from the reference), applied as fontClasses on the html element; h1 and h2 render in Vollkorn unless the brief names another font. A change to the look goes through the brief, not through edits to the components."
       ],
       "verification": [
         "Diff src/lib/content.ts and src/components/restaurant against reference/.",

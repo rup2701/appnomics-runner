@@ -26,7 +26,8 @@
 .rb *, .rb *::before, .rb *::after { box-sizing: border-box; }
 /* :where() keeps these resets at zero specificity so every class below can override them. */
 :where(.rb) :is(h1, h2, h3, p, blockquote, figure) { margin: 0; }
-:where(.rb) :is(h1, h2, h3) { font-family: var(--font-heading, inherit); }
+/* Not :where(): a plain h1 or h2 rule in the app's own stylesheet must not be able to take the heading font away. */
+.rb :is(h1, h2) { font-family: var(--font-heading, "Vollkorn", Georgia, serif); }
 :where(.rb) a { color: inherit; text-decoration: none; }
 .rb-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 .rb section[id] { scroll-margin-top: 80px; }
