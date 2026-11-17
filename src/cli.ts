@@ -7,7 +7,7 @@ import { readFile, writeFile, access, cp } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import path from "node:path";
-import { config, costUsd, emptyUsage } from "./config.js";
+import { config, costUsd, emptyUsage, useModel } from "./config.js";
 import { standInBrief } from "./brief.js";
 import { copyReference, createWorkspace } from "./workspace.js";
 import { isStaticBrief, isStaticRun } from "./kind.js";
@@ -135,7 +135,7 @@ async function resume(runDir: string, message: string = RESUME_MESSAGE, label: s
   const buildMs = Date.now() - buildStart;
   const seconds = (ms: number) => Math.round(ms / 100) / 10;
   const summary = {
-    resumedRun: path.basename(root), stopReason: result.stopReason, turns: result.turns,
+    resumedRun: path.basename(root), model: config.model, stopReason: result.stopReason, turns: result.turns,
     durationMinutes: Math.round((Date.now() - started) / 600) / 100,
     // Where the time went, in seconds: the agent's own work (which includes the tests it runs), then the two independent checks.
     // Inside the agent's time: waiting for the model, running tools (of which tests, and its own build or type checks).
@@ -158,6 +158,7 @@ async function main() {
     return verifyRun(process.argv[3]);
   }
   if (process.argv[2] === "change") {
+    useModel(config.changeModel);
     const runDir = process.argv[3];
     const rest = process.argv.slice(4);
     const instruction = rest.filter((a, i) => !a.startsWith("--") && !rest[i - 1]?.startsWith("--")).join(" ").trim();
