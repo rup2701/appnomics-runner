@@ -16,6 +16,8 @@ const model = process.env.RUNNER_MODEL ?? "claude-opus-5-5";
 
 export const config = {
   model,
+  // Site changes (the change command) run on their own model, so quick edits from Scout stay quick and cheap.
+  changeModel: process.env.RUNNER_CHANGE_MODEL ?? "claude-sonnet-5-5",
   maxTurns: Number(process.env.RUNNER_MAX_TURNS ?? 150),
   maxCostUsd: Number(process.env.RUNNER_MAX_COST_USD ?? 15),
   commandTimeoutMs: 10 * 60 * 1000,
@@ -24,6 +26,12 @@ export const config = {
   // Where run databases are created. Your local Postgres user must be able to create databases.
   dbBaseUrl: process.env.RUNNER_DB_BASE_URL ?? "postgres://localhost:5432",
 };
+
+/** Switches this run to another model, and its cost estimate and cost limit to that model's prices. */
+export function useModel(m: string): void {
+  config.model = m;
+  config.prices = pricesFor(m);
+}
 
 export type Usage = { input: number; output: number; cacheRead: number; cacheWrite: number };
 
