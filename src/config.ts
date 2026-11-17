@@ -1,11 +1,26 @@
 // Everything tunable lives here. Prices are estimates in dollars per million tokens.
+// Cache writes are the 5 minute rate, 1.25 times the input price.
+export type Prices = { input: number; output: number; cacheRead: number; cacheWrite: number };
+
+export const PRICES: Record<string, Prices> = {
+  "claude-opus-5-5": { input: 4, output: 20, cacheRead: 0.2, cacheWrite: 5 },
+  "claude-sonnet-5-5": { input: 2, output: 10, cacheRead: 0.1, cacheWrite: 2.5 },
+};
+
+/** Prices for a model. A model not in the table is priced as Opus, the dearer one, so the cost limit never stops late. */
+export function pricesFor(model: string): Prices {
+  return PRICES[model] ?? PRICES["claude-opus-5-5"];
+}
+
+const model = process.env.RUNNER_MODEL ?? "claude-opus-5-5";
+
 export const config = {
-  model: process.env.RUNNER_MODEL ?? "claude-sonnet-5-5",
+  model,
   maxTurns: Number(process.env.RUNNER_MAX_TURNS ?? 150),
   maxCostUsd: Number(process.env.RUNNER_MAX_COST_USD ?? 15),
   commandTimeoutMs: 10 * 60 * 1000,
   toolOutputLimit: 12_000,
-  prices: { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 },
+  prices: pricesFor(model),
   // Where run databases are created. Your local Postgres user must be able to create databases.
   dbBaseUrl: process.env.RUNNER_DB_BASE_URL ?? "postgres://localhost:5432",
 };

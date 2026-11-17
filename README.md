@@ -76,12 +76,12 @@ The app's own commands (migrate, seed, hash) run with a clean environment that h
 ## Settings
 | Variable | Default | What it does |
 |---|---|---|
-| `RUNNER_MODEL` | `claude-sonnet-5-5` | Model for builds |
+| `RUNNER_MODEL` | `claude-opus-5-5` | Model for builds. Set it to `claude-sonnet-5-5` for a cheaper build |
 | `RUNNER_MAX_COST_USD` | 15 | Stops a run that spends too much |
 | `RUNNER_MAX_TURNS` | 150 | Stops a stuck run |
 | `RUNNER_DB_BASE_URL` | `postgres://localhost:5432` | Where run databases are created |
 
-Prices for the cost estimate are in `src/config.ts`. The estimate has run 14 to 20 percent above the billed amount.
+Prices for the cost estimate are in `src/config.ts`, one row per model. A model not listed there is priced as Opus. The estimate has run 14 to 20 percent above the billed amount.
 
 ## Each run leaves, under runs/<id>/
 - `app/` the built app (a git repo; first commit is the specs and brief), with `AGENT_LOG.md`: what was built, choices, what was not verified
