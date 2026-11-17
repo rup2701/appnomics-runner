@@ -110,7 +110,12 @@ export function makeHandlers(appDir: string, env: Record<string, string>) {
 
 // The agent's commands see only what they need. API keys and tokens are left out on purpose.
 export function agentEnv(databaseUrl: string): Record<string, string> {
-  const keep = ["PATH", "HOME", "USER", "LANG", "TMPDIR", "PLAYWRIGHT_BROWSERS_PATH", "NODE_PATH"];
+  // The GIT_ names give the agent's commits an author. On Fly there is no git identity in the home folder, and without
+  // them every commit fails with "Author identity unknown". The worker sets them.
+  const keep = [
+    "PATH", "HOME", "USER", "LANG", "TMPDIR", "PLAYWRIGHT_BROWSERS_PATH", "NODE_PATH",
+    "GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL", "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL",
+  ];
   const env: Record<string, string> = { CI: "1" };
   if (databaseUrl) env.DATABASE_URL = databaseUrl; // a static site has none
   for (const k of keep) if (process.env[k]) env[k] = process.env[k]!;
