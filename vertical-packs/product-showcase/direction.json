@@ -1,5 +1,5 @@
 {
-  "note": "The closed lists from specs/creative.md, for code that must check a direction choice (the Builder's design brief, APP-42). creative.md is the source; test/showcase-pack.test.ts fails when the two differ. Copied into the Builder by npm run sync:site-pack.",
+  "note": "The closed lists from specs/creative.md (pairings, motifs, hero kinds, hero layouts, signatures), for code that must check a direction choice (the Builder's design brief, APP-42). creative.md is the source; test/showcase-pack.test.ts fails when the two differ. Copied into the Builder by npm run sync:site-pack.",
   "pairings": [
     { "name": "Neutral modern", "heading": "Inter", "headingWeight": "tone", "body": "Inter", "accentFont": null, "capsLabels": false, "fits": "calm, serious, plain" },
     { "name": "Grotesk and mono", "heading": "Space Grotesk", "headingWeight": 600, "body": "Inter", "accentFont": "JetBrains Mono", "capsLabels": false, "fits": "technical products, data" },
@@ -23,6 +23,10 @@
     { "name": "frame", "what": "a browser or device window holding a picture of the product's main screen, built in HTML and CSS" },
     { "name": "fragment", "what": "a small piece of the product's interface composed in HTML and CSS, without a window around it" },
     { "name": "owner-art", "what": "an image the owner supplied, used as given" }
+  ],
+  "heroLayouts": [
+    { "name": "centred", "what": "one centred stack, headline, line and buttons, with the preview below", "heroKinds": ["frame", "fragment", "owner-art"] },
+    { "name": "split", "what": "on desktop, the text on the left and the fragment on the right; on a phone it stacks, the fragment below the main button", "heroKinds": ["fragment"] }
   ],
   "signatures": [
     { "name": "oversized-numerals", "what": "oversized numerals (benefit cards, steps)" },
