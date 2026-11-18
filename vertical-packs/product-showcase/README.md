@@ -1,6 +1,6 @@
 # Product showcase pack
 
-A showcase website for a software product (a home page first; more pages come later through Scout), built fast from a short interview. No sign-ups, no database, no owner area, no email. Hero with a main button (a link the owner sets) and a product image placeholder, benefits bento, how it works, pricing (up to three plans, optional yearly billing), testimonials, FAQ, closing call to action and a full footer. Optional: examples gallery, comparison table, use-case cards.
+A showcase website for a software product (a home page first; more pages come later through Scout), built fast from a short interview. No sign-ups, no database, no owner area, no email. Hero with a main button (a link the owner sets) and a concept preview of the product built in HTML, benefits bento, how it works, pricing (up to three plans, optional yearly billing), testimonials, FAQ, closing call to action and a full footer. Optional: examples gallery, comparison table, use-case cards.
 
 The brand is the part to get right: audience, tone (calm, bold, playful, serious) and color (light or dark, plus a main colour from a short list) are asked in the interview. Tone changes the design as well as the words: `specs/look.md` turns tone, mode and accent into numbers (type, shape, accent use, a true bento grid, a scrolling testimonials row, motion).
 
@@ -9,3 +9,5 @@ Honesty rules: drafted copy comes from the interview; sample content (testimonia
 The earlier version of this pack, with email sign-ups, a database and an owner area, is kept in `parked/saas-signup-owner-v1` for the app packs that need those parts (waitlist, creator, coaching).
 
 Status: interview, brief, contract and specs are written for this pack. Not yet done: the runner's no-database deploy mode, the builder and worker wiring, and a first test build.
+
+The look comes from two files: `specs/look.md` (spacing, contrast, depth and checks) and `specs/creative.md` (the direction the agent chooses for each product: font pairing, motif, hero kind and signature elements, recorded in the site's `src/theme.ts` and in AGENT_LOG.md).
