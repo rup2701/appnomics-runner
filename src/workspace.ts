@@ -19,6 +19,8 @@ export type Workspace = { runId: string; root: string; appDir: string; dbName: s
 
 export async function createWorkspace(opts: {
   prompt: string; specsDir: string; brief: unknown; runsDir: string; skipDb?: boolean;
+  /** The design brief written from the interview (APP-42), as markdown. Saved as specs/design-brief.md. */
+  designBrief?: string;
 }): Promise<Workspace> {
   const slug = opts.prompt.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 24) || "run";
   const stamp = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
@@ -29,6 +31,7 @@ export async function createWorkspace(opts: {
   await cp(opts.specsDir, path.join(appDir, "specs"), { recursive: true });
   await copyReference(opts.specsDir, appDir);
   await writeFile(path.join(appDir, "specs", "brief.json"), JSON.stringify(opts.brief, null, 2));
+  if (opts.designBrief?.trim()) await writeFile(path.join(appDir, "specs", "design-brief.md"), opts.designBrief);
 
   const dbName = `run_${stamp}_${Math.random().toString(36).slice(2, 6)}`;
   const databaseUrl = `${config.dbBaseUrl}/${dbName}`;

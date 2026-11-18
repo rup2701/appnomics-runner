@@ -127,4 +127,50 @@ const agent = await read(root, "src/agent.ts");
   pass("no check spells out the owner's copy, and the rule is written down");
 }
 
+// direction.json is the closed lists of creative.md, for code that checks a choice (the Builder's design brief, APP-42). The two never differ.
+{
+  const dir = JSON.parse(await read(packs, "product-showcase/direction.json")) as {
+    pairings: { name: string; heading: string; headingWeight: number | "tone"; body: string; accentFont: string | null; capsLabels: boolean; fits: string }[];
+    motifs: { name: string; looks: string; goodFor: string }[]; heroKinds: { name: string; what: string }[]; signatures: { name: string; what: string }[];
+  };
+  const rows = creative.split("\n").filter((l) => /^\| [A-Z]/.test(l) && !l.startsWith("| Pairing") && !l.startsWith("| Motif") && !l.startsWith("| The owner"));
+  const cells = (l: string) => l.split("|").slice(1, -1).map((c) => c.trim());
+  const pairings = rows.filter((l) => l.split("|").length === 8).map(cells);
+  assert.deepEqual(dir.pairings.map((p) => p.name), pairings.map((c) => c[0]), "same pairings, same order");
+  for (const p of dir.pairings) {
+    const c = pairings.find((x) => x[0] === p.name)!;
+    assert.equal(p.heading, c[1], `${p.name} heading font`);
+    assert.equal(String(p.headingWeight), /^\d+$/.test(c[2]) ? c[2] : "tone", `${p.name} headline weight`);
+    assert.equal(p.body, c[3], `${p.name} body font`);
+    assert.equal(p.accentFont ?? "none", c[4], `${p.name} accent font`);
+    assert.equal(p.capsLabels, p.name === "Heavy geometric", `${p.name} caps labels`);
+    assert.equal(p.fits, c[5], `${p.name} fits`);
+  }
+  assert.deepEqual(dir.motifs.map((m) => [m.name, m.looks, m.goodFor]), rows.filter((l) => l.split("|").length === 5).map((l) => cells(l)), "same motifs");
+  for (const k of dir.heroKinds) assert.match(creative, new RegExp(`\\*\\*${k.name}\\*\\*`), `hero kind ${k.name}`);
+  assert.equal(dir.heroKinds.length, 3);
+  const sigs = [...creative.matchAll(/^- `([a-z-]+)`: (.+)$/gm)].map((m) => [m[1], m[2]]);
+  assert.deepEqual(dir.signatures.map((s) => [s.name, s.what]), sigs, "same signature names");
+  pass("direction.json matches the pairing, motif, hero and signature lists in creative.md");
+}
+
+// A design brief written from the interview goes into the run as specs/design-brief.md, and the agent reads it after creative.md (APP-42).
+{
+  const tmp = await mkdtemp(path.join(os.tmpdir(), "runner-design-brief-"));
+  const specsDir = path.join(packs, "product-showcase", "specs");
+  const md = "# Design brief\n\nThe owner said: \"bold is fine\"\n";
+  const withBrief = await createWorkspace({ prompt: "design brief", specsDir, brief: { site: { name: "Test" } }, runsDir: tmp, skipDb: true, designBrief: md });
+  assert.equal(await read(withBrief.appDir, "specs/design-brief.md"), md);
+  const without = await createWorkspace({ prompt: "no design brief", specsDir, brief: { site: { name: "Test" } }, runsDir: tmp, skipDb: true });
+  assert.equal(await exists(path.join(without.appDir, "specs/design-brief.md")), false, "no file when there is no design brief");
+  assert.equal(await exists(path.join(specsDir, "design-brief.md")), false, "the pack itself has no design brief");
+  assert.match(agent, /then specs\/creative\.md if it exists \(.*\), then specs\/design-brief\.md if it exists \(read it right after creative\.md/);
+  assert.match(agent, /Its gaps are open questions: never answer or fill them on the page/);
+  assert.match(agent, /Never put its quotes, notes or questions on the page as content/);
+  const lookPass = cli.slice(cli.indexOf("const LOOK_PASS_MESSAGE"), cli.indexOf("const changeMessage"));
+  assert.match(lookPass, /specs\/design-brief\.md if it exists/);
+  assert.match(cli, /arg\("design-brief"\)/);
+  pass("the design brief goes into the run after creative.md, and the agent is told how to use it");
+}
+
 console.log("showcase pack tests passed");
