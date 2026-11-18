@@ -24,21 +24,21 @@
     },
     {
       "id": "hero",
-      "name": "Hero with main button and image placeholder",
+      "name": "Hero with main button and concept preview",
       "priority": "must-have",
       "status": "draft",
-      "description": "A centred headline, one supporting line, the main button, and below it a plain labelled image placeholder (aspect 16:10) that the owner replaces later.",
+      "description": "A centred headline, one supporting line, the main button, and below it a concept preview of the product built in HTML (a window frame or an interface fragment, about 16:10, labelled Concept preview). The owner image replaces it in the same frame later.",
       "acceptance_criteria": [
         "Headline, supporting line and button label come from the brief.",
         "The headline and the main button are visible without scrolling at 1440 by 900 and at 375 by 667.",
-        "The hero is not full screen: the image placeholder starts just below the button.",
-        "The placeholder is a plain box with the label from the brief. No mock-up is drawn and no image is fetched or generated.",
-        "When the owner supplies an image, it replaces the box in the same frame.",
+        "The hero is not full screen: the concept preview starts just below the button.",
+        "With no owner image, the preview is built in HTML and CSS from the brief (see look.md, Hero, and creative.md, Hero) and carries a visible Concept preview label. Filler values sit in panels marked Sample. No figure in it is invented: no user counts, percentages, ratings, revenue or growth. No image is fetched or generated.",
+        "When the owner supplies an image, it replaces the preview in the same frame and the Concept preview label goes away.",
         "Text contrast against the background is at least 4.5:1."
       ],
       "verification": [
         "Check the hero at both sizes.",
-        "Confirm the placeholder box is labelled and no broken image appears."
+        "Confirm the preview is labelled Concept preview, its filler is marked Sample, and no broken image appears."
       ]
     },
     {

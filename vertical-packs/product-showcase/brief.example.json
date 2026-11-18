@@ -111,7 +111,7 @@
         "label": "Your product image goes here",
         "aspect": "16:10",
         "image": null,
-        "note": "A plain labelled box under the hero text. No mock-up is drawn. The owner supplies a screenshot or image later, and the box is replaced."
+        "note": "With no image, the hero shows a concept preview of the product built in HTML (a window frame or an interface fragment), labelled Concept preview. The owner supplies a screenshot or image later, and it takes the same frame."
       },
       "secondary_cta": {
         "label": "Watch demo",
@@ -337,7 +337,7 @@
     "source": "owner_uploads",
     "rules": [
       "No stock or generated photos or screenshots are fetched or invented.",
-      "The hero image starts as a plain labelled placeholder box.",
+      "The hero starts with a concept preview built in HTML, labelled Concept preview, until the owner adds a screenshot.",
       "Logos and screenshots are added later by the owner."
     ]
   },
@@ -345,8 +345,8 @@
     "preset": "showcase-light",
     "mode": "light",
     "tone": "calm",
-    "accent": "#2563EB",
-    "accent_note": "One hex colour from the interview's colour choice or the owner's own words. Record any change made for contrast.",
+    "accent": "#0F766E",
+    "accent_note": "One hex colour from the interview: the one the owner picked, or one chosen from the product and tone (here a calm ink teal for a finance tool). Record any change made for contrast.",
     "layout": {
       "width": "contained",
       "max_width_px": 1200
