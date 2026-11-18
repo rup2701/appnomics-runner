@@ -11,3 +11,7 @@ The earlier version of this pack, with email sign-ups, a database and an owner a
 Status: interview, brief, contract and specs are written for this pack. Not yet done: the runner's no-database deploy mode, the builder and worker wiring, and a first test build.
 
 The look comes from two files: `specs/look.md` (spacing, contrast, depth and checks) and `specs/creative.md` (the direction the agent chooses for each product: font pairing, motif, hero kind and signature elements, recorded in the site's `src/theme.ts` and in AGENT_LOG.md).
+
+`direction.json` holds the same closed lists (pairings, motifs, hero kinds, signature names) for code. The Builder copies it with `npm run sync:site-pack` and checks the design brief's choices against it (APP-42). A test fails if it and `creative.md` differ.
+
+The design brief (APP-42): the Builder's worker writes it from the interview before each build and passes it with `--design-brief`. It lands in the run as `specs/design-brief.md`, and the agent reads it right after `creative.md`. A build without one works as before.

@@ -80,12 +80,14 @@ The rules for a frame or fragment (also in `look.md`, Hero):
 
 One or two recognizable devices the whole site repeats:
 
-- oversized numerals (benefit cards, steps)
-- a recurring marker under key words in headlines
-- section index labels (01, 02, 03) in the accent font
-- corner ticks on cards
-- status chips used the same way everywhere
-- a grid line that bleeds off the page edge
+- `oversized-numerals`: oversized numerals (benefit cards, steps)
+- `headline-marker`: a recurring marker under key words in headlines
+- `section-index`: section index labels (01, 02, 03) in the accent font
+- `corner-ticks`: corner ticks on cards
+- `status-chips`: status chips used the same way everywhere
+- `bleed-grid-line`: a grid line that bleeds off the page edge
+
+Use these names in `direction.signatures`.
 
 Each chosen element gets one class or token and is used the same way in at least three places. A signature that appears once is a decoration, not a signature.
 

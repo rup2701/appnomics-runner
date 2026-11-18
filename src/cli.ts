@@ -2,6 +2,7 @@
 //   options: --brief path/to/brief.json   skip the stand-in and use this brief
 //            --specs path/to/specs        default: vertical-packs/store/specs
 //            --no-look-pass               skip the second pass that applies specs/look.md (put it after the prompt)
+//            --design-brief path/to/file.md   copied into the run as specs/design-brief.md; the agent reads it after creative.md (APP-42)
 import Anthropic from "@anthropic-ai/sdk";
 import { readFile, writeFile, access, cp } from "node:fs/promises";
 import { execFile } from "node:child_process";
@@ -30,7 +31,7 @@ const RESUME_MESSAGE = `This is a resumed run. An earlier session building this 
 5. Write AGENT_LOG.md with the usual headings. Say plainly under 'Not verified' that the first session's notes were lost and that parts of the log are reconstructed from the files.`;
 
 const LOOK_PASS_MESSAGE = `The site is built and tested. This is the look pass: make the public page follow this pack's own specs/look.md exactly, and specs/creative.md where it exists. You have no memory of building it, so work from the files.
-1. Read specs/look.md, specs/creative.md if it exists, and specs/brief.json (its look and brand fields). Read the public page code and its styles. If the page has a direction object (src/theme.ts, see specs/creative.md), read it and keep it: the fonts, motif and hero it names stay as they are.
+1. Read specs/look.md, specs/creative.md if it exists, specs/design-brief.md if it exists (its recommended direction and its care notes), and specs/brief.json (its look and brand fields). Read the public page code and its styles. If the page has a direction object (src/theme.ts, see specs/creative.md), read it and keep it: the fonts, motif and hero it names stay as they are.
 2. Go through look.md rule by rule, and then creative.md, and fix everything the page does not follow. Use only the rules written in these files; they differ between packs, so do not bring in rules from another kind of site.
 3. Do not change anything under /admin, the database, the API routes, authentication or uploads, and do not change the words from the brief. Keep every field and text.
 4. Add the checks listed at the end of look.md (and of creative.md, where it exists) to the end-to-end tests. Do not weaken an existing check. A check never spells out text the owner can edit (a headline, a button label, a price, a section heading, FAQ text): read the expected text from the site's content file, or check a property (present, not empty, fits without overflow).
@@ -211,7 +212,9 @@ async function main() {
 
   console.log("2/4 Setting up a fresh folder and database…");
   const staticSite = isStaticBrief(brief);
-  const ws = await createWorkspace({ prompt, specsDir, brief, runsDir: path.join(here, "runs"), skipDb: staticSite });
+  const designBrief = arg("design-brief") ? await readFile(arg("design-brief")!, "utf8") : undefined;
+  const ws = await createWorkspace({ prompt, specsDir, brief, runsDir: path.join(here, "runs"), skipDb: staticSite, designBrief });
+  if (designBrief?.trim()) console.log("    design brief: specs/design-brief.md");
   await writeFile(path.join(ws.root, "brief.json"), JSON.stringify(brief, null, 2));
   console.log(`    ${ws.appDir}${staticSite ? "\n    static site: no database" : `\n    database ${ws.dbName}`}`);
 

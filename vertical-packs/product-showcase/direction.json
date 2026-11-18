@@ -1,0 +1,15 @@
+{
+  "note": "The closed lists from specs/creative.md, for code that must check a direction choice (the Builder's design brief, APP-42). creative.md is the source; test/showcase-pack.test.ts fails when the two differ. Copied into the Builder by npm run sync:site-pack.",
+  "pairings": [
+    { "name": "Neutral modern", "heading": "Inter", "headingWeight": "tone", "body": "Inter", "accentFont": null, "capsLabels": false },
+    { "name": "Grotesk and mono", "heading": "Space Grotesk", "headingWeight": 600, "body": "Inter", "accentFont": "JetBrains Mono", "capsLabels": false },
+    { "name": "Editorial", "heading": "Fraunces", "headingWeight": 600, "body": "Inter", "accentFont": null, "capsLabels": false },
+    { "name": "Soft geometric", "heading": "Plus Jakarta Sans", "headingWeight": 700, "body": "Plus Jakarta Sans", "accentFont": null, "capsLabels": false },
+    { "name": "Sharp technical", "heading": "IBM Plex Sans", "headingWeight": 600, "body": "IBM Plex Sans", "accentFont": "IBM Plex Mono", "capsLabels": false },
+    { "name": "Display contrast", "heading": "Sora", "headingWeight": 700, "body": "Inter", "accentFont": null, "capsLabels": false },
+    { "name": "Heavy geometric", "heading": "Outfit", "headingWeight": 800, "body": "Inter", "accentFont": null, "capsLabels": true }
+  ],
+  "motifs": ["Board", "Ledger", "Blueprint", "Paper", "Terminal", "Soft mesh", "Bands", "Stack"],
+  "heroKinds": ["frame", "fragment", "owner-art"],
+  "signatures": ["oversized-numerals", "headline-marker", "section-index", "corner-ticks", "status-chips", "bleed-grid-line"]
+}
