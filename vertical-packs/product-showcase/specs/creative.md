@@ -18,11 +18,12 @@ export const direction = {
   capsLabels: true,             // true when the pairing asks for uppercase nav and labels
   motif: "Stack",               // a name from the motif table
   heroKind: "fragment",         // frame, fragment or owner-art
+  heroLayout: "split",          // centred, or split (only with a fragment)
   signatures: ["oversized-numerals"], // one or two names from the signature list
 } as const;
 ```
 
-2. **AGENT_LOG.md**, under "Decisions on ambiguous points": the pairing, the motif, the hero kind and the signature elements, each with one line on why it fits this product.
+2. **AGENT_LOG.md**, under "Decisions on ambiguous points": the pairing, the motif, the hero kind, the hero layout and the signature elements, each with one line on why it fits this product.
 
 Later changes read `direction` and keep it. When the owner asks for a different look in everyday words (see "Plain-words changes"), the change updates `direction` and the page together.
 
@@ -42,7 +43,7 @@ Choose from this list only. All of them load through `next/font/google`, so a bu
 
 Rules:
 - **The pairing sets the headline weight**, in every tone. The tone table's display weight in `look.md` applies only with Neutral modern. Hero, section and closing headlines use this weight; nothing else does.
-- **Only headlines go above 700.** Card titles, plan names, FAQ questions, nav links and buttons stay at 600 or less; eyebrows and numerals may use 700.
+- **Only headlines go above 700.** Card titles, plan names, FAQ questions, nav links and buttons stay at 600 or less. The logo, the titles inside the hero's fragment (a matchup on a pick card), step titles and prices use 700. Eyebrows and numerals may use 700. One exception: with the `oversized-numerals` signature, the oversized numerals (a plan's length, a step or benefit numeral) count as the signature and may use the headline weight, up to 800. Each carries `data-signature="oversized-numerals"`.
 - **Heavy geometric uses uppercase nav and labels:** nav links, eyebrows, buttons and small labels are uppercase, with letter spacing of at least 0.08em (eyebrows keep 0.12em). Headlines and paragraphs are never uppercase. Set `capsLabels: true`.
 - At most two families plus one mono accent. Load only the weights used, `display: "swap"`, with a system fallback.
 - Heading letter spacing still comes from the tone table in `look.md`.
@@ -50,7 +51,7 @@ Rules:
 
 ## 2. Motif: choose one
 
-The motif is drawn from what the product does. It is CSS and inline SVG only (no external images), appears in the hero and in at least one other section, and never sits behind body text at less than 4.5:1 contrast.
+The motif is drawn from what the product does. It is CSS and inline SVG only (no external images), appears in the hero and in at least one other section (a motif seen only in the hero is a hero picture, not a motif), and never sits behind body text at less than 4.5:1 contrast.
 
 | Motif | How it looks | Good for |
 |---|---|---|
@@ -70,6 +71,11 @@ The hero shows the product, not an empty box. Choose one (`heroKind`):
 1. **frame**: a browser or device window (a top bar with three dots and a title) holding a picture of the product's main screen, built in HTML and CSS from the brief's description of the product.
 2. **fragment**: a small piece of the product's interface composed in HTML and CSS from the site's own words, without a window around it. For a calendar tool, three post cards on a week strip; for a picks app, a stack of pick cards. It looks like the product without needing a screenshot.
 3. **owner-art**: an image the owner supplied. Used as given, inside the same frame; never recoloured, redrawn or stretched. Once the owner supplies an image, `heroKind` becomes `owner-art`.
+
+The hero has one of two layouts (`heroLayout`; the rules in numbers are in `look.md`, Hero):
+
+1. **centred**: one centred stack, headline, line and buttons, with the preview below. Any hero kind.
+2. **split**: on desktop, the text on the left and the fragment on the right; on a phone it stacks, the fragment below the main button. Only when `heroKind` is `fragment`. A frame or owner art always uses centred.
 
 The rules for a frame or fragment (also in `look.md`, Hero):
 - It carries a small visible label, **Concept preview**, because it is not the real product.
@@ -105,7 +111,7 @@ When the owner asks in everyday words, change `direction`, then rebuild the affe
 | "more technical", "more developer" | Grotesk and mono, or Sharp technical, with Blueprint or Terminal |
 | "friendlier", "softer" | Soft geometric, Soft mesh |
 | "punchier", "sportier", "louder" | Heavy geometric, with Stack or Bands |
-| "less busy", "plainer" | remove the motif from every section except the hero, keep one signature element |
+| "less busy", "plainer" | keep the motif in the hero and one other section only, keep one signature element |
 | "make it feel like <a site they name>" | add it as a reference, record what you learned, keep the quality floor |
 
 ## 7. Checks
@@ -113,10 +119,10 @@ When the owner asks in everyday words, change `direction`, then rebuild the affe
 Add these to the end-to-end tests with the `look.md` checks. They read the expected values from `direction` in `src/theme.ts`, never from copied text.
 
 1. The computed font family of the first `h1` matches `direction.headingFont`, body text matches `direction.bodyFont`, and no more than three font families load on the page.
-2. The computed font weight of the hero, section and closing headlines equals `direction.headingWeight`, and `direction.headingWeight` is the weight the pairing table declares for `direction.pairing` (for Neutral modern, the tone's display weight). No element other than a headline has a weight above 700.
+2. The computed font weight of the hero, section and closing headlines equals `direction.headingWeight`, and `direction.headingWeight` is the weight the pairing table declares for `direction.pairing` (for Neutral modern, the tone's display weight). No element other than a headline has a weight above 700, except numerals marked `data-signature="oversized-numerals"` when that signature is chosen, at most `direction.headingWeight`.
 3. With `direction.capsLabels` true: the nav links, eyebrows and buttons have `text-transform: uppercase` and letter spacing of at least 0.08em, and no `h1` to `h3` or paragraph is uppercase.
-4. The motif appears in the hero and in at least one other section (marked with `data-motif`), and uses no external image.
+4. The motif appears in the hero and in at least one other section (each marked with `data-motif`), and uses no external image.
 5. Each signature element appears in at least three places with the same class or token.
-6. Hero: with no owner image, the hero has a frame or fragment (`data-hero-kind` equal to `direction.heroKind`), the words "Concept preview" are visible in it, every panel with filler values carries a visible "Sample" label, and the hero holds no `img` that points at a file the owner did not supply. With an owner image (set by the test itself in the content file), that image fills the same frame, its rendered ratio matches its natural ratio within 2%, and it has alt text.
+6. Hero: with no owner image, the hero has a frame or fragment (`data-hero-kind` equal to `direction.heroKind`), the words "Concept preview" are visible in it, every panel with filler values carries a visible "Sample" label, and the hero holds no `img` that points at a file the owner did not supply. `data-hero-layout` equals `direction.heroLayout`, and it is `split` only when `direction.heroKind` is `fragment` (look.md check 33). With an owner image (set by the test itself in the content file), that image fills the same frame, its rendered ratio matches its natural ratio within 2%, and it has alt text.
 7. Every check in `look.md` still passes.
 8. Tests measure the rendered page (computed styles, boxes, screenshot samples). They never spell out text the owner can edit (headlines, button labels, prices, plan names, section headings, FAQ text); where a check needs that text, it reads it from `src/content/site.ts`.

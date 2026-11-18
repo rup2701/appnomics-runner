@@ -132,6 +132,7 @@ const agent = await read(root, "src/agent.ts");
   const dir = JSON.parse(await read(packs, "product-showcase/direction.json")) as {
     pairings: { name: string; heading: string; headingWeight: number | "tone"; body: string; accentFont: string | null; capsLabels: boolean; fits: string }[];
     motifs: { name: string; looks: string; goodFor: string }[]; heroKinds: { name: string; what: string }[]; signatures: { name: string; what: string }[];
+    heroLayouts: { name: string; what: string; heroKinds: string[] }[];
   };
   const rows = creative.split("\n").filter((l) => /^\| [A-Z]/.test(l) && !l.startsWith("| Pairing") && !l.startsWith("| Motif") && !l.startsWith("| The owner"));
   const cells = (l: string) => l.split("|").slice(1, -1).map((c) => c.trim());
@@ -151,7 +152,74 @@ const agent = await read(root, "src/agent.ts");
   assert.equal(dir.heroKinds.length, 3);
   const sigs = [...creative.matchAll(/^- `([a-z-]+)`: (.+)$/gm)].map((m) => [m[1], m[2]]);
   assert.deepEqual(dir.signatures.map((s) => [s.name, s.what]), sigs, "same signature names");
-  pass("direction.json matches the pairing, motif, hero and signature lists in creative.md");
+  const layouts = [...creative.matchAll(/^\d\. \*\*(centred|split)\*\*: (.+)$/gm)].map((m) => [m[1], m[2]]);
+  assert.deepEqual(dir.heroLayouts.map((l) => l.name), layouts.map((l) => l[0]), "same hero layouts, same order");
+  for (const l of dir.heroLayouts) {
+    const text = layouts.find((x) => x[0] === l.name)![1];
+    assert.ok(text.startsWith(`${l.what}.`), `hero layout ${l.name} has the same description`);
+    assert.ok(l.heroKinds.every((k) => dir.heroKinds.some((h) => h.name === k)), `hero layout ${l.name} names known hero kinds`);
+    if (l.heroKinds.length === dir.heroKinds.length) assert.match(text, /Any hero kind\./, `${l.name} is for any hero kind`);
+    else assert.match(text, new RegExp(`Only when \`heroKind\` is ${l.heroKinds.map((k) => `\`${k}\``).join(" or ")}\\.`), `${l.name} names its hero kinds`);
+  }
+  assert.deepEqual(dir.heroLayouts.find((l) => l.name === "split")!.heroKinds, ["fragment"], "split only with a fragment");
+  pass("direction.json matches the pairing, motif, hero kind, hero layout and signature lists in creative.md");
+}
+
+// APP-42 decisions of 18 November: where the style tile and the pack disagreed, the tile wins. Preview scale (body size, headline size, dot spacing) is left alone.
+{
+  // 1. Dark is a navy ink from the accent, not a fixed near-black green, and the owner's own background wins.
+  assert.doesNotMatch(look, /#0B0F0D \|\n/, "no near-black green dark background");
+  assert.doesNotMatch(look, /#151B18|#232B27|#A9B4AE/, "no green dark neutrals");
+  const dark = look.slice(look.indexOf("### Dark mode: navy ink"), look.indexOf("If neither"));
+  const roles = [...dark.matchAll(/^\| (background|surface|border|text|muted text) \| ([\d.]+) \| ([\d.]+) \|$/gm)].map((m) => ({ role: m[1], l: Number(m[2]), c: Number(m[3]) }));
+  assert.equal(roles.length, 5, "five navy ink roles");
+  const hexes = dark.match(/the roles are (#[0-9A-F]{6}), (#[0-9A-F]{6}), (#[0-9A-F]{6}), (#[0-9A-F]{6}) and (#[0-9A-F]{6})/)!.slice(1);
+  const toHex = (L: number, C: number, h: number) => {
+    const a = C * Math.cos((h * Math.PI) / 180), b = C * Math.sin((h * Math.PI) / 180);
+    const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3, m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3, s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+    const lin = [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+    return lin.map((v) => Math.round(255 * Math.min(1, Math.max(0, v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055))));
+  };
+  const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  roles.forEach((r, i) => toHex(r.l, r.c, 268).forEach((v, k) => assert.ok(Math.abs(v - rgb(hexes[i])[k]) <= 3, `${r.role}: lightness and chroma at hue 268 give ${hexes[i]}`)));
+  assert.deepEqual(rgb(hexes[0]), rgb("#0B1020"), "the orange example is the tile's navy");
+  const hue = (accent: number) => {
+    const d = ((accent - 268 + 540) % 360) - 180;
+    return Math.abs(d) >= 50 ? 268 : (accent - Math.sign(d || -1) * 50 + 360) % 360;
+  };
+  for (const [accent, base] of [...dark.matchAll(/an accent at hue (\d+) gives a shared hue of (\d+)|an accent at (\d+) gives (\d+)/g)].map((m) => [Number(m[1] ?? m[3]), Number(m[2] ?? m[4])])) assert.equal(hue(accent), base, `accent ${accent}`);
+  assert.equal(hue(48), 268, "orange keeps navy");
+  assert.match(look, /`look\.background`: one hex colour \(optional\)/);
+  assert.match(dark, /\*\*The owner's own background wins\.\*\*/);
+  assert.match(dark, /never change the owner's colour/);
+  // 2. A split hero, only with a fragment.
+  const hero = look.slice(look.indexOf("## Hero"), look.indexOf("## Benefits grid"));
+  assert.match(hero, /\*\*Split\*\* \(only when the hero kind is `fragment`\)/);
+  assert.match(hero, /A frame or an owner image always uses the centred layout/);
+  assert.match(creative, /heroLayout: "split", +\/\/ centred, or split \(only with a fragment\)/);
+  assert.match(look, /A split hero does not count: the hero is not a section/);
+  // 3. Glow and card radius as in the tile.
+  assert.doesNotMatch(look, /top-centre glow|centred at the top of the first screen/);
+  assert.match(look, /about 60% wide and 40% tall, centred at 18% across and 8% down the first screen/);
+  assert.match(look, /\| Card radius \| 16 px \| 16 px \| 32 px \| 8 px \|/, "bold cards at 16 px");
+  assert.match(look, /a radius 1\.25 times the card radius/);
+  // 4. Only headlines above 700, oversized numerals as the signature up to 800, logo, matchup, step titles and prices at 700.
+  for (const f of [look, creative]) {
+    assert.match(f, /The logo, the titles inside the hero's fragment \(.*matchup.*\), step titles and prices use 700/);
+    assert.match(f, /may use the headline weight, up to 800/);
+    assert.match(f, /data-signature="oversized-numerals"/);
+  }
+  // 5. The motif goes beyond the hero, and "less busy" no longer strips it to the hero.
+  assert.match(look, /\*\*The motif goes beyond the hero\.\*\*/);
+  assert.doesNotMatch(creative, /remove the motif from every section except the hero/);
+  // 6. Equal plans, equal treatment.
+  assert.match(look, /\*\*Equal plans get equal treatment\.\*\* A plan is highlighted only when the owner asked for it/);
+  // The checks are numbered without gaps, and each decision has one.
+  const checks = look.slice(look.indexOf("## Checks to run before you finish"));
+  const nums = [...checks.matchAll(/^(\d+)\. /gm)].map((m) => Number(m[1]));
+  assert.deepEqual(nums, nums.map((_, i) => i + 1), "checks numbered 1 to n");
+  for (const c of [/22\. Glow .* 18% across and 8% down/, /27\. Weights: .*data-signature="oversized-numerals"/, /33\. Hero layout: /, /34\. Dark base: /, /35\. Card radius: /, /36\. Plans: with no plan marked `highlight: true`/, /37\. Motif: /]) assert.match(checks, c);
+  pass("the look rules follow the style tile: navy ink dark base, split fragment hero, glow and radius, weights, motif, equal plans");
 }
 
 // A design brief written from the interview goes into the run as specs/design-brief.md, and the agent reads it after creative.md (APP-42).
