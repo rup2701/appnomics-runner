@@ -1,15 +1,35 @@
 {
   "note": "The closed lists from specs/creative.md, for code that must check a direction choice (the Builder's design brief, APP-42). creative.md is the source; test/showcase-pack.test.ts fails when the two differ. Copied into the Builder by npm run sync:site-pack.",
   "pairings": [
-    { "name": "Neutral modern", "heading": "Inter", "headingWeight": "tone", "body": "Inter", "accentFont": null, "capsLabels": false },
-    { "name": "Grotesk and mono", "heading": "Space Grotesk", "headingWeight": 600, "body": "Inter", "accentFont": "JetBrains Mono", "capsLabels": false },
-    { "name": "Editorial", "heading": "Fraunces", "headingWeight": 600, "body": "Inter", "accentFont": null, "capsLabels": false },
-    { "name": "Soft geometric", "heading": "Plus Jakarta Sans", "headingWeight": 700, "body": "Plus Jakarta Sans", "accentFont": null, "capsLabels": false },
-    { "name": "Sharp technical", "heading": "IBM Plex Sans", "headingWeight": 600, "body": "IBM Plex Sans", "accentFont": "IBM Plex Mono", "capsLabels": false },
-    { "name": "Display contrast", "heading": "Sora", "headingWeight": 700, "body": "Inter", "accentFont": null, "capsLabels": false },
-    { "name": "Heavy geometric", "heading": "Outfit", "headingWeight": 800, "body": "Inter", "accentFont": null, "capsLabels": true }
+    { "name": "Neutral modern", "heading": "Inter", "headingWeight": "tone", "body": "Inter", "accentFont": null, "capsLabels": false, "fits": "calm, serious, plain" },
+    { "name": "Grotesk and mono", "heading": "Space Grotesk", "headingWeight": 600, "body": "Inter", "accentFont": "JetBrains Mono", "capsLabels": false, "fits": "technical products, data" },
+    { "name": "Editorial", "heading": "Fraunces", "headingWeight": 600, "body": "Inter", "accentFont": null, "capsLabels": false, "fits": "calm, premium, writing-led products" },
+    { "name": "Soft geometric", "heading": "Plus Jakarta Sans", "headingWeight": 700, "body": "Plus Jakarta Sans", "accentFont": null, "capsLabels": false, "fits": "playful, friendly, consumer" },
+    { "name": "Sharp technical", "heading": "IBM Plex Sans", "headingWeight": 600, "body": "IBM Plex Sans", "accentFont": "IBM Plex Mono", "capsLabels": false, "fits": "serious, developer-facing" },
+    { "name": "Display contrast", "heading": "Sora", "headingWeight": 700, "body": "Inter", "accentFont": null, "capsLabels": false, "fits": "bold, confident" },
+    { "name": "Heavy geometric", "heading": "Outfit", "headingWeight": 800, "body": "Inter", "accentFont": null, "capsLabels": true, "fits": "bold, sports, gaming, consumer apps with a strong voice" }
   ],
-  "motifs": ["Board", "Ledger", "Blueprint", "Paper", "Terminal", "Soft mesh", "Bands", "Stack"],
-  "heroKinds": ["frame", "fragment", "owner-art"],
-  "signatures": ["oversized-numerals", "headline-marker", "section-index", "corner-ticks", "status-chips", "bleed-grid-line"]
+  "motifs": [
+    { "name": "Board", "looks": "rows and columns with thin rules, small status dots", "goodFor": "scheduling, ops, project tools" },
+    { "name": "Ledger", "looks": "ruled lines, tabular numerals, quiet columns", "goodFor": "finance, analytics, billing" },
+    { "name": "Blueprint", "looks": "fine dot or cross grid, thin technical lines", "goodFor": "developer tools, infrastructure" },
+    { "name": "Paper", "looks": "warm off-white, soft shadows, ink-coloured text", "goodFor": "writing, notes, knowledge tools" },
+    { "name": "Terminal", "looks": "mono labels, prompt-style marks, sharp corners", "goodFor": "CLI, security, data" },
+    { "name": "Soft mesh", "looks": "blurred gradient shapes from the accent", "goodFor": "creative, consumer, community" },
+    { "name": "Bands", "looks": "diagonal or stepped colour bands between sections", "goodFor": "marketing, sales tools" },
+    { "name": "Stack", "looks": "two or three cards overlapping at a slight offset or tilt, each with a status chip, like a feed of items", "goodFor": "products whose core is a list of items: picks, deals, listings, matches, tickets" }
+  ],
+  "heroKinds": [
+    { "name": "frame", "what": "a browser or device window holding a picture of the product's main screen, built in HTML and CSS" },
+    { "name": "fragment", "what": "a small piece of the product's interface composed in HTML and CSS, without a window around it" },
+    { "name": "owner-art", "what": "an image the owner supplied, used as given" }
+  ],
+  "signatures": [
+    { "name": "oversized-numerals", "what": "oversized numerals (benefit cards, steps)" },
+    { "name": "headline-marker", "what": "a recurring marker under key words in headlines" },
+    { "name": "section-index", "what": "section index labels (01, 02, 03) in the accent font" },
+    { "name": "corner-ticks", "what": "corner ticks on cards" },
+    { "name": "status-chips", "what": "status chips used the same way everywhere" },
+    { "name": "bleed-grid-line", "what": "a grid line that bleeds off the page edge" }
+  ]
 }

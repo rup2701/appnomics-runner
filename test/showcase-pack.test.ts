@@ -130,8 +130,8 @@ const agent = await read(root, "src/agent.ts");
 // direction.json is the closed lists of creative.md, for code that checks a choice (the Builder's design brief, APP-42). The two never differ.
 {
   const dir = JSON.parse(await read(packs, "product-showcase/direction.json")) as {
-    pairings: { name: string; heading: string; headingWeight: number | "tone"; body: string; accentFont: string | null; capsLabels: boolean }[];
-    motifs: string[]; heroKinds: string[]; signatures: string[];
+    pairings: { name: string; heading: string; headingWeight: number | "tone"; body: string; accentFont: string | null; capsLabels: boolean; fits: string }[];
+    motifs: { name: string; looks: string; goodFor: string }[]; heroKinds: { name: string; what: string }[]; signatures: { name: string; what: string }[];
   };
   const rows = creative.split("\n").filter((l) => /^\| [A-Z]/.test(l) && !l.startsWith("| Pairing") && !l.startsWith("| Motif") && !l.startsWith("| The owner"));
   const cells = (l: string) => l.split("|").slice(1, -1).map((c) => c.trim());
@@ -144,12 +144,13 @@ const agent = await read(root, "src/agent.ts");
     assert.equal(p.body, c[3], `${p.name} body font`);
     assert.equal(p.accentFont ?? "none", c[4], `${p.name} accent font`);
     assert.equal(p.capsLabels, p.name === "Heavy geometric", `${p.name} caps labels`);
+    assert.equal(p.fits, c[5], `${p.name} fits`);
   }
-  assert.deepEqual(dir.motifs, rows.filter((l) => l.split("|").length === 5).map((l) => cells(l)[0]), "same motifs");
-  for (const k of dir.heroKinds) assert.match(creative, new RegExp(`\\*\\*${k}\\*\\*`), `hero kind ${k}`);
+  assert.deepEqual(dir.motifs.map((m) => [m.name, m.looks, m.goodFor]), rows.filter((l) => l.split("|").length === 5).map((l) => cells(l)), "same motifs");
+  for (const k of dir.heroKinds) assert.match(creative, new RegExp(`\\*\\*${k.name}\\*\\*`), `hero kind ${k.name}`);
   assert.equal(dir.heroKinds.length, 3);
-  const sigs = [...creative.matchAll(/^- `([a-z-]+)`: /gm)].map((m) => m[1]);
-  assert.deepEqual(dir.signatures, sigs, "same signature names");
+  const sigs = [...creative.matchAll(/^- `([a-z-]+)`: (.+)$/gm)].map((m) => [m[1], m[2]]);
+  assert.deepEqual(dir.signatures.map((s) => [s.name, s.what]), sigs, "same signature names");
   pass("direction.json matches the pairing, motif, hero and signature lists in creative.md");
 }
 
