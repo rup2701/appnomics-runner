@@ -13,6 +13,7 @@ The runner is the AI agent and the deploy script. In production it runs inside t
 - Any change in this repo needs `fly deploy` from `~/appnomics` to reach production. Deploy only when no build is in flight.
 
 ## Rules from the owner (RP)
+- Follow `UX_PRINCIPLES.md` for the packs and every site they build: make what is possible visible, show what the system understood and changed, use constraints as guides. Keep it the same as the copy in `../appnomics-builder`.
 - Commit messages: plain words, no quotes, no apostrophes, no escapes.
 - Never print, ask for or write keys, passwords or hashes. Names of variables only. A generated owner password is printed once by deploy on purpose; do not log it anywhere else.
 - Nothing invented in a customer's site. The restaurant pack shows placeholders or leaves things out, and the Builder lists them in a check list.
