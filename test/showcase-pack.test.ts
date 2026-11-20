@@ -239,6 +239,11 @@ const agent = await read(root, "src/agent.ts");
   assert.match(creative, /Benefit and use-case cards carry icons, never numerals, whatever the signatures/);
   assert.match(look, /1\. \*\*How it works:\*\* heading, then up to three columns, each with a numeral/, "steps keep their numerals");
   pass("feature grids carry icons in any layout, and numerals are kept for steps");
+  // Four cards with a short first card are a narrower 2x2, never one row (RP, 20 November).
+  assert.match(look, /\*\*Four cards with a short first card: a 2x2\.\*\* .*at least 100 characters.*at most 740 px wide and centred.*Four cards are never laid out in one row\./);
+  assert.match(look, /16\. Bento: .*except four equal cards in the 2x2 .*four cards are never in one row/);
+  assert.match(req, /Four cards with a short first card are a 2x2 of equal cards, at most 740 px wide and centred/);
+  pass("four cards with a short first card are a 2x2 at most 740 px wide, never one row");
 }
 
 // A design brief written from the interview goes into the run as specs/design-brief.md, and the agent reads it after creative.md (APP-42).

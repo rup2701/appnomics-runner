@@ -119,6 +119,8 @@ A true bento: cards of different sizes, on a 4-column grid on desktop with rows 
 | 5 | large 2 by 2, four small 1 by 1 |
 | 6 | large 2 by 2, wide 2 by 1, two small 1 by 1, then two wide 2 by 1 |
 
+**Four cards with a short first card: a 2x2.** The large card needs enough to say to fill it: its title and supporting line together at least 100 characters. With four cards and a shorter first card, use a 2x2 of equal cards instead, two columns of two, the grid at most 740 px wide and centred in the page, so short cards do not stretch across it. Four cards are never laid out in one row.
+
 On a phone every card is full width in one column, and the large card keeps its larger title.
 
 - **The first benefit is the large card**, the most important claim. It is the one the owner would pick if they could pick only one.
@@ -226,7 +228,7 @@ Add these to the end-to-end tests, as far as Playwright can measure them:
 13. With a main button link set, every main button opens it; with none, every main button scrolls to the pricing section (the closing section when pricing is off).
 14. Prices: every price shown equals the plan data; yearly and per-month figures are whole dollars rounded down; the FAQ and the pricing section show the same figures.
 15. The FAQ opens and closes with the keyboard. The footer has the Product, Company and Resources columns and the Privacy, Terms and Security links.
-16. Bento: with three or more cards at 1440, at least two distinct card areas exist; every card has the same computed padding; every benefit card holds exactly one icon (an `svg` from `lucide-react`) whose box does not overlap the title's box; no benefit or use-case card holds a numeral (an element whose text is only digits, such as 01). Every how it works step holds a numeral.
+16. Bento: with three or more cards at 1440, at least two distinct card areas exist, except four equal cards in the 2x2 (two columns of two, the grid at most 740 px wide and centred); four cards are never in one row; every card has the same computed padding; every benefit card holds exactly one icon (an `svg` from `lucide-react`) whose box does not overlap the title's box; no benefit or use-case card holds a numeral (an element whose text is only digits, such as 01). Every how it works step holds a numeral.
 17. Testimonials: with two or more quotes at 1440, at least two cards are visible at once; the "Sample" label's box does not overlap the quote's box; with more than three quotes a scroll container exists and the next button scrolls it by at least one card.
 18. Tone and pairing: the hero headline's computed font size at 1440 equals the tone's size (within 2 px), and its weight equals `direction.headingWeight` from `src/theme.ts` (see creative.md, check 2).
 19. With reduced motion requested, no element has a running transition or animation.
