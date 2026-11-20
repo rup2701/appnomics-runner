@@ -43,7 +43,7 @@ Choose from this list only. All of them load through `next/font/google`, so a bu
 
 Rules:
 - **The pairing sets the headline weight**, in every tone. The tone table's display weight in `look.md` applies only with Neutral modern. Hero, section and closing headlines use this weight; nothing else does.
-- **Only headlines go above 700.** Card titles, plan names, FAQ questions, nav links and buttons stay at 600 or less. The logo, the titles inside the hero's fragment (a matchup on a pick card), step titles and prices use 700. Eyebrows and numerals may use 700. One exception: with the `oversized-numerals` signature, the oversized numerals (a plan's length, a step or benefit numeral) count as the signature and may use the headline weight, up to 800. Each carries `data-signature="oversized-numerals"`.
+- **Only headlines go above 700.** Card titles, plan names, FAQ questions, nav links and buttons stay at 600 or less. The logo, the titles inside the hero's fragment (a matchup on a pick card), step titles and prices use 700. Eyebrows and numerals may use 700. One exception: with the `oversized-numerals` signature, the oversized numerals (a plan's length or a step numeral) count as the signature and may use the headline weight, up to 800. Each carries `data-signature="oversized-numerals"`.
 - **Heavy geometric uses uppercase nav and labels:** nav links, eyebrows, buttons and small labels are uppercase, with letter spacing of at least 0.08em (eyebrows keep 0.12em). Headlines and paragraphs are never uppercase. Set `capsLabels: true`.
 - At most two families plus one mono accent. Load only the weights used, `display: "swap"`, with a system fallback.
 - Heading letter spacing still comes from the tone table in `look.md`.
@@ -86,14 +86,14 @@ The rules for a frame or fragment (also in `look.md`, Hero):
 
 One or two recognizable devices the whole site repeats:
 
-- `oversized-numerals`: oversized numerals (benefit cards, steps)
+- `oversized-numerals`: oversized numerals (steps, plan lengths)
 - `headline-marker`: a recurring marker under key words in headlines
 - `section-index`: section index labels (01, 02, 03) in the accent font
 - `corner-ticks`: corner ticks on cards
 - `status-chips`: status chips used the same way everywhere
 - `bleed-grid-line`: a grid line that bleeds off the page edge
 
-Use these names in `direction.signatures`.
+Use these names in `direction.signatures`. Benefit and use-case cards carry icons, never numerals, whatever the signatures (look.md, Icons for features, numerals for steps).
 
 Each chosen element gets one class or token and is used the same way in at least three places. A signature that appears once is a decoration, not a signature.
 

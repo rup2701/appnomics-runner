@@ -29,7 +29,7 @@
     { "name": "split", "what": "on desktop, the text on the left and the fragment on the right; on a phone it stacks, the fragment below the main button", "heroKinds": ["fragment"] }
   ],
   "signatures": [
-    { "name": "oversized-numerals", "what": "oversized numerals (benefit cards, steps)" },
+    { "name": "oversized-numerals", "what": "oversized numerals (steps, plan lengths)" },
     { "name": "headline-marker", "what": "a recurring marker under key words in headlines" },
     { "name": "section-index", "what": "section index labels (01, 02, 03) in the accent font" },
     { "name": "corner-ticks", "what": "corner ticks on cards" },

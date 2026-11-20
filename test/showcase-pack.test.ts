@@ -222,6 +222,30 @@ const agent = await read(root, "src/agent.ts");
   pass("the look rules follow the style tile: navy ink dark base, split fragment hero, glow and radius, weights, motif, equal plans");
 }
 
+// Icons for features, numerals for steps (RP, 20 November): every feature grid item has an icon, in any layout; numerals
+// are only for steps and the oversized-numerals signature.
+{
+  const look = await readFile(path.join(packs, "product-showcase", "specs", "look.md"), "utf8");
+  const creative = await readFile(path.join(packs, "product-showcase", "specs", "creative.md"), "utf8");
+  const req = await readFile(path.join(packs, "product-showcase", "specs", "requirements.json"), "utf8");
+  assert.match(look, /\*\*Icons for features, numerals for steps\.\*\* Every item in a grid of features carries one icon: .*in any layout \(bento, columns, a 2x2, an accordion\)/);
+  assert.match(look, /Numerals are only for a sequence of steps/);
+  assert.match(look, /- \*\*Card contents:\*\* the card's icon at the top/);
+  assert.match(look, /use-case cards \(up to four, each with an icon, a title and one line\)/);
+  assert.match(look, /16\. Bento: .*every benefit card holds exactly one icon .*no benefit or use-case card holds a numeral/);
+  for (const f of [look, creative, req]) {
+    assert.doesNotMatch(f, /benefit numeral|benefit cards, steps|a numeral that does not overlap the title|Benefit cards use numerals|No icon squares|no benefit card has an icon square/);
+  }
+  assert.match(creative, /Benefit and use-case cards carry icons, never numerals, whatever the signatures/);
+  assert.match(look, /1\. \*\*How it works:\*\* heading, then up to three columns, each with a numeral/, "steps keep their numerals");
+  pass("feature grids carry icons in any layout, and numerals are kept for steps");
+  // Four cards with a short first card are a narrower 2x2, never one row (RP, 20 November).
+  assert.match(look, /\*\*Four cards with a short first card: a 2x2\.\*\* .*at least 100 characters.*at most 740 px wide and centred.*Four cards are never laid out in one row\./);
+  assert.match(look, /16\. Bento: .*except four equal cards in the 2x2 .*four cards are never in one row/);
+  assert.match(req, /Four cards with a short first card are a 2x2 of equal cards, at most 740 px wide and centred/);
+  pass("four cards with a short first card are a 2x2 at most 740 px wide, never one row");
+}
+
 // A design brief written from the interview goes into the run as specs/design-brief.md, and the agent reads it after creative.md (APP-42).
 {
   const tmp = await mkdtemp(path.join(os.tmpdir(), "runner-design-brief-"));
