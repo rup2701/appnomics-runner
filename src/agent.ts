@@ -5,6 +5,7 @@ import { appendFile, access } from "node:fs/promises";
 import path from "node:path";
 import { config, costUsd, addUsage, type Usage } from "./config.js";
 import { toolDefs, makeHandlers, agentEnv } from "./tools.js";
+import { THEME_INSTRUCTION } from "./theme-tokens.js";
 
 const BASE_PROMPT = `You are the builder agent for an AI app builder. You are given a folder with specs/ (the files for this kind of app) and specs/brief.json (the facts about this one app). Build the app they describe, whether it is a store or a website.
 
@@ -27,6 +28,9 @@ export const staticPrompt = (p: string) =>
   p.replace(DB_LINE, "- This is a static site: no database, no API routes, no environment variables, no owner area. Page content comes from src/content/site.ts, written from the brief. Ignore any mention of a database in the instructions above.")
    .replace(STAGES_LINE, "(1) scaffold and the content file from the brief, (2) the public page (every section in the brief's page_plan), (3) end-to-end tests");
 export const SYSTEM_PROMPT = BASE_PROMPT;
+/** The system prompt for one run. The theme line is added only when src/theme.ts was written from the Visual design tokens (--theme). */
+export const systemPrompt = (o: { staticSite?: boolean; themeTokens?: boolean }) =>
+  (o.staticSite ? staticPrompt(SYSTEM_PROMPT) : SYSTEM_PROMPT) + (o.themeTokens ? `\n\nFor this site:\n${THEME_INSTRUCTION}` : "");
 
 /** Where the agent's time went, in milliseconds: waiting for the model, running tools, and, as parts of the tool time, running tests and running build or type checks. Reset by the caller before a run. */
 export const agentClock = { modelMs: 0, toolMs: 0, testMs: 0, buildMs: 0 };
@@ -52,6 +56,7 @@ export async function runAgent(opts: {
   client: Anthropic; appDir: string; databaseUrl: string; usage: Usage; transcriptPath: string; budgetUsedUsd: () => number;
   firstMessage?: string; // used by resume
   staticSite?: boolean; // no database or owner area
+  themeTokens?: boolean; // src/theme.ts was written from the Visual design tokens (--theme)
 }): Promise<Result> {
   const handlers = makeHandlers(opts.appDir, agentEnv(opts.databaseUrl)) as Record<string, (i: never) => Promise<string>>;
   const messages: Anthropic.MessageParam[] = [
@@ -73,7 +78,7 @@ export async function runAgent(opts: {
         res = await opts.client.messages.create({
           model: config.model,
           max_tokens: 20000,
-          system: [{ type: "text", text: opts.staticSite ? staticPrompt(SYSTEM_PROMPT) : SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+          system: [{ type: "text", text: systemPrompt(opts), cache_control: { type: "ephemeral" } }],
           tools: toolDefs,
           messages,
         });
