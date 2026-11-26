@@ -14,6 +14,7 @@ If the brief has `look.references`, each is a layout the owner likes from anothe
 - `look.tone`: `calm`, `bold`, `playful` or `serious` (from `brand.tone`). The tone table below sets the character.
 - `look.card_edge`: `blended` or `defined` (optional). Decides how cards are told apart from the page; see Depth and polish. Default by tone.
 - The direction (font pairing, motif, hero kind, signature elements) is yours to choose, from `creative.md`. Read it right after this file and record the choice in `src/theme.ts` and AGENT_LOG.md as it says.
+- If `src/theme.ts` already exports `tokens` when you start, those are the numbers this file works out, already worked out for this site from the Visual design the owner saw. Use them as they are (see creative.md, "When `src/theme.ts` is already there").
 - The brief wins over this file. If the brief asks for something else, do that and record it in AGENT_LOG.md under "Decisions on ambiguous points".
 
 ## Colour roles

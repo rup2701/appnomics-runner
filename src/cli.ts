@@ -3,6 +3,8 @@
 //            --specs path/to/specs        default: vertical-packs/store/specs
 //            --no-look-pass               skip the second pass that applies specs/look.md (put it after the prompt)
 //            --design-brief path/to/file.md   copied into the run as specs/design-brief.md; the agent reads it after creative.md (APP-42)
+//            --theme path/to/tokens.json      the Visual design tokens from the Builder, written into the site as src/theme.ts
+//                                             before the agent starts (PR B). A missing or wrong file is logged and skipped.
 import Anthropic from "@anthropic-ai/sdk";
 import { readFile, writeFile, access, cp } from "node:fs/promises";
 import { execFile } from "node:child_process";
@@ -11,6 +13,7 @@ import path from "node:path";
 import { config, costUsd, emptyUsage, useModel } from "./config.js";
 import { standInBrief } from "./brief.js";
 import { copyReference, createWorkspace } from "./workspace.js";
+import { readThemeTokens, type ThemeTokens } from "./theme-tokens.js";
 import { isStaticBrief, isStaticRun } from "./kind.js";
 import { agentClock, runAgent, transcriptFile } from "./agent.js";
 import { agentEnv } from "./tools.js";
@@ -213,14 +216,21 @@ async function main() {
   console.log("2/4 Setting up a fresh folder and database…");
   const staticSite = isStaticBrief(brief);
   const designBrief = arg("design-brief") ? await readFile(arg("design-brief")!, "utf8") : undefined;
-  const ws = await createWorkspace({ prompt, specsDir, brief, runsDir: path.join(here, "runs"), skipDb: staticSite, designBrief });
+  let theme: ThemeTokens | undefined;
+  if (arg("theme")) {
+    const t = await readThemeTokens(arg("theme")!);
+    if ("problem" in t) console.log(`    theme tokens not used: ${t.problem}`);
+    else theme = t.tokens;
+  }
+  const ws = await createWorkspace({ prompt, specsDir, brief, runsDir: path.join(here, "runs"), skipDb: staticSite, designBrief, theme });
   if (designBrief?.trim()) console.log("    design brief: specs/design-brief.md");
+  if (ws.themeWritten) console.log("    theme tokens: src/theme.ts");
   await writeFile(path.join(ws.root, "brief.json"), JSON.stringify(brief, null, 2));
   console.log(`    ${ws.appDir}${staticSite ? "\n    static site: no database" : `\n    database ${ws.dbName}`}`);
 
   console.log("3/4 Agent is building (this takes a while)…");
   let result = await runAgent({
-    client, appDir: ws.appDir, databaseUrl: ws.databaseUrl, usage, staticSite,
+    client, appDir: ws.appDir, databaseUrl: ws.databaseUrl, usage, staticSite, themeTokens: ws.themeWritten,
     transcriptPath: transcriptFile(ws.root), budgetUsedUsd: () => costUsd(usage),
   });
   // Packs with a look file get a second, focused pass: a full build follows look rules far less closely than a short, single-purpose request does.
@@ -228,7 +238,7 @@ async function main() {
   if (hasLook && result.stopReason === "finished" && !process.argv.includes("--no-look-pass")) {
     console.log("3b/4 Look pass (the agent checks the public page against look.md)…");
     const lp = await runAgent({
-      client, appDir: ws.appDir, databaseUrl: ws.databaseUrl, usage, staticSite, firstMessage: LOOK_PASS_MESSAGE,
+      client, appDir: ws.appDir, databaseUrl: ws.databaseUrl, usage, staticSite, themeTokens: ws.themeWritten, firstMessage: LOOK_PASS_MESSAGE,
       transcriptPath: transcriptFile(ws.root), budgetUsedUsd: () => costUsd(usage),
     });
     result = { ...lp, turns: result.turns + lp.turns };
@@ -252,7 +262,7 @@ async function main() {
     durationMinutes: Math.round((Date.now() - started) / 600) / 100,
     tokens: result.usage, estimatedCostUsd: Math.round(costUsd(result.usage) * 100) / 100,
     briefStepCostUsd: Math.round(briefCost * 1000) / 1000,
-    checks: { typecheck: tsc, build }, builtAnything: built, agentLogWritten: agentLog, appDir: ws.appDir, database: ws.dbName,
+    checks: { typecheck: tsc, build }, ...(ws.themeWritten ? { themeTokens: true } : {}), builtAnything: built, agentLogWritten: agentLog, appDir: ws.appDir, database: ws.dbName,
     note: "Cost is an estimate from token counts and the prices in src/config.ts.",
   };
   await writeFile(path.join(ws.root, "run.json"), JSON.stringify(summary, null, 2));

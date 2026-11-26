@@ -27,6 +27,13 @@ export const direction = {
 
 Later changes read `direction` and keep it. When the owner asks for a different look in everyday words (see "Plain-words changes"), the change updates `direction` and the page together.
 
+**When `src/theme.ts` is already there when you start.** The Builder writes it when the owner saw a Visual design for this site. Besides `direction` (already filled in, in the shape above) it exports `tokens`: the colours, fonts, weights, type sizes, spacing, radii and depth worked out by code from the owner's mode, accent and tone and the design brief, by the same rules as `look.md` and this file. Then:
+- Start from it. Keep both exports and their values. Import every colour, font, weight, size, spacing and radius the page uses from `tokens` (for example as CSS variables in the global styles), and add no colour or font that is not in it.
+- Change a value only when a `look.md` or `creative.md` check fails with it, or the owner asked for something else. Record the old value, the new one and the reason in AGENT_LOG.md under "Decisions on ambiguous points".
+- Record the direction in AGENT_LOG.md as above; the reason for each choice is that it came with the Visual design.
+
+Without the file, choose the direction and write `src/theme.ts` as above.
+
 ## 1. Typography: choose one pairing
 
 Choose from this list only. All of them load through `next/font/google`, so a build never depends on a font that fails to load.

@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "mode": "dark",
+  "tone": "playful",
+  "direction": {
+    "pairing": "Heavy geometric",
+    "motif": "Stack",
+    "heroKind": "fragment",
+    "heroLayout": "split",
+    "signatures": [
+      "status-chips",
+      "oversized-numerals"
+    ]
+  },
+  "color": {
+    "background": "#0A1020",
+    "surface": "#131A2E",
+    "border": "#26304C",
+    "text": "#F4F6FB",
+    "muted": "#9AA6C4",
+    "inverse": "#F4F6FB",
+    "onInverse": "#0A1020",
+    "accent": "#2EE6C4",
+    "onAccent": "#04130D",
+    "accentText": "#2EE6C4",
+    "tint50": "#E0FFF6",
+    "tint100": "#BBFFED",
+    "tint200": "#68FFDE",
+    "tint300": "#3FF0CE",
+    "tint700": "#007461",
+    "tint900": "#002E26",
+    "glow": "#2EE6C433",
+    "dot": "#F4F6FB24",
+    "edge": "#FFFFFF1F",
+    "shadow": "#00000073"
+  },
+  "neutralHue": 268,
+  "accentGiven": null,
+  "font": {
+    "heading": "Outfit",
+    "body": "Inter",
+    "accent": null,
+    "capsLabels": true,
+    "weight": {
+      "headline": 800,
+      "strong": 700,
+      "title": 600,
+      "medium": 500,
+      "body": 400,
+      "numeral": 800
+    }
+  },
+  "type": {
+    "hero": [
+      68,
+      40
+    ],
+    "heroTracking": -0.035,
+    "heroLine": 1.05,
+    "section": [
+      52,
+      32
+    ],
+    "sectionTracking": -0.025,
+    "sectionLine": 1.08,
+    "body": [
+      18,
+      16
+    ],
+    "bodyLine": 1.6,
+    "small": 15,
+    "label": 13,
+    "eyebrow": 13,
+    "eyebrowTracking": 0.12,
+    "capsTracking": 0.08,
+    "caption": 12,
+    "cardTitle": 20,
+    "price": 40,
+    "numeral": [
+      72,
+      52
+    ]
+  },
+  "space": {
+    "section": [
+      104,
+      64
+    ],
+    "gutter": [
+      32,
+      16
+    ],
+    "cardPad": [
+      32,
+      24
+    ],
+    "gap": 16,
+    "contentMax": 1200,
+    "headingGap": 28,
+    "heroGap": 32,
+    "buttonHeight": 48
+  },
+  "radius": {
+    "card": 32,
+    "closing": 40,
+    "small": 16,
+    "round": 999
+  },
+  "depth": {
+    "dotGrid": 16,
+    "dotSize": 2,
+    "glowAt": [
+      18,
+      8
+    ],
+    "glowSize": [
+      60,
+      40
+    ],
+    "cardEdge": "blended"
+  }
+}

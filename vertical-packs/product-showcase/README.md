@@ -10,7 +10,7 @@ The earlier version of this pack, with email sign-ups, a database and an owner a
 
 Status: interview, brief, contract and specs are written for this pack. Not yet done: the runner's no-database deploy mode, the builder and worker wiring, and a first test build.
 
-The look comes from two files: `specs/look.md` (spacing, contrast, depth and checks) and `specs/creative.md` (the direction the agent chooses for each product: font pairing, motif, hero kind and signature elements, recorded in the site's `src/theme.ts` and in AGENT_LOG.md).
+The look comes from two files: `specs/look.md` (spacing, contrast, depth and checks) and `specs/creative.md` (the direction the agent chooses for each product: font pairing, motif, hero kind and signature elements, recorded in the site's `src/theme.ts` and in AGENT_LOG.md). When the Builder passes the Visual design tokens (`--theme`), the runner writes `src/theme.ts` before the agent starts, with `tokens` and a filled-in `direction`, and the agent starts from them.
 
 `direction.json` holds the same closed lists (pairings, motifs, hero kinds, hero layouts, signature names) for code. The Builder copies it with `npm run sync:site-pack` and checks the design brief's choices against it (APP-42). A test fails if it and `creative.md` differ.
 
